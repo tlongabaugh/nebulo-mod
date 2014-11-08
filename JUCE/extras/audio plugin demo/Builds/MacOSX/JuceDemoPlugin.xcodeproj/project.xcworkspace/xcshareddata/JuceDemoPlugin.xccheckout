@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>735BA079-1821-4779-BE07-F380B83ABA6F</string>
+	<key>IDESourceControlProjectName</key>
+	<string>JuceDemoPlugin</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>206CF6179009B5B94E8C94A10A93A4532ABA6A6C</key>
+		<string>https://github.com/tlongabaugh/nebulo-mod.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>JUCE/extras/audio plugin demo/Builds/MacOSX/JuceDemoPlugin.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>206CF6179009B5B94E8C94A10A93A4532ABA6A6C</key>
+		<string>../../../../../../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/tlongabaugh/nebulo-mod.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>206CF6179009B5B94E8C94A10A93A4532ABA6A6C</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>206CF6179009B5B94E8C94A10A93A4532ABA6A6C</string>
+			<key>IDESourceControlWCCName</key>
+			<string>nebulo-mod</string>
+		</dict>
+	</array>
+</dict>
+</plist>
