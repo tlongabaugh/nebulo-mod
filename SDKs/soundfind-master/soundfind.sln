@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual C++ Express 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "soundfind", "soundfind.vcxproj", "{4D8EA3AA-5563-44A1-BAA0-C409C4654A8D}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "minihost", "vstsdk2.4\public.sdk\samples\vst2.x\minihost\win\minihost.vcxproj", "{D36A7267-C114-4C52-8299-18BD15D0D690}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+		Template|Win32 = Template|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4D8EA3AA-5563-44A1-BAA0-C409C4654A8D}.Debug|Win32.ActiveCfg = Debug|Win32
+		{4D8EA3AA-5563-44A1-BAA0-C409C4654A8D}.Debug|Win32.Build.0 = Debug|Win32
+		{4D8EA3AA-5563-44A1-BAA0-C409C4654A8D}.Release|Win32.ActiveCfg = Release|Win32
+		{4D8EA3AA-5563-44A1-BAA0-C409C4654A8D}.Release|Win32.Build.0 = Release|Win32
+		{4D8EA3AA-5563-44A1-BAA0-C409C4654A8D}.Template|Win32.ActiveCfg = Release|Win32
+		{4D8EA3AA-5563-44A1-BAA0-C409C4654A8D}.Template|Win32.Build.0 = Release|Win32
+		{D36A7267-C114-4C52-8299-18BD15D0D690}.Debug|Win32.ActiveCfg = Debug|Win32
+		{D36A7267-C114-4C52-8299-18BD15D0D690}.Debug|Win32.Build.0 = Debug|Win32
+		{D36A7267-C114-4C52-8299-18BD15D0D690}.Release|Win32.ActiveCfg = Template|Win32
+		{D36A7267-C114-4C52-8299-18BD15D0D690}.Release|Win32.Build.0 = Template|Win32
+		{D36A7267-C114-4C52-8299-18BD15D0D690}.Template|Win32.ActiveCfg = Template|Win32
+		{D36A7267-C114-4C52-8299-18BD15D0D690}.Template|Win32.Build.0 = Template|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
