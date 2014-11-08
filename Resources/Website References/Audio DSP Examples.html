@@ -1,0 +1,197 @@
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=9" />
+<title>Audio DSP Examples</title>
+<style>
+body { 
+	font-family: segoe ui, courier, sans-serif; 
+	background-color: #404040; 
+}
+.content 
+{ 
+	width: 600px; 
+	margin-left: auto; 
+	margin-right: auto; 
+	border: 1px solid black;
+	background-color: white;
+	padding: 20px;
+	color: #404066;
+	border-radius: 16px;
+}
+h1
+{
+	font-weight: normal;
+}
+</style>
+</head>
+
+<body bgcolor=ffffff>
+
+<div class="content">
+
+<h1>Audio DSP as VST plug-ins</h1>
+
+<p>
+I've recrafted some of my older audio DSP work in VST format so you can
+use the effects within popular recording software.  Most products support
+VST plug-ins these days, it's become something of a de facto standard
+for audio.  Below I've got a guitar processor, a phase shifter, chorus,
+doppler pitch shifter, FFT pitch shifter, and flange effects implemented.
+
+<h3>notes</h3>
+
+<p>
+You can either download the .dll files directly and use them with your
+recording software by putting them in the appropriate directory that
+is scanned on startup, or you can grab the source code and play with
+them yourself.  To use the source code you'll need to first get the <a
+href='vst_sdk2_4_rev2.zip'>Steinberg 2.4 VST SDK</a> and install that.
+Then just drop the projects files into directories at the same level as
+the SDK top dir and you should be able to build 'em.  I used Niall's Pedal
+Board for a test host.  After building, copy to the Niall's directory
+and start the pedal board host.  You can then attach Visual Studio to
+the running pedal board process for debugging.  Oh, and of course you'll
+need the appropriate Visual Studio redist DLLs which can be found on <a
+href="http://msdn.com" target='_blank'>MSDN</a>.
+
+<h3>guitar</h3>
+
+<p>
+This implements a one-knob guitar processor.  It actually morphs thru a
+number of presets but it uses a single knob so you don't have to think.
+It progresses more or less from clean to dirty with in between positions
+where you get the classic glassy compressed clean sound, medium cruch for rhythm,
+or further along the high gain metal sounds.
+
+<p>
+The processor is composed of a several sub-modules: a limiter/gate, a
+12db/octave high boost, distortion, a phaser, and a chorus.  The ordering
+of the effects is a little unusual as I enjoy the sound of a phaser
+driving the distortion--the phasing sound almost disappears and it just
+turns more into a chewy movement in the distortion.  The chorus is used
+on the output to make the distortion sound a bit juicier and mellower.
+
+<p>
+<a href="aguitar.dll">aguitar.dll</a> ready-to-use binary<br>
+<a href="guitar.zip">guitar.zip</a> source code VS project<br>
+
+
+<h3>phase shifter</h3>
+
+<p>
+This implements a simple all pass filter bank and allows you to select
+basic phase shifting parameters.  You can select from 2-10 sections of
+all pass and control speed, depth, and feedback.  There are also some
+mix options that might be useful with recording software.
+
+<p>
+Phase shifting uses an interesting type of filter called an all-pass
+filter. As the name implies, this type of filter passes all frequencies,
+but instead "filters" the phase of the signal. While its frequency
+response is a straight line, its phase response varies by 180 degrees
+with a 90 degree phase shift at what would traditionally be considered
+the cutoff frequency of a normal filter.
+
+<p>
+The normalized transfer function of a first order all-pass filter is:<br>
+<pre>
+               s - 1 
+        H(s) = -----
+               s + 1
+</pre>
+
+<p>
+Using a bilinear z-transform (BZT) method, we arrive at a difference equation of: <br>
+<pre>
+        y(n) = A * x(n) + A * y(n-1) - x(n-1)
+</pre>
+
+<p>
+Where the coefficient A is described by: 
+<pre>
+            1 - wp    
+        A = ------
+            1 + wp
+</pre>
+and:<br>
+<pre>
+        wp = (PI * freq) / Fs
+        Fs = sampling rate    
+</pre>
+
+The phase shifting effect is then implemented by cascading several
+such all-pass filter sections and sweeping their cutoff frequencies in
+unison. Mixing this processed signal with the original signal results in
+the notching effect as the total phase delay through the filter sections
+causes certain frequencies to cancel. Like flanging, the effect can be
+varied by providing a feedback path around the filter sections, and by
+providing for inverting the processed signal and the feedback.
+
+<p>
+A smooth sweep function is important; the frequencies of the filters
+should be changed exponentially over time. This is easily accomplished
+using floating point in C, but in an assembly version we'd probably use
+a piece-wise linear approximation of the desired function.
+
+<p>
+<a href="aphaser.dll">aphaser.dll</a> ready-to-use binary<br>
+<a href="aphaser.zip">aphaser.zip</a> source code VS project<br>
+
+<h3>chorus</h3>
+
+<p>
+This implements a simple chorus and is about like every other chorus
+out there except for the fact this has mix options to spread the dry/wet
+signal in stereo the way I like.
+
+<p>
+<a href="achorus.dll">achorus.dll</a> ready-to-use binary</br>
+<a href="achorus.zip">achorus.zip</a> source code VS project</br>
+
+<h3>flange</h3>
+
+<p>
+Again, a simple flanger but with a few minor tweaks that make me happy.
+It can sweep to zero to simulate that cross-over flange sound, and setting
+the mix mode to "mono minus" or "stereo minus" and turning the feedback
+up gets a very fun effect.  The delay and mix inputs are conditioned so
+the effect can be driven from automation with no clicks.  This allows you to
+use your DAW to drive the effect and control its blend.
+
+<p>
+<a href="aflange.dll">aflange.dll</a> ready-to-use binary</br>
+<a href="aflange.zip">aflange.zip</a> source code VS project</br>
+
+<h3>fft pitch shifter</h3>
+
+<p>
+This is a quickie whack at doing an FFT-based pitch shift.  It's less warbly
+than the doppler approach below.
+
+<p>
+<a href="afftpitch.dll">afftpitch.dll</a> ready-to-use binary</br>
+<a href="fftpitch.zip">fftpitch.zip</a> source code VS project</br>
+
+<h3>doppler pitch shifter</h3>
+
+<p>
+This was my take on pitch shifting back before CPUs were fast enough.
+Been supplanted by FFT approaches but this is still nice for smaller
+shifts.
+
+<p>
+<a href="apitch.dll">apitch.dll</a> ready-to-use binary</br>
+<a href="apitch.zip">apitch.zip</a> source code VS project</br>
+
+<!--
+<h3>older Dr. Dobbs stuff</h3>
+
+<a href="index.html">Go here</a>
+-->
+<br><br><br>
+<a href='http://www.denniscronin.net''>denniscronin.net home</a>
+</div>
+
+</body>
+</html>
+
