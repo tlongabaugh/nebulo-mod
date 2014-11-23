@@ -15,6 +15,7 @@
 //==============================================================================
 NebuloModAudioProcessor::NebuloModAudioProcessor()
 {
+    gain = 1.0f;
 }
 
 NebuloModAudioProcessor::~NebuloModAudioProcessor()
@@ -29,26 +30,27 @@ const String NebuloModAudioProcessor::getName() const
 
 int NebuloModAudioProcessor::getNumParameters()
 {
-    return 0;
+    return 1;
 }
 
 float NebuloModAudioProcessor::getParameter (int index)
 {
-    return 0.0f;
+    return gain;
 }
 
 void NebuloModAudioProcessor::setParameter (int index, float newValue)
 {
+    gain = newValue;
 }
 
 const String NebuloModAudioProcessor::getParameterName (int index)
 {
-    return String();
+    return "Gain";
 }
 
 const String NebuloModAudioProcessor::getParameterText (int index)
 {
-    return String();
+    return String(index);
 }
 
 const String NebuloModAudioProcessor::getInputChannelName (int channelIndex) const
@@ -149,18 +151,19 @@ void NebuloModAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffe
 
     // This is the place where you'd normally do the guts of your plugin's
     // audio processing...
-    for (int channel = 0; channel < getNumInputChannels(); ++channel)
+   /* for (int channel = 0; channel < getNumInputChannels(); ++channel)
     {
         float* channelData = buffer.getWritePointer (channel);
 
         // ..do something to the data...
-    }
+    }*/
+    buffer.applyGain(gain);
 }
 
 //==============================================================================
 bool NebuloModAudioProcessor::hasEditor() const
 {
-    return true; // (change this to false if you choose to not supply an editor)
+    return false; // (change this to false if you choose to not supply an editor)
 }
 
 AudioProcessorEditor* NebuloModAudioProcessor::createEditor()
