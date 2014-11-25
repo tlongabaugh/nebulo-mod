@@ -11,4 +11,17 @@
 
 #include <stdio.h>
 
+#define BUFFER_SIZE         2048
+
+class LFOWaveform
+{
+public:
+    // Initialize our buffer to write samples from table buffer
+    void initLFOBuffer(void);
+    // Write to buffer
+    bool writeBuffer(int *buf);
+    // Translate into a usable waveform
+    bool transformLFO(int *buf);
+};
+
 #endif /* defined(__NebuloMod__LFOWaveformGenerator__) */

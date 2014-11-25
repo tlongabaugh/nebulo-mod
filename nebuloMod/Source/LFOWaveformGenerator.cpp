@@ -14,3 +14,22 @@
  */
 
 #include "LFOWaveformGenerator.h"
+
+// Initialize our buffer to write samples from table buffer
+void LFOWaveform::initLFOBuffer(void)
+{
+    
+}
+
+// Write to buffer
+bool LFOWaveform::writeBuffer(int *buf)
+{
+    // default return
+    return false;
+}
+
+// Translate into a usable waveform
+bool LFOWaveform::transformLFO(int *buf)
+{
+    
+}
