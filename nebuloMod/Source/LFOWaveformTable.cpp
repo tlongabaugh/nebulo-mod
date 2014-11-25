@@ -64,6 +64,9 @@ bool LFOTable::movePointOne(int point, tableData *userData)
     if (point != data->pointOne)
     {
         data->pointOne = point;
+        
+        // Set the point in tableBuf
+        tableBuf[512] = data->pointOne;
         return true;
     }
     
@@ -79,6 +82,9 @@ bool LFOTable::movePointTwo(int point, tableData *userData)
     if (point != data->pointTwo)
     {
         data->pointTwo = point;
+        
+        // Set the point in tableBuf
+        tableBuf[1536] = data->pointTwo;
         return true;
     }
     
@@ -87,7 +93,7 @@ bool LFOTable::movePointTwo(int point, tableData *userData)
 }
 
 // Manipulate Graph (uses table buffer to draw graph)
-void LFOTable::drawGraph(int *graph)
+void LFOTable::drawGraph(void)
 {
     // Use tableBuf info to draw the graph
     // Interact with GUI here
@@ -103,7 +109,14 @@ void LFOTable::drawGraph(int *graph)
 }
 
 // Redraw graph when needed (callback everytime a change is detected/maybe only need drawGraph)
-void LFOTable::redrawGraph(int *graph)
+void LFOTable::redrawGraph(int pointOne, int pointTwo, tableData *userData)
 {
-    
+    tableData *data = userData;
+
+    // Move Points
+    movePointOne(pointOne, data);
+    movePointTwo(pointTwo, data);
+
+    // Redraw the graph
+    drawGraph();
 }

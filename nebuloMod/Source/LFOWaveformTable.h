@@ -43,9 +43,9 @@ public:
     bool movePointOne(int point, tableData *userData);
     bool movePointTwo(int point, tableData *userData);
     // Manipulate Graph (uses table buffer to draw graph)
-    void drawGraph(int *graph);
+    void drawGraph(void);
     // Redraw graph when needed (callback everytime a change is detected/maybe only need drawGraph)
-    void redrawGraph(int *graph);
+    void redrawGraph(int pointOne, int pointTwo, tableData *userData);
 };
 
 #endif /* defined(__NebuloMod__LFOWaveformTable__) */
