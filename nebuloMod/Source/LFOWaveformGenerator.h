@@ -13,13 +13,16 @@
 
 #define BUFFER_SIZE         2048
 
+// Global Variables
+int lfoBuf[BUFFER_SIZE];
+
 class LFOWaveform
 {
 public:
     // Initialize our buffer to write samples from table buffer
     void initLFOBuffer(void);
     // Write to buffer
-    bool writeBuffer(int *buf);
+    bool writeBuffer(void);
     // Translate into a usable waveform
     bool transformLFO(int *buf);
 };

@@ -12,20 +12,36 @@
 #include <stdio.h>
 
 #define BUFFER_SIZE         2048
+#define TABLE_SIZE          BUFFER_SIZE
+#define SAMPLE_RATE         44100
+
+// LFO Data
+typedef struct {
+    float frequency;
+} lfoData;
+
+// Table Data
+typedef struct {
+    int pointOne;
+    int pointTwo;
+} tableData;;
+
+// Table Buffer
+int tableBuf[BUFFER_SIZE];
 
 class LFOTable
 {
 public:
     // Initialize our table buffer
-    void initTableBuffer(int *buf);
+    void initTableBuffer(int *buf, lfoData *userData);
     // Initialize our waveform graph/table
     void initGraph(int *graph);
     
     // Move test points to draw waveform; returns bool if changed;
     // IF true, redraw graph and refill buffer
     // O/W, don't redraw/don't refill buffer
-    bool movePointOne(int point);
-    bool movePointTwo(int point);
+    bool movePointOne(int point, tableData *userData);
+    bool movePointTwo(int point, tableData *userData);
     // Manipulate Graph (uses table buffer to draw graph)
     void drawGraph(int *graph);
     // Redraw graph when needed (callback everytime a change is detected/maybe only need drawGraph)

@@ -14,16 +14,33 @@
  */
 
 #include "LFOWaveformGenerator.h"
+#include "LFOWaveformTable.h"
 
 // Initialize our buffer to write samples from table buffer
 void LFOWaveform::initLFOBuffer(void)
 {
-    
+    int i;
+
+    // Initialize Buffer to 0
+    for (i = 0; i < BUFFER_SIZE; i++)
+    {
+        lfoBuf[i] = 0;
+    }
 }
 
 // Write to buffer
-bool LFOWaveform::writeBuffer(int *buf)
+bool LFOWaveform::writeBuffer(void)
 {
+    int i;
+    
+    // Write to buffer
+    for (i = 0; i < BUFFER_SIZE; i++)
+    {
+        lfoBuf[i] = tableBuf[i];
+    
+        return true;
+    }
+    
     // default return
     return false;
 }
@@ -31,5 +48,6 @@ bool LFOWaveform::writeBuffer(int *buf)
 // Translate into a usable waveform
 bool LFOWaveform::transformLFO(int *buf)
 {
-    
+    // default return
+    return false;
 }
