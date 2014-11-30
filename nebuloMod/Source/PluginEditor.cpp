@@ -19,6 +19,16 @@ NebuloModAudioProcessorEditor::NebuloModAudioProcessorEditor (NebuloModAudioProc
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
     setSize (600, 450);
+    
+    gainSlider.setSliderStyle (Slider::LinearVertical);
+    gainSlider.setRange(0.0, 1.0, 0.01);
+    gainSlider.setTextBoxStyle (Slider::NoTextBox, false, 90, 0);
+    gainSlider.setPopupDisplayEnabled (true, this);
+    gainSlider.setTextValueSuffix(" Volume");
+    gainSlider.setValue(1.0);
+    
+    addAndMakeVisible(gainSlider);
+    gainSlider.addListener(this);
 }
 
 NebuloModAudioProcessorEditor::~NebuloModAudioProcessorEditor()
@@ -32,11 +42,18 @@ void NebuloModAudioProcessorEditor::paint (Graphics& g)
 
     g.setColour (Colours::black);
     g.setFont (26.0f);
-    g.drawFittedText ("Tom and Ryan make DOPE plug-ins!", getLocalBounds(), Justification::centred, 1);
+    g.drawFittedText ("Tom and Ryan make DOPE plug-ins! (This one controls gain)", getLocalBounds(), Justification::centred, 1);
 }
 
 void NebuloModAudioProcessorEditor::resized()
 {
     // This is generally where you'll want to lay out the positions of any
     // subcomponents in your editor..
+    
+    gainSlider.setBounds(300, 300, 20, 100);
+}
+
+void NebuloModAudioProcessorEditor::sliderValueChanged(Slider* slider)
+{
+    processor.gain = gainSlider.getValue();
 }
