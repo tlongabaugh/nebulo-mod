@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<FILTERGRAPH>
+  <FILTER uid="1" x="0.5" y="0.1" uiLastX="" uiLastY="">
+    <PLUGIN name="Audio Input" descriptiveName="" format="Internal" category="I/O devices"
+            manufacturer="Raw Material Software" version="1.0" file="" uid="246006c0"
+            isInstrument="0" fileTime="0" numInputs="0" numOutputs="2" isShell="0"/>
+    <STATE>0.</STATE>
+  </FILTER>
+  <FILTER uid="2" x="0.25" y="0.1" uiLastX="" uiLastY="">
+    <PLUGIN name="Midi Input" descriptiveName="" format="Internal" category="I/O devices"
+            manufacturer="Raw Material Software" version="1.0" file="" uid="cb5fde0b"
+            isInstrument="0" fileTime="0" numInputs="0" numOutputs="0" isShell="0"/>
+    <STATE>0.</STATE>
+  </FILTER>
+  <FILTER uid="3" x="0.5" y="0.9" uiLastX="" uiLastY="">
+    <PLUGIN name="Audio Output" descriptiveName="" format="Internal" category="I/O devices"
+            manufacturer="Raw Material Software" version="1.0" file="" uid="724248cb"
+            isInstrument="0" fileTime="0" numInputs="2" numOutputs="0" isShell="0"/>
+    <STATE>0.</STATE>
+  </FILTER>
+  <FILTER uid="4" x="0.45125" y="0.496296" uiLastX="358" uiLastY="177">
+    <PLUGIN name="NebuloMod" format="VST" category="Effect" manufacturer="FUboyz"
+            version="V1.0.0" file="/Users/tom/Library/Audio/Plug-Ins/VST/NebuloMod.vst"
+            uid="4e4d6f64" isInstrument="0" fileTime="149ff1c11b0" numInputs="2"
+            numOutputs="2" isShell="0"/>
+    <STATE>160.K41XCA.....ZCIjQ....A3TSuQF....Y....A.................................................................................................................................................................................</STATE>
+  </FILTER>
+  <CONNECTION srcFilter="1" srcChannel="0" dstFilter="4" dstChannel="0"/>
+  <CONNECTION srcFilter="1" srcChannel="1" dstFilter="4" dstChannel="1"/>
+  <CONNECTION srcFilter="4" srcChannel="0" dstFilter="3" dstChannel="0"/>
+  <CONNECTION srcFilter="4" srcChannel="1" dstFilter="3" dstChannel="1"/>
+</FILTERGRAPH>

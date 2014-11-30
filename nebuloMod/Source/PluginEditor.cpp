@@ -50,7 +50,7 @@ void NebuloModAudioProcessorEditor::resized()
     // This is generally where you'll want to lay out the positions of any
     // subcomponents in your editor..
     
-    gainSlider.setBounds(300, 300, 20, 100);
+    gainSlider.setBounds(300, 250, 20, 100);
 }
 
 void NebuloModAudioProcessorEditor::sliderValueChanged(Slider* slider)
