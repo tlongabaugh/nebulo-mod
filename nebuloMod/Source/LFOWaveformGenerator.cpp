@@ -36,11 +36,7 @@ bool LFOWaveform::writeBuffer(void)
     // Write to buffer
     for (i = 0; i < BUFFER_SIZE; i++)
     {
-<<<<<<< HEAD
         //lfoBuf[i] = tableBuf[i];
-=======
-        // lfoBuf[i] = tableBuf[i];
->>>>>>> e59fdcfe3435b97de20989c1d4f40106f0df1ec4
     
         return true;
     }
