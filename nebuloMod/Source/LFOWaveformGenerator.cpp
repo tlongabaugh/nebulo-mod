@@ -14,7 +14,7 @@
  */
 
 #include "LFOWaveformGenerator.h"
-#include "LFOWaveformTable.h"
+// #include "LFOWaveformTable.h"
 
 // Initialize our buffer to write samples from table buffer
 void LFOWaveform::initLFOBuffer(void)
@@ -36,7 +36,7 @@ bool LFOWaveform::writeBuffer(void)
     // Write to buffer
     for (i = 0; i < BUFFER_SIZE; i++)
     {
-        lfoBuf[i] = tableBuf[i];
+        // lfoBuf[i] = tableBuf[i];
     
         return true;
     }

@@ -120,3 +120,94 @@ void LFOTable::redrawGraph(int pointOne, int pointTwo, tableData *userData)
     // Redraw the graph
     drawGraph();
 }
+
+// Stock Waveform Generation
+float LFOTable::generateSine(lfoData *userData)
+{
+    float phase, sinSample = 0;
+    static float prev_phase;
+    lfoData *data = userData;
+    
+    phase = 2 * M_PI * data->frequency / SAMPLE_RATE + prev_phase;
+    sinSample = sin(phase);
+    
+    if (phase > (2 * M_PI))
+    {
+        phase -= (2 * M_PI);
+    }
+    
+    prev_phase = phase;
+    
+    return sinSample;
+}
+
+float LFOTable::generateTriangle(lfoData *userData)
+{
+    static float triSample;
+    static float counter = 1;
+    lfoData *data = userData;
+    float T = SAMPLE_RATE / data->frequency;
+    
+    if (counter == 1)
+    {
+        triSample += 2./T;
+    }
+    else
+    {
+        triSample -= 2./T;
+    }
+    
+    if (triSample >= 1)
+    {
+        counter = 0;
+    }
+    else if (triSample <= -1)
+    {
+        counter = 1;
+    }
+    
+    return triSample;
+}
+
+float LFOTable::generateSawtooth(lfoData *userData)
+{
+    static float sawSample;
+    lfoData *data = userData;
+    float T = SAMPLE_RATE / data->frequency;
+    
+    sawSample += 2./T;
+    
+    if (sawSample >= 1)
+    {
+        sawSample -= 2;
+    }
+    
+    return sawSample;
+}
+
+float LFOTable::generateSquare(lfoData *userData)
+{
+    float sqrSample, phase;
+    static float prev_phase;
+    lfoData *data = userData;
+    
+    phase = 2 * M_PI * data->frequency / SAMPLE_RATE + prev_phase;
+    sqrSample = sin(phase);
+    
+    if (sqrSample > 0)
+    {
+        sqrSample = 1;
+    }
+    else
+    {
+        sqrSample = -1;
+    }
+    if (phase > (2 * M_PI))
+    {
+        phase -= (2 * M_PI);
+    }
+    
+    prev_phase = phase;
+    
+    return sqrSample;
+}

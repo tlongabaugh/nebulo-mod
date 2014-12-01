@@ -46,6 +46,12 @@ public:
     void drawGraph(void);
     // Redraw graph when needed (callback everytime a change is detected/maybe only need drawGraph)
     void redrawGraph(int pointOne, int pointTwo, tableData *userData);
+    
+    // Stock Waveform Generation
+    float generateSine(lfoData *userData);
+    float generateTriangle(lfoData *userData);
+    float generateSawtooth(lfoData *userData);
+    float generateSquare(lfoData *userData);
 };
 
 #endif /* defined(__NebuloMod__LFOWaveformTable__) */
