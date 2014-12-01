@@ -26,9 +26,6 @@ typedef struct {
     int pointTwo;
 } tableData;;
 
-// Table Buffer
-int tableBuf[BUFFER_SIZE];
-
 class LFOTable
 {
 public:
@@ -46,6 +43,9 @@ public:
     void drawGraph(void);
     // Redraw graph when needed (callback everytime a change is detected/maybe only need drawGraph)
     void redrawGraph(int pointOne, int pointTwo, tableData *userData);
+    
+    // Table Buffer
+    int tableBuf[BUFFER_SIZE];
 };
 
 #endif /* defined(__NebuloMod__LFOWaveformTable__) */
