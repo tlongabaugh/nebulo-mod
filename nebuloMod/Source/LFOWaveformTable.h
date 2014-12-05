@@ -26,9 +26,6 @@ typedef struct {
     int pointTwo;
 } tableData;;
 
-// Table Buffer
-int tableBuf[BUFFER_SIZE];
-
 class LFOTable
 {
 public:
@@ -52,6 +49,6 @@ public:
     float generateTriangle(lfoData *userData);
     float generateSawtooth(lfoData *userData);
     float generateSquare(lfoData *userData);
-};
+
 
 #endif /* defined(__NebuloMod__LFOWaveformTable__) */
