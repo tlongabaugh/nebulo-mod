@@ -103,7 +103,7 @@ protected:
     // Flanger Methods
     void setDepth(float depth);
     void setRate(float rate);
-    void setLFO(float lfo);
+    void setLFO(float lfo, float waveform);
     void setResonance(float resonance);
     void setManualControl(float manCtrl);
     void setMix(float mix);
@@ -113,6 +113,7 @@ protected:
     float paramDepth;
     float paramRate;
     float paramLFO;
+    float paramLFOWaveform;
     float paramResonance;
     float paramManCtrl;
     float paramMix;
@@ -122,6 +123,7 @@ protected:
     double depth;
     double rate;
     double lfo;
+    double lfoWaveform;
     double resonance;
     double manCtrl;
     double mix;
