@@ -11,6 +11,7 @@
 
 #include <stdio.h>
 
+// Global Definitions
 #define SAMPLE_RATE         44100
 #define INIT_LFO_FREQ       40
 // BSZ is 1/5 of a second at 44100 Hz sample rate/must be power of 2
@@ -99,6 +100,7 @@ class Flanger
     ~Flanger();
     
 protected:
+    // Flanger Methods
     void setDepth(float depth);
     void setRate(float rate);
     void setLFO(float lfo);
