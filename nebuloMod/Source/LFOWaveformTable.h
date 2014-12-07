@@ -10,6 +10,7 @@
 #define __NebuloMod__LFOWaveformTable__
 
 #include <stdio.h>
+#include <math.h>
 
 #define BUFFER_SIZE         2048
 #define TABLE_SIZE          BUFFER_SIZE
@@ -29,6 +30,9 @@ typedef struct {
 class LFOTable
 {
 public:
+    
+    int tableBuf[TABLE_SIZE];
+    
     // Initialize our table buffer
     void initTableBuffer(int *buf, lfoData *userData);
     // Initialize our waveform graph/table
@@ -49,6 +53,6 @@ public:
     float generateTriangle(lfoData *userData);
     float generateSawtooth(lfoData *userData);
     float generateSquare(lfoData *userData);
-}
+};
 
 #endif /* defined(__NebuloMod__LFOWaveformTable__) */
