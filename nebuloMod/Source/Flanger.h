@@ -46,8 +46,6 @@ enum
     kMixStereoBoth,
 };
 
-class Flanger;
-
 // For future development for presets
 /*
 class FlangerEffect
