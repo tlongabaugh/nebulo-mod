@@ -12,6 +12,8 @@
 #define PLUGINPROCESSOR_H_INCLUDED
 
 #include "../JuceLibraryCode/JuceHeader.h"
+#include "Flanger.h"
+#include "Phaser.h"
 
 
 //==============================================================================
@@ -68,6 +70,9 @@ public:
     float gain;
 
 private:
+    Flanger flanger;
+    Phaser phaser;
+    
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (NebuloModAudioProcessor)
 };
