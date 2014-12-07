@@ -16,7 +16,6 @@
  */
 
 #include "LFOWaveformTable.h"
-#include <math.h>
 
 // Initialize our table buffer
 void LFOTable::initTableBuffer(int *buf, lfoData *userData)
