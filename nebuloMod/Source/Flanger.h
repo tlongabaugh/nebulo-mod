@@ -93,6 +93,7 @@ public:
 
 class Flanger
 {
+public:
     // Constructor
     Flanger();              // put parameters in here for the constructor
     ~Flanger();
