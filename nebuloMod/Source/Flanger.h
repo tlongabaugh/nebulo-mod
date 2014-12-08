@@ -10,6 +10,10 @@
 #define __NebuloMod__Flanger__
 
 #include <stdio.h>
+#include <math.h>
+#include <stdlib.h>
+#include <string.h>
+#include "../JuceLibraryCode/JuceHeader.h"
 
 // Global Definitions
 #define SAMPLE_RATE         44100
@@ -20,6 +24,7 @@
 #define PIN(n, min, max)    ((n) > (max) ? max : ((n) < (min) ? (min) : (n)))
 #define MODF(n, i, f)       ((i) = (int)(n), (f) = (n) - (double)(i))
 
+/*
 // Define the Globals, Parameters, and Variables needed for the Flanger
 enum
 {
@@ -34,7 +39,8 @@ enum
     kNumParams = 6,
     kNumMixModes = 6,
 };
-
+*/
+/*
 // Mix Modes to enable Mono/Stereo outputs
 enum
 {
@@ -45,7 +51,7 @@ enum
     kMixStereoMinus,
     kMixStereoBoth,
 };
-
+*/
 // For future development for presets
 /*
 class FlangerEffect
@@ -98,46 +104,60 @@ public:
     Flanger();              // put parameters in here for the constructor
     ~Flanger();
     
+    // Global Sound Properties
+    double *input_buffer;
+    double *output_buffer;
+    
+    // Flanger Parameters
+    enum Params
+    {
+        depth,
+        rate,
+        lfowaveform,
+        resonance,
+        mix,
+    };
+    
+    // Hold the Parameters
+    typedef struct Parameters
+    {
+        Parameters() noexcept
+        : depth(0.5f),
+          rate(0.5f),
+          lfoWaveform(0),
+          resonance(0.5f),
+          mix(0.5f)
+        {}
+        
+        float depth;
+        float rate;
+        // float lfo;
+        int lfoWaveform;
+        float resonance;
+        // float manControl;
+        float mix;
+    } Parameters;
+
+    void processMonoSamples(float* const samples, const int numSamples);
+    void processStereoSamples(float* const left, float* const right, const int numSamples);
+    Parameters& getParameters(void);
+    void setParameters(const Parameters& newParam);
+    void setSampleRate (const double sampleRate);
+    void flush(void);
+    
+private:
+    Parameters params;
+    
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Flanger);
+    
+    
 protected:
     // Flanger Methods
     void setDepth(float depth);
     void setRate(float rate);
-    void setLFO(float lfo, float waveform);
+    void setLFOWaveform(int waveform);
     void setResonance(float resonance);
-    void setManualControl(float manCtrl);
     void setMix(float mix);
-    void setMixMode(float mode);
-    
-    // Parameters (Scaled)
-    float paramDepth;
-    float paramRate;
-    float paramLFO;
-    float paramLFOWaveform;
-    float paramResonance;
-    float paramManCtrl;
-    float paramMix;
-    float paramMixMode;
-    
-    // Actual Values (not scaled)
-    double depth;
-    double rate;
-    double lfo;
-    double lfoWaveform;
-    double resonance;
-    double manCtrl;
-    double mix;
-    double mixMode;
-    
-    // For sound
-    double *input_buffer;
-    double *output_buffer;
-    
-    // Output Mixing
-    double _mixLeftWet;
-    double _mixLeftDry;
-    double _mixRightWet;
-    double _mixRightDry;
-    bool _mixMono;
     
     // Control Filtering
     TwoPoleLowPassFilter *_delayControlFilter;

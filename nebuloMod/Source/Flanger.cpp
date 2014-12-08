@@ -8,40 +8,14 @@
 
 #include "Flanger.h"
 
-#include <math.h>
-#include <stdlib.h>
-#include <string.h>
-
 // Constructor
 Flanger::Flanger(void)
 {
-    // Setting Parameter Knobs/Sliders
-    paramDepth = 0.5f;
-    paramRate = 0.5f;
-    paramLFO = 0.5f;
-    paramLFOWaveform = 0;
-    paramResonance = 0.5f;
-    paramManCtrl = 0.5f;
-    paramMix = 0.5f;
-    // paramMixMode = 0.5f;
+    // Set Paramaters
+    setParameters(params);
     
-    // Actual Values (need to change numbers
-    depth = 0.5;
-    rate = 0.5;
-    lfo = 0.5;
-    lfoWaveform = 0;
-    resonance = 0.5;
-    manCtrl = 0.5;
-    mix = 0.5;
-    mixMode = 0;
-    
-    // Create Buffers
-    input_buffer = new double[BSZ];
-    output_buffer = new double[BSZ];
-    for (int i = 0; i < BSZ; i++)
-    {
-        input_buffer[i] = output_buffer[i] = 0.0;
-    }
+    // Set Sample Rate (44100 default)
+    setSampleRate(SAMPLE_RATE);
 }
 
 // Deconstructor
@@ -57,44 +31,77 @@ Flanger::~Flanger(void)
     }
 }
 
+// MONO AUDIO PROCESSING
+void Flanger::processMonoSamples(float* const samples, const int numSamples)
+{
+    // Buffer size is 2048
+    for(int i = 0; i < 2048; i++)
+    {
+        
+    }
+}
+
+// STEREO AUDIO PROCESSING
+void Flanger::processStereoSamples(float* const left, float* const right, const int numSamples)
+{
+    // Buffer size is 2048
+    for (int i = 0; i < 2048; i++)
+    {
+        
+    }
+}
+
+// Get the parameters of the flanger
+Flanger::Parameters& Flanger::getParameters(void)
+{
+    return params;
+}
+
+// Set the parameters of the flanger
+void Flanger::setParameters(const Parameters& newParam)
+{
+    params = newParam;
+}
+
+// Set the sample rate of the flanger
+void Flanger::setSampleRate (const double sampleRate)
+{
+    
+}
+
+// flush the buffers and parameters once we exit DAW
+void Flanger::flush(void)
+{
+    input_buffer = NULL;
+    output_buffer = NULL;
+}
+
 // Set Depth
 void Flanger::setDepth(float depth)
 {
-    
+    params.depth = depth;
 }
 
 // Set Rate
 void Flanger::setRate(float rate)
 {
-    
+    params.rate = rate;
 }
 
 // Set LFO
-void Flanger::setLFO(float lfo, float waveform)
+void Flanger::setLFOWaveform(int waveform)
 {
-    
+    params.lfoWaveform = waveform;
 }
 
 // Set Resonance
 void Flanger::setResonance(float resonance)
 {
-    
-}
-
-// Set Manual Control
-void Flanger::setManualControl(float manCtrl)
-{
-    
+    params.resonance = resonance;
 }
 
 // Set Mix
 void Flanger::setMix(float mix)
 {
-    
-}
-
-// Set Mix Mode
-void Flanger::setMixMode(float mode)
-{
-    
+    params.mix = mix;
 }
