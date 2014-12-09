@@ -130,6 +130,14 @@ void NebuloModAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBl
 {
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
+    
+    // set Volume
+    mainVolume = 0.5;
+    
+    // Set Our Flanger Sample Rate
+    flanger.setSampleRate(getSampleRate());
+    
+    
 }
 
 void NebuloModAudioProcessor::releaseResources()
@@ -158,6 +166,37 @@ void NebuloModAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffe
         // ..do something to the data...
     }*/
     buffer.applyGain(gain);
+  
+    int sampleCount = buffer.getNumSamples();
+    
+    // Get samples from left channel
+    float *leftChannel = buffer.getWritePointer(0);
+    
+    // filters?
+    
+    // For effects...
+    if (getNumInputChannels() == 2)
+    {
+        // Get samples from right channel
+        float *rightChannel = buffer.getWritePointer(1);
+        
+        flanger.processStereoSamples(leftChannel, rightChannel, sampleCount);
+    }
+    else if (getNumInputChannels() == 1)
+    {
+        flanger.processMonoSamples(leftChannel, sampleCount);
+    }
+    
+    // Process naudio
+    for (int channel = 0; channel < getNumInputChannels(); ++channel)
+    {
+        float* channelData = buffer.getWritePointer(channel);
+        
+        for (int i =0; i < sampleCount; i++)
+        {
+            channelData[i] = mainVolume * channelData[i];
+        }
+    }
 }
 
 //==============================================================================
