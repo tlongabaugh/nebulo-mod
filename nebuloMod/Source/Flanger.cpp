@@ -12,7 +12,7 @@
 Flanger::Flanger(void)
 {
     // Set Paramaters
-    setParameters(params);
+    setParameters(Parameters());
     
     // Set Sample Rate (44100 default)
     setSampleRate(SAMPLE_RATE);
@@ -34,20 +34,32 @@ Flanger::~Flanger(void)
 // MONO AUDIO PROCESSING
 void Flanger::processMonoSamples(float* const samples, const int numSamples)
 {
-    // Buffer size is 2048
-    for(int i = 0; i < 2048; i++)
+    // Make sure left channel is not NULL
+    jassert (samples != nullptr);
+    
+    for (int i = 0; i < numSamples; ++i)
     {
+        const float input = samples[i] * gain;
+        float output = 0;
         
+        samples[i] = output * 1 * wet + samples[i] * dry;
     }
 }
 
 // STEREO AUDIO PROCESSING
 void Flanger::processStereoSamples(float* const left, float* const right, const int numSamples)
 {
-    // Buffer size is 2048
-    for (int i = 0; i < 2048; i++)
+    // Make sure left and right channels are not NULL
+    jassert (left != nullptr && right != nullptr);
+    
+    // Process stereo samples
+    for (int i = 0; i < numSamples; ++i)
     {
+        const float input = (left[i] + right[i]) * gain;
+        float outL = 0, outR = 0;
         
+        left[i] = outL * wet + left[i] * dry;
+        left[i] = outR * wet + right[i] * dry;
     }
 }
 
@@ -66,7 +78,8 @@ void Flanger::setParameters(const Parameters& newParam)
 // Set the sample rate of the flanger
 void Flanger::setSampleRate (const double sampleRate)
 {
-    
+    // Make sure sample rate is above 0 (NO NEGATIVE VALUES ACCEPTED)
+    jassert (sampleRate > 0);
 }
 
 // flush the buffers and parameters once we exit DAW
@@ -74,34 +87,4 @@ void Flanger::flush(void)
 {
     input_buffer = NULL;
     output_buffer = NULL;
-}
-
-// Set Depth
-void Flanger::setDepth(float depth)
-{
-    params.depth = depth;
-}
-
-// Set Rate
-void Flanger::setRate(float rate)
-{
-    params.rate = rate;
-}
-
-// Set LFO
-void Flanger::setLFOWaveform(int waveform)
-{
-    params.lfoWaveform = waveform;
-}
-
-// Set Resonance
-void Flanger::setResonance(float resonance)
-{
-    params.resonance = resonance;
-}
-
-// Set Mix
-void Flanger::setMix(float mix)
-{
-    params.mix = mix;
 }

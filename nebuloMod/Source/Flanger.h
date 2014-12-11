@@ -147,18 +147,12 @@ public:
     
 private:
     Parameters params;
+    float gain, wet, dry;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Flanger);
     
     
 protected:
-    // Flanger Methods
-    void setDepth(float depth);
-    void setRate(float rate);
-    void setLFOWaveform(int waveform);
-    void setResonance(float resonance);
-    void setMix(float mix);
-    
     // Control Filtering
     TwoPoleLowPassFilter *_delayControlFilter;
     TwoPoleLowPassFilter *_mixControlFilter;
