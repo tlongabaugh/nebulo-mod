@@ -79,9 +79,7 @@ private:
     
 // Added by Ryan Foo
 public:
-    // global gui variables
-    float mainVolume;
-    
+    // global gui variables    
     float depthVal;
     float rateVal;
     int lfoWaveformVal;

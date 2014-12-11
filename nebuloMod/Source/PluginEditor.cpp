@@ -80,10 +80,10 @@ void NebuloModAudioProcessorEditor::resized()
     // gainSlider.setBounds(300, 250, 20, 100);
     
     // Knobs!!!
-    depthSlider.setBounds(150, 150, 50, 50);
-    rateSlider.setBounds(250, 150, 50, 50);
-    resonanceSlider.setBounds(350, 150, 50, 50);
-    mixSlider.setBounds(450, 150, 50, 50);
+    depthSlider.setBounds(125, 150, 50, 50);
+    rateSlider.setBounds(225, 150, 50, 50);
+    resonanceSlider.setBounds(325, 150, 50, 50);
+    mixSlider.setBounds(425, 150, 50, 50);
 }
 
 void NebuloModAudioProcessorEditor::sliderValueChanged(Slider* slider)

@@ -143,12 +143,14 @@ void NebuloModAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBl
     // initialisation that you need..
     
     // set Volume
-    mainVolume = 0.5;
+    mixVal = 0.5;
+    depthVal= 0.5;
+    rateVal = 0.5;
+    resonanceVal = 0.5;
+    lfoWaveformVal = 0;
     
     // Set Our Flanger Sample Rate
     flanger.setSampleRate(getSampleRate());
-    
-    
 }
 
 void NebuloModAudioProcessor::releaseResources()
@@ -205,7 +207,7 @@ void NebuloModAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffe
         
         for (int i =0; i < sampleCount; i++)
         {
-            channelData[i] = mainVolume * channelData[i];
+            channelData[i] = mixVal * channelData[i];
         }
     }
 }
