@@ -11,6 +11,24 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
+// Thanks Uri!!! So helpful man!
+void NebuloModAudioProcessorEditor::createSlider(Slider &slider, Slider::SliderStyle style, double defaultVal, double min, double max, double incr, std::string name) {
+    // these define the parameters of our slider object
+    slider.setSliderStyle(style);
+    slider.setRange(min, max, incr);
+    slider.setTextBoxStyle (Slider::NoTextBox, false, 90, 0);
+    slider.setPopupDisplayEnabled (true, this);
+    slider.setTextValueSuffix(name);
+    slider.setValue(defaultVal);
+    
+    // set this class as the listener for the slider's callback function
+    slider.addListener(this);
+    
+    // this function adds the slider to the editor
+    addAndMakeVisible(&slider);
+    
+    slider.setComponentID(name);
+}
 
 //==============================================================================
 NebuloModAudioProcessorEditor::NebuloModAudioProcessorEditor (NebuloModAudioProcessor& p)
@@ -19,7 +37,7 @@ NebuloModAudioProcessorEditor::NebuloModAudioProcessorEditor (NebuloModAudioProc
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
     setSize (600, 450);
-    
+    /*
     gainSlider.setSliderStyle (Slider::LinearVertical);
     gainSlider.setRange(0.0, 1.0, 0.01);
     gainSlider.setTextBoxStyle (Slider::NoTextBox, false, 90, 0);
@@ -29,6 +47,15 @@ NebuloModAudioProcessorEditor::NebuloModAudioProcessorEditor (NebuloModAudioProc
     
     addAndMakeVisible(gainSlider);
     gainSlider.addListener(this);
+     */
+    
+    // Create dah sliders!!!
+    createSlider(depthSlider, Slider::Rotary, processor.depthVal, 0.0, 1.0, 0.01, "Depth");
+    createSlider(rateSlider, Slider::Rotary, processor.rateVal, 0.0, 1.0, 0.01, "Rate");
+    createSlider(resonanceSlider, Slider::Rotary, processor.resonanceVal, 0.0, 1.0, 0.01, "Rate");
+    
+    createSlider(mixSlider, Slider::Rotary, processor.mixVal, 0.0, 1.0, 0.01, "Volume");
+    
 }
 
 NebuloModAudioProcessorEditor::~NebuloModAudioProcessorEditor()
@@ -50,10 +77,31 @@ void NebuloModAudioProcessorEditor::resized()
     // This is generally where you'll want to lay out the positions of any
     // subcomponents in your editor..
     
-    gainSlider.setBounds(300, 250, 20, 100);
+    // gainSlider.setBounds(300, 250, 20, 100);
+    
+    // Knobs!!!
+    depthSlider.setBounds(150, 150, 50, 50);
+    rateSlider.setBounds(250, 150, 50, 50);
+    resonanceSlider.setBounds(350, 150, 50, 50);
+    mixSlider.setBounds(450, 150, 50, 50);
 }
 
 void NebuloModAudioProcessorEditor::sliderValueChanged(Slider* slider)
 {
-    processor.gain = gainSlider.getValue();
+    // processor.gain = gainSlider.getValue();
+    
+    if (slider->getComponentID().compare("Mix") == 0) {
+        processor.mixVal = slider->getValue();
+    }
+    else if (slider->getComponentID().compare("Depth") == 0) {
+        processor.depthVal = slider->getValue();
+    }
+    else if (slider->getComponentID().compare("Rate") == 0) {
+        processor.rateVal = slider->getValue();
+    }
+    else if (slider->getComponentID().compare("Resonance") == 0) {
+        processor.resonanceVal = slider->getValue();
+    }
+    
+    processor.updateFlanger();
 }

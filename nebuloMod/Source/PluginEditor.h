@@ -35,7 +35,15 @@ private:
     // access the processor object that created it.
     NebuloModAudioProcessor& processor;
     
+    void createSlider(Slider &slider, Slider::SliderStyle style, double defaultVal,
+                      double min, double max, double incr, std::string name);
+    
     Slider gainSlider;
+    
+    Slider depthSlider;
+    Slider rateSlider;
+    Slider resonanceSlider;
+    Slider mixSlider;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (NebuloModAudioProcessorEditor)
 };

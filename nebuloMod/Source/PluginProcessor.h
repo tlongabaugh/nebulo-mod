@@ -71,7 +71,7 @@ public:
 
 private:
     // Added by Ryan Foo and Tom Longabaugh
-    Flanger flanger;
+    // Flanger flanger;
     // Phaser phaser;
 
     //==============================================================================
@@ -79,7 +79,19 @@ private:
     
 // Added by Ryan Foo
 public:
-    int mainVolume;
+    // global gui variables
+    float mainVolume;
+    
+    float depthVal;
+    float rateVal;
+    int lfoWaveformVal;
+    float resonanceVal;
+    float mixVal;
+    
+    Flanger flanger;
+    
+    // GUI update functions
+    void updateFlanger(void);
 };
 
 

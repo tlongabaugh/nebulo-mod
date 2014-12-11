@@ -125,6 +125,17 @@ void NebuloModAudioProcessor::changeProgramName (int index, const String& newNam
 {
 }
 
+// GUI elements implemented by Ryan Foo
+void NebuloModAudioProcessor::updateFlanger(void)
+{
+    Flanger::Parameters flangerParams = flanger.getParameters();
+    flangerParams.depth = depthVal;
+    flangerParams.rate = rateVal;
+    flangerParams.lfoWaveform = lfoWaveformVal;
+    flangerParams.resonance = resonanceVal;
+    flangerParams.mix = mixVal;
+}
+
 //==============================================================================
 void NebuloModAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
