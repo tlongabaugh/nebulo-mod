@@ -77,11 +77,10 @@ NebuloModAudioProcessorEditor::NebuloModAudioProcessorEditor (NebuloModAudioProc
     // Backgrounds
     //fxBackground->setColour(Colours::chocolate);
     //fxBackground->drawRoundedRectangle(0, 0, 300, 300, 5, 5);
-    // fxBackground->fillRect(<#const Rectangle<int> &rectangle#>)
     
     
     // LFO PARAMETER SIDE
-    
+
     // Menu
     lfoMenu.setText("Select LFO Waveform");
     lfoMenu.addItem("Sine", 1);
@@ -93,6 +92,8 @@ NebuloModAudioProcessorEditor::NebuloModAudioProcessorEditor (NebuloModAudioProc
     addAndMakeVisible(&lfoMenu);
     lfoMenu.addListener(this);
     
+    // LFO Wavetable
+    
 }
 
 NebuloModAudioProcessorEditor::~NebuloModAudioProcessorEditor()
@@ -102,11 +103,29 @@ NebuloModAudioProcessorEditor::~NebuloModAudioProcessorEditor()
 //==============================================================================
 void NebuloModAudioProcessorEditor::paint (Graphics& g)
 {
-    g.fillAll (Colours::wheat);
+    // Wavetable graph
+    Path waveRef;
+    waveRef.startNewSubPath(40, 260);
+    waveRef.lineTo(270, 260);
+    float dashes[] = {20, 10};
+    PathStrokeType (3.0f).createDashedStroke (waveRef, waveRef, dashes, 2);
+    
+    // Background
+    g.fillAll (Colours::khaki);
 
+    // Texts and Line Graph
     g.setColour (Colours::black);
     g.setFont (28.0f);
     g.drawFittedText ("Nebulo Mod", getLocalBounds(), Justification::bottomLeft, 1);
+    
+    // Backgrounds son!!!
+    g.setColour(Colours::ivory);
+    g.fillRect(320, 160, 370, 250);
+    g.fillRect(20, 160, 280, 250);
+    
+    // The line graph!!
+    g.setColour(Colours::black);
+    g.fillPath(waveRef);
 }
 
 void NebuloModAudioProcessorEditor::resized()

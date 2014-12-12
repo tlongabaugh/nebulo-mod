@@ -32,6 +32,8 @@ public:
     
     void sliderValueChanged (Slider* slider) override;
     void comboBoxChanged (ComboBox *comboBoxThatHasChanged) override;
+    
+    void initialize_glut(void);
 
 private:
     // This reference is provided as a quick way for your editor to
@@ -63,10 +65,10 @@ private:
     
     // Backgrounds
     //Graphics *fxBackground;
-    Label lfoBackground;
-    
+    // Label lfoBackground;
+
     // Wavetable
-    OpenGLContext waveTable;
+    // Graphics *waveTable;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (NebuloModAudioProcessorEditor)
 };
