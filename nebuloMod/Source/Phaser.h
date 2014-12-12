@@ -11,98 +11,81 @@
 #define __NebuloMod__Phaser__
 
 #include <stdio.h>
-#include "public.sdk/source/vst2.x/audioeffectx.h"
+#include <math.h>
+#include "../JuceLibraryCode/JuceHeader.h"
 
-#define	SAMPLE_RATE	44100
+#define SAMPLE_RATE 44100
 #define BOTTOM_FREQ 100
-#define M_PI 3.141592653589793
-#define M_PI_2 (M_PI/2.0)
 #define PIN(n,min,max) ((n) > (max) ? max : ((n) < (min) ? (min) : (n)))
 
-enum
-{
-    // Global
-    kNumPrograms = 8,
-    
-    // Parameters Tags
-    kRate = 0,
-    kWidth,
-    kFeedback,
-    kStages,
-    kMixMode,
-    
-    kNumParams
-};
-
-enum
-{
-    kMixMono,
-    kMixMonoMinus,
-    kMixWetLeft,
-    kMixWetRight,
-    kMixStereo
-};
-
-class APhaser;
 
 //------------------------------------------------------------------------
-class APhaserProgram
+class Phaser
 {
-    friend class APhaser;
 public:
-    APhaserProgram ();
-    APhaserProgram( double sweep, double width, double feedback, double stages, double mixMode, char *name );
-    ~APhaserProgram () {}
+    Phaser();
+    ~Phaser();
     
-private:
-    double paramSweepRate;
-    double paramWidth;
-    double paramFeedback;
-    double paramStages;
-    double paramMixMode;
-    char name[64];
-};
+    // Parameter enums
+    enum
+    {
+        kDepth,
+        kRate,
+        kLfowaveform,
+        kFeedback,
+        kMix,
+    };
+    
+    /* Holds the parameters used by the */
+    struct Parameters
+    {
+        Parameters() noexcept
+        : depth(1.0f),
+        mix(1.0f)
+        {}
+        
+        float depth;
+        float rate;
+        // float lfo;
+        int lfoWaveform;
+        // float manControl;
+        float mix;
+    };
+    
+    /* Returns the parameters for the phaser */
+    const Parameters& getParameters() const noexcept
+    {
+        return parameters;
+    };
+    
+    /* Apply new set of parameters to the phaser */
+    void setParameters (const Parameters& newParams);
+    
+    /* Sets the sample rate that the phaser will use. This needs to be
+     called before the process method */
+    void setSampleRate(const double sampleRate);
+    
+    /* Clear the phaser buffers */
+    void reset();
+    
+    void setRange(float freqMin, float freqMax );
+    
+    void setRate(float rate);
+    
+    //==============================================================================
+    /** Applies effect to two stereo channels of audio data. */
+    void processStereo (float* const left, float* const right, const int numSamples) noexcept;
+    
+    /** Applies effect single mono channel of audio data. */
+    void processMono (float* const samples, const int numSamples) noexcept;
+    
+    /* Processes one sample */
+    float processSingleSample (float newSample) noexcept;
 
-//------------------------------------------------------------------------
-class APhaser : public AudioEffectX
-{
-public:
-    APhaser (audioMasterCallback audioMaster);
-    ~APhaser ();
-    
-    //---from AudioEffect-----------------------
-    virtual void processReplacing (float** inputs, float** outputs, VstInt32 sampleFrames);
-    
-    virtual void setProgram (VstInt32 program);
-    virtual void setProgramName (char* name);
-    virtual void getProgramName (char* name);
-    virtual bool getProgramNameIndexed (VstInt32 category, VstInt32 index, char* text);
-    
-    virtual void setParameter (VstInt32 index, float value);
-    virtual float getParameter (VstInt32 index);
-    virtual void getParameterLabel (VstInt32 index, char* label);
-    virtual void getParameterDisplay (VstInt32 index, char* text);
-    virtual void getParameterName (VstInt32 index, char* text);
-    
-    virtual void resume ();
-    
-    virtual bool getEffectName (char* name);
-    virtual bool getVendorString (char* text);
-    virtual bool getProductString (char* text);
-    virtual VstInt32 getVendorVersion () { return 1000; }
-    
-    virtual VstPlugCategory getPlugCategory () { return kPlugCategEffect; }
-    
 protected:
-    void setRate (float v);
-    void setWidth (float v);
-    void setFeedback (float v);
-    void setStages (float v);
-    void setMixMode (float v);
-    void setSweep(void);
-    
-    APhaserProgram* pPrograms[kNumPrograms];
-    
+    void setDepth(float newDepth);
+    void setMix(float mix);
+/*
     float _paramSweepRate;		// 0.0-1.0 passed in
     float _paramWidth;			// ditto
     float _paramFeedback;		// ditto
@@ -116,8 +99,8 @@ protected:
     int	  _mixMode;				// mapped to supported mix modes
     
     double _wp;					// freq param for equation
-    double  _minwp;
-    double  _maxwp;
+    double _minwp;
+    double _maxwp;
     double _sweepFactor;		// amount to multiply the freq by with each sample
     
     // the all pass line
@@ -146,7 +129,45 @@ protected:
     double _mixLeftWet;
     double _mixLeftDry;
     double _mixRightWet;
-    double _mixRightDry;
+    double _mixRightDry;*/
+    
+private:
+
+    //A Simple Allpass Delay from From www.musicdsp.org/files/phaser.cpp
+    class AllpassDelay {
+    public:
+        AllpassDelay() : a1( 0.f ), zm1( 0.f )
+        {}
+        
+        void delayAmt(float delay){ //sample delay time
+            a1 = (1.f - delay) / (1.f + delay);
+        }
+        
+        float update(float newSample){
+            float y = newSample * - a1 + zm1;
+            zm1 = y * a1 + newSample;
+            
+            return y;
+        }
+    private:
+        float a1, zm1;
+    };
+    
+    AllpassDelay allPass[6];
+    Parameters parameters;
+    double currentSampleRate;
+
+    float depthMin;
+    float depthMax; //range
+    //float feedBack; //feedback
+    float lfoPhase;
+    float lfoInc;
+    float depth;
+    
+    float zm1;
+    
+    
+    //JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Phaser);
 };
 
 #endif /* defined(__NebuloMod__Phaser__) */
