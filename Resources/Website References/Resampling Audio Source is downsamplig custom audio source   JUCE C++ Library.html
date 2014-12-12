@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<!--[if IEMobile 7]><html class="iem7"  lang="en" dir="ltr"><![endif]-->
+<!--[if lte IE 6]><html class="lt-ie9 lt-ie8 lt-ie7"  lang="en" dir="ltr"><![endif]-->
+<!--[if (IE 7)&(!IEMobile)]><html class="lt-ie9 lt-ie8"  lang="en" dir="ltr"><![endif]-->
+<!--[if IE 8]><html class="lt-ie9"  lang="en" dir="ltr"><![endif]-->
+<!--[if (gte IE 9)|(gt IEMobile 7)]><!--><html  lang="en" dir="ltr" prefix="content: http://purl.org/rss/1.0/modules/content/ dc: http://purl.org/dc/terms/ foaf: http://xmlns.com/foaf/0.1/ og: http://ogp.me/ns# rdfs: http://www.w3.org/2000/01/rdf-schema# sioc: http://rdfs.org/sioc/ns# sioct: http://rdfs.org/sioc/types# skos: http://www.w3.org/2004/02/skos/core# xsd: http://www.w3.org/2001/XMLSchema#"><!--<![endif]-->
+
+<head>
+  <meta charset="utf-8" />
+<link rel="shortlink" href="http://www.juce.com/node/75445" />
+<link rel="shortcut icon" href="http://www.juce.com/sites/default/files/images/template/JUCE-icon.ico" type="image/vnd.microsoft.icon" />
+<link rel="canonical" href="http://www.juce.com/forum/topic/resampling-audio-source-downsamplig-custom-audio-source" />
+<meta name="description" content="I´ve made a custom audio source that takes data from a wave file and stores it in a buffer, when I connect it to a Audio Source Player and it sounds &quot;right&quot; but if I connect it first to an Resampling Audio Source i get a downsampled sound 
+ 
+This is the getNextAudioBlock method I am using:" />
+<meta content="Resampling Audio Source is downsamplig custom audio source" about="/forum/topic/resampling-audio-source-downsamplig-custom-audio-source" property="dc:title" />
+<meta about="/forum/topic/resampling-audio-source-downsamplig-custom-audio-source" property="sioc:num_replies" content="1" datatype="xsd:integer" />
+<meta name="generator" content="Drupal 7 (http://drupal.org)" />
+  <title>Resampling Audio Source is downsamplig custom audio source | JUCE C++ Library</title>
+
+      <meta name="MobileOptimized" content="width">
+    <meta name="HandheldFriendly" content="true">
+    <meta name="viewport" content="width=device-width">
+    <meta http-equiv="cleartype" content="on">
+
+  <style>@import url("http://www.juce.com/modules/system/system.base.css?ng0hpm");
+@import url("http://www.juce.com/modules/system/system.messages.css?ng0hpm");
+@import url("http://www.juce.com/modules/system/system.theme.css?ng0hpm");</style>
+<style>@import url("http://www.juce.com/modules/comment/comment.css?ng0hpm");
+@import url("http://www.juce.com/modules/field/theme/field.css?ng0hpm");
+@import url("http://www.juce.com/modules/node/node.css?ng0hpm");
+@import url("http://www.juce.com/modules/search/search.css?ng0hpm");
+@import url("http://www.juce.com/modules/user/user.css?ng0hpm");
+@import url("http://www.juce.com/sites/all/modules/extlink/extlink.css?ng0hpm");
+@import url("http://www.juce.com/sites/all/modules/views/css/views.css?ng0hpm");</style>
+<style>@import url("http://www.juce.com/sites/all/modules/ckeditor/ckeditor.css?ng0hpm");
+@import url("http://www.juce.com/sites/all/modules/ctools/css/ctools.css?ng0hpm");</style>
+<style>#sliding-popup.sliding-popup-bottom{background:#0779BF;}#sliding-popup .popup-content #popup-text h2,#sliding-popup .popup-content #popup-text p{color:#ffffff !important;}
+</style>
+<style>@import url("http://www.juce.com/sites/all/modules/eu-cookie-compliance/css/eu_cookie_compliance.css?ng0hpm");
+@import url("http://www.juce.com/sites/all/modules/lightbox2/css/lightbox.css?ng0hpm");
+@import url("http://www.juce.com/sites/all/libraries/superfish/css/superfish.css?ng0hpm");
+@import url("http://www.juce.com/sites/all/libraries/superfish/css/superfish-vertical.css?ng0hpm");
+@import url("http://www.juce.com/sites/all/libraries/superfish/css/superfish-navbar.css?ng0hpm");
+@import url("http://www.juce.com/sites/all/libraries/syntaxhighlighter_3.0.83/styles/shCore.css?ng0hpm");
+@import url("http://www.juce.com/sites/all/libraries/syntaxhighlighter_3.0.83/styles/shThemeDefault.css?ng0hpm");
+@import url("http://www.juce.com/sites/all/modules/advanced_forum/styles/naked/advanced-forum.naked.structure.css?ng0hpm");
+@import url("http://www.juce.com/sites/all/modules/advanced_forum/styles/silver_bells/advanced-forum.silver_bells.style.css?ng0hpm");
+@import url("http://www.juce.com/sites/all/modules/advanced_forum/styles/naked/advanced-forum.naked.images.css?ng0hpm");
+@import url("http://www.juce.com/sites/all/modules/advanced_forum/styles/silver_bells/advanced-forum.silver_bells.images.css?ng0hpm");
+@import url("http://www.juce.com/sites/all/libraries/superfish/style/white.css?ng0hpm");</style>
+<style>@import url("http://www.juce.com/sites/default/themes/jucetheme002/css/normalize.css?ng0hpm");
+@import url("http://www.juce.com/sites/default/themes/jucetheme002/css/wireframes.css?ng0hpm");
+@import url("http://www.juce.com/sites/default/themes/jucetheme002/css/layouts/responsive-sidebars.css?ng0hpm");
+@import url("http://www.juce.com/sites/default/themes/jucetheme002/css/tabs.css?ng0hpm");
+@import url("http://www.juce.com/sites/default/themes/jucetheme002/css/pages.css?ng0hpm");
+@import url("http://www.juce.com/sites/default/themes/jucetheme002/css/blocks.css?ng0hpm");
+@import url("http://www.juce.com/sites/default/themes/jucetheme002/css/navigation.css?ng0hpm");
+@import url("http://www.juce.com/sites/default/themes/jucetheme002/css/views-styles.css?ng0hpm");
+@import url("http://www.juce.com/sites/default/themes/jucetheme002/css/nodes.css?ng0hpm");
+@import url("http://www.juce.com/sites/default/themes/jucetheme002/css/comments.css?ng0hpm");
+@import url("http://www.juce.com/sites/default/themes/jucetheme002/css/forms.css?ng0hpm");
+@import url("http://www.juce.com/sites/default/themes/jucetheme002/css/fields.css?ng0hpm");
+@import url("http://www.juce.com/sites/default/themes/jucetheme002/css/users.css?ng0hpm");
+@import url("http://www.juce.com/sites/default/themes/jucetheme002/css/forum.css?ng0hpm");
+@import url("http://www.juce.com/sites/default/themes/jucetheme002/css/_juce.css?ng0hpm");
+@import url("http://www.juce.com/sites/default/themes/jucetheme002/css/print.css?ng0hpm");</style>
+  <script>window.google_analytics_uacct = "UA-19759318-1";</script>
+<script src="http://www.juce.com/sites/default/files/js/js_xAPl0qIk9eowy_iS9tNkCWXLUVoat94SQT48UBCFkyQ.js"></script>
+<script src="http://www.juce.com/sites/default/files/js/js_KCd8rbJYUruV1tRJnh4um34UYvyhlrSVCPR1jNko2h8.js"></script>
+<script src="http://www.juce.com/sites/default/files/js/js_WVjCOiwknmmPgeDA0ZKHWIyV_tjE928qUUb77qfMpQ4.js"></script>
+<script src="http://www.juce.com/sites/all/modules/lightbox2/js/lightbox.js?1417997019"></script>
+<script src="http://www.juce.com/sites/default/files/js/js_DVoCgnp56fhuq6bJHFi35Ib_mW6r38nAdjb7bTdPWGs.js"></script>
+<script>SyntaxHighlighter.defaults['gutter'] = false;SyntaxHighlighter.defaults['toolbar'] = false;</script>
+<script src="http://www.juce.com/sites/default/files/js/js_lgAAOlplEun7p_8Pb-8dM079wtvnfwLZ0hAK0mH7Dto.js"></script>
+<script>var _gaq = _gaq || [];_gaq.push(["_setAccount", "UA-19759318-1"]);_gaq.push(["_trackPageview"]);(function() {var ga = document.createElement("script");ga.type = "text/javascript";ga.async = true;ga.src = ("https:" == document.location.protocol ? "https://ssl" : "http://www") + ".google-analytics.com/ga.js";var s = document.getElementsByTagName("script")[0];s.parentNode.insertBefore(ga, s);})();</script>
+<script src="http://www.juce.com/sites/default/files/js/js_a_XWH2S1EQaU85ypMDyQGiUfzPFez1IOZKxHnhGkv3E.js"></script>
+<script>jQuery(function(){
+jQuery('#superfish-2').supersubs({minWidth: 12, maxWidth: 13, extraWidth: 1}).superfish({
+animation: {opacity:'show'},
+speed: 'fast',
+autoArrows: false,
+dropShadows: true});
+});</script>
+<script>jQuery.extend(Drupal.settings, {"basePath":"\/","pathPrefix":"","ajaxPageState":{"theme":"jucetheme002","theme_token":"0iCiPKF6D05Alct5pSdriHOD4e3MQBSd2Vj5RrgOgio","css":{"modules\/system\/system.base.css":1,"modules\/system\/system.menus.css":1,"modules\/system\/system.messages.css":1,"modules\/system\/system.theme.css":1,"modules\/comment\/comment.css":1,"modules\/field\/theme\/field.css":1,"modules\/node\/node.css":1,"modules\/search\/search.css":1,"modules\/user\/user.css":1,"sites\/all\/modules\/extlink\/extlink.css":1,"modules\/forum\/forum.css":1,"sites\/all\/modules\/views\/css\/views.css":1,"sites\/all\/modules\/ckeditor\/ckeditor.css":1,"sites\/all\/modules\/ctools\/css\/ctools.css":1,"0":1,"sites\/all\/modules\/eu-cookie-compliance\/css\/eu_cookie_compliance.css":1,"sites\/all\/modules\/lightbox2\/css\/lightbox.css":1,"sites\/all\/libraries\/superfish\/css\/superfish.css":1,"sites\/all\/libraries\/superfish\/css\/superfish-vertical.css":1,"sites\/all\/libraries\/superfish\/css\/superfish-navbar.css":1,"sites\/all\/libraries\/syntaxhighlighter_3.0.83\/styles\/shCore.css":1,"sites\/all\/libraries\/syntaxhighlighter_3.0.83\/styles\/shThemeDefault.css":1,"sites\/all\/modules\/advanced_forum\/styles\/naked\/advanced-forum.naked.structure.css":1,"sites\/all\/modules\/advanced_forum\/styles\/silver_bells\/advanced-forum.silver_bells.style.css":1,"sites\/all\/modules\/advanced_forum\/styles\/naked\/advanced-forum.naked.images.css":1,"sites\/all\/modules\/advanced_forum\/styles\/silver_bells\/advanced-forum.silver_bells.images.css":1,"sites\/all\/libraries\/superfish\/style\/white.css":1,"sites\/default\/themes\/jucetheme002\/system.menus.css":1,"sites\/default\/themes\/jucetheme002\/css\/normalize.css":1,"sites\/default\/themes\/jucetheme002\/css\/wireframes.css":1,"sites\/default\/themes\/jucetheme002\/css\/layouts\/responsive-sidebars.css":1,"sites\/default\/themes\/jucetheme002\/css\/page-backgrounds.css":1,"sites\/default\/themes\/jucetheme002\/css\/tabs.css":1,"sites\/default\/themes\/jucetheme002\/css\/pages.css":1,"sites\/default\/themes\/jucetheme002\/css\/blocks.css":1,"sites\/default\/themes\/jucetheme002\/css\/navigation.css":1,"sites\/default\/themes\/jucetheme002\/css\/views-styles.css":1,"sites\/default\/themes\/jucetheme002\/css\/nodes.css":1,"sites\/default\/themes\/jucetheme002\/css\/comments.css":1,"sites\/default\/themes\/jucetheme002\/css\/forms.css":1,"sites\/default\/themes\/jucetheme002\/css\/fields.css":1,"sites\/default\/themes\/jucetheme002\/css\/users.css":1,"sites\/default\/themes\/jucetheme002\/css\/forum.css":1,"sites\/default\/themes\/jucetheme002\/css\/_juce.css":1,"sites\/default\/themes\/jucetheme002\/css\/print.css":1},"js":{"sites\/all\/modules\/syntaxhighlighter\/syntaxhighlighter.min.js":1,"sites\/all\/modules\/eu-cookie-compliance\/js\/eu_cookie_compliance.js":1,"0":1,"misc\/jquery.js":1,"misc\/jquery.once.js":1,"misc\/drupal.js":1,"misc\/form.js":1,"sites\/all\/libraries\/syntaxhighlighter_3.0.83\/scripts\/shCore.js":1,"sites\/all\/libraries\/syntaxhighlighter_3.0.83\/scripts\/shAutoloader.js":1,"sites\/default\/files\/syntaxhighlighter.autoloader.js":1,"sites\/all\/modules\/extlink\/extlink.js":1,"sites\/all\/modules\/lightbox2\/js\/lightbox.js":1,"sites\/all\/libraries\/superfish\/jquery.hoverIntent.minified.js":1,"sites\/all\/libraries\/superfish\/jquery.bgiframe.min.js":1,"sites\/all\/libraries\/superfish\/superfish.js":1,"sites\/all\/libraries\/superfish\/supersubs.js":1,"sites\/all\/libraries\/superfish\/supposition.js":1,"sites\/all\/libraries\/superfish\/sftouchscreen.js":1,"1":1,"sites\/all\/modules\/google_analytics\/googleanalytics.js":1,"2":1,"misc\/collapse.js":1,"3":1}},"eu_cookie_compliance":{"popup_enabled":1,"popup_agreed_enabled":1,"popup_hide_agreed":1,"popup_clicking_confirmation":true,"popup_html_info":"\n\u003Cdiv\u003E\n  \u003Cdiv class =\u0022popup-content info\u0022\u003E\n    \u003Cdiv id=\u0022popup-text\u0022\u003E\n      \u003Ch2\u003EWe use cookies on this site to enhance your user experience\u003C\/h2\u003E\n\u003Cp\u003EBy clicking any link on this page you are giving your consent for us to set cookies.\u003C\/p\u003E\n    \u003C\/div\u003E\n    \u003Cdiv id=\u0022popup-buttons\u0022\u003E\n      \u003Cbutton type=\u0022button\u0022 class=\u0022agree-button\u0022\u003EYes, I agree\u003C\/button\u003E\n      \u003Cbutton type=\u0022button\u0022 class=\u0022find-more-button\u0022\u003ENo, I want to find out more\u003C\/button\u003E\n    \u003C\/div\u003E\n  \u003C\/div\u003E\n\u003C\/div\u003E\n","popup_html_agreed":"\u003Cdiv\u003E\n  \u003Cdiv class =\u0022popup-content agreed\u0022\u003E\n    \u003Cdiv id=\u0022popup-text\u0022\u003E\n      \u003Ch2\u003EThank you for accepting cookies\u003C\/h2\u003E\n\u003Cp\u003EYou can now hide this message or find out more about cookies.\u003C\/p\u003E\n    \u003C\/div\u003E\n    \u003Cdiv id=\u0022popup-buttons\u0022\u003E\n      \u003Cbutton type=\u0022button\u0022 class=\u0022hide-popup-button\u0022\u003EHide this message\u003C\/button\u003E\n      \u003Cbutton type=\u0022button\u0022 class=\u0022find-more-button\u0022 \u003EMore information on cookies\u003C\/button\u003E\n    \u003C\/div\u003E\n  \u003C\/div\u003E\n\u003C\/div\u003E","popup_height":"auto","popup_width":"100%","popup_delay":1000,"popup_link":"\/cookies-policy-old","popup_position":0,"popup_language":"en"},"lightbox2":{"rtl":0,"file_path":"\/(\\w\\w\/)public:\/","default_image":"\/sites\/all\/modules\/lightbox2\/images\/brokenimage.jpg","border_size":10,"font_color":"000","box_color":"fff","top_position":"","overlay_opacity":"0.8","overlay_color":"000","disable_close_click":true,"resize_sequence":0,"resize_speed":400,"fade_in_speed":400,"slide_down_speed":600,"use_alt_layout":false,"disable_resize":false,"disable_zoom":false,"force_show_nav":false,"show_caption":true,"loop_items":false,"node_link_text":"View Image Details","node_link_target":false,"image_count":"Image !current of !total","video_count":"Video !current of !total","page_count":"Page !current of !total","lite_press_x_close":"press \u003Ca href=\u0022#\u0022 onclick=\u0022hideLightbox(); return FALSE;\u0022\u003E\u003Ckbd\u003Ex\u003C\/kbd\u003E\u003C\/a\u003E to close","download_link_text":"","enable_login":false,"enable_contact":false,"keys_close":"c x 27","keys_previous":"p 37","keys_next":"n 39","keys_zoom":"z","keys_play_pause":"32","display_image_size":"original","image_node_sizes":"()","trigger_lightbox_classes":"","trigger_lightbox_group_classes":"","trigger_slideshow_classes":"","trigger_lightframe_classes":"","trigger_lightframe_group_classes":"","custom_class_handler":0,"custom_trigger_classes":"","disable_for_gallery_lists":true,"disable_for_acidfree_gallery_lists":true,"enable_acidfree_videos":true,"slideshow_interval":5000,"slideshow_automatic_start":true,"slideshow_automatic_exit":true,"show_play_pause":true,"pause_on_next_click":false,"pause_on_previous_click":true,"loop_slides":false,"iframe_width":600,"iframe_height":400,"iframe_border":1,"enable_video":false},"syntaxhighlighter":{"useAutoloader":true},"extlink":{"extTarget":"_blank","extClass":"ext","extSubdomains":1,"extExclude":"","extInclude":"","extCssExclude":".footer-menu","extCssExplicit":"","extAlert":0,"extAlertText":"This link will take you to an external web site. We are not responsible for their content.","mailtoClass":"mailto"},"googleanalytics":{"trackOutbound":1,"trackMailto":1,"trackDownload":1,"trackDownloadExtensions":"7z|aac|arc|arj|asf|asx|avi|bin|csv|doc|exe|flv|gif|gz|gzip|hqx|jar|jpe?g|js|mp(2|3|4|e?g)|mov(ie)?|msi|msp|pdf|phps|png|ppt|qtm?|ra(m|r)?|sea|sit|tar|tgz|torrent|txt|wav|wma|wmv|wpd|xls|xml|z|zip"}});</script>
+      <!--[if lt IE 9]>
+    <script src="/sites/default/themes/zen/js/html5-respond.js"></script>
+    <![endif]-->
+  </head>
+<body class="html not-front not-logged-in no-sidebars page-node page-node- page-node-75445 node-type-forum section-forum" >
+      <p id="skip-link">
+      <a href="#main-menu" class="element-invisible element-focusable">Jump to navigation</a>
+    </p>
+      
+<div id="page">
+
+  <header id="header" role="banner">
+
+    <div id="header-content">
+
+              <a href="/" title="Home" rel="home" id="logo"><img src="http://www.juce.com/sites/default/files/images/template/JUCE-logo-002.png" alt="Home" /></a>
+      
+      
+      
+      <div class="header__region region region-header">
+    <div id="block-block-7" class="block block-block search-account first odd">
+
+      
+  <p><a href="/user" target="_parent" title="Account / Login / Register"><img alt="Account / Login / Register" src="/sites/default/files/images/template/account.png" style="width: 28px; height: 25px;" /></a><a href="/search" target="_parent" title="Search"><img alt="Search" src="/sites/default/files/images/template/search.png" style="width: 21px; height: 25px;" /></a></p>
+
+</div>
+<div id="block-superfish-2" class="block block-superfish main-menu even">
+
+      
+  <ul id="superfish-2" class="sf-menu menu-main-menu-002 sf-horizontal sf-style-white sf-total-items-5 sf-parent-items-1 sf-single-items-4"><li id="menu-1316-2" class="first sf-item-1 sf-depth-1 sf-no-children"><a href="/home" title="" class="sf-depth-1 ">Home</a></li><li id="menu-1317-2" class="middle sf-item-2 sf-depth-1 sf-no-children"><a href="/features" title="" class="sf-depth-1 ">Features</a></li><li id="menu-1318-2" class="middle sf-item-3 sf-depth-1 sf-total-children-8 sf-parent-children-1 sf-single-children-7 menuparent"><a href="/learn" title="" class="sf-depth-1  menuparent">Learn</a><ul><li id="menu-1328-2" class="first sf-item-1 sf-depth-2 sf-no-children"><a href="/learn/getting-started" title="" class="sf-depth-2 ">Getting Started</a></li><li id="menu-1329-2" class="middle sf-item-2 sf-depth-2 sf-no-children"><a href="/learn/coding-standards" title="" class="sf-depth-2 ">Coding Standards</a></li><li id="menu-1338-2" class="middle sf-item-3 sf-depth-2 sf-no-children"><a href="http://www.juce.com/api/classes.html" title="" class="sf-depth-2 ">Class API Reference</a></li><li id="menu-1330-2" class="middle sf-item-4 sf-depth-2 sf-no-children"><a href="/learn/juce-module-format" title="" class="sf-depth-2 ">The JUCE Module Format</a></li><li id="menu-1331-2" class="middle sf-item-5 sf-depth-2"><a href="/learn/tutorials-code-examples" title="" class="sf-depth-2 ">Tutorials &amp; Code Examples</a></li><li id="menu-1332-2" class="middle sf-item-6 sf-depth-2 sf-no-children"><a href="/learn/introjucer" title="" class="sf-depth-2 ">The Introjucer</a></li><li id="menu-1333-2" class="middle sf-item-7 sf-depth-2 sf-no-children"><a href="/learn/integrating-juce-project" title="" class="sf-depth-2 ">Integrating JUCE Into A Project</a></li><li id="menu-1334-2" class="last sf-item-8 sf-depth-2 sf-no-children"><a href="/learn/learning-c" title="" class="sf-depth-2 ">Learning C++</a></li></ul></li><li id="menu-1321-2" class="middle sf-item-4 sf-depth-1 sf-no-children"><a href="/forum" title="" class="sf-depth-1 ">Forum</a></li><li id="menu-1322-2" class="last sf-item-5 sf-depth-1 sf-no-children"><a href="/faq" title="" class="sf-depth-1 ">FAQ</a></li></ul>
+</div>
+<div id="block-menu-menu-menu-header-right-menu" class="block block-menu header-right-menu odd" role="navigation">
+
+      
+  <ul class="menu"><li class="menu__item is-leaf first leaf"><a href="/buy" title="" class="menu__link">Buy</a></li>
+<li class="menu__item is-leaf last leaf"><a href="/download" title="" class="menu__link">Download</a></li>
+</ul>
+</div>
+<div id="block-block-9" class="block block-block header-image last even">
+
+      
+  <p><img alt="" src="/sites/default/files/images/headers/header-default.png" /></p>
+
+</div>
+  </div>
+
+    </div>
+    
+  </header>
+
+  <nav id="navigation">
+
+    
+    
+  </nav><!-- /#navigation -->
+
+  <div id="main">
+
+    <div id="content" class="column" role="main">
+            <nav class="breadcrumb" role="navigation"><h2 class="element-invisible">You are here</h2><ol><li><a href="/">Home</a> / </li><li><a href="/forum">Forums</a> / </li><li><a href="/forums/general">General</a> / </li><li><a href="/forums/general-juce-discussion">General JUCE discussion</a> / </li></ol></nav>      <a id="main-content"></a>
+                    <h1 class="title" id="page-title">Resampling Audio Source is downsamplig custom audio source</h1>
+                                          
+
+
+
+  
+<div id="forum-topic-header" class="forum-topic-header clearfix">
+	
+  <div class="topic-post-count">
+  2 posts / 0 new  </div>
+
+      <div class="topic-reply-link">
+    <a href="/user/login?destination=node/75445%23comment-form">Log in</a> or <a href="/user/register?destination=node/75445%23comment-form">register</a> to post comments    </div>
+  
+  
+      <div class="last-post-link">
+     <a href="/forum/topic/resampling-audio-source-downsamplig-custom-audio-source#comment-307903" class="af-button-large active"><span>Last post</span></a>    </div>
+  
+
+  <a id="forum-topic-top"></a>
+</div>
+
+<div id="post-75445" class="forum-post clearfix en posted-by-11708 view-mode-full"  about="/forum/topic/resampling-audio-source-downsamplig-custom-audio-source" typeof="sioc:Post sioct:BoardPost">
+  <div class="forum-post-info clearfix">
+    <div class="forum-posted-on">
+      <span property="dc:date dc:created" content="2014-10-12T20:47:20+01:00" datatype="xsd:dateTime">Sun, 12 Oct 2014 - 20:47</span>
+                </div>  
+    
+        
+    <span class="forum-post-number"><a href="/forum/topic/resampling-audio-source-downsamplig-custom-audio-source" class="active">#1</a></span>
+  </div> 
+  <div class="forum-post-wrapper">
+    <div class="forum-post-panel-sub">
+              
+
+<div class="author-pane">
+ <div class="author-pane-inner">
+        <div class="author-pane-section author-pane-general">
+            <div class="author-pane-line author-name">
+        <span class="username" xml:lang="" about="/users/bk8" typeof="sioc:UserAccount" property="foaf:name" datatype="">BK8</span>      </div>
+
+                    
+      
+                    <div class="author-pane-line author-offline">
+           Offline        </div>
+      
+                    <div class="author-pane-line">
+           <span class="author-pane-label">Last seen:</span> 1 month 3 weeks ago        </div>
+      
+            
+            
+                    <div class="author-pane-line author-joined">
+          <span class="author-pane-label">Joined:</span> 1 Sep 2013 - 23:13        </div>
+      
+            
+                </div>
+
+        <div class="author-pane-section author-pane-contact">
+            
+            
+            
+                </div>
+
+        <div class="author-pane-section author-pane-admin">
+            
+              </div>
+  </div>
+</div>
+          </div>
+
+    <div class="forum-post-panel-main clearfix">
+              <div class="forum-post-title">
+          Resampling Audio Source is downsamplig custom audio source        </div>
+      
+      <div class="forum-post-content">
+        <div class="field field-name-body field-type-text-with-summary field-label-hidden"><div class="field-items"><div class="field-item even" property="content:encoded"><p>I´ve made a custom audio source that takes data from a wave file and stores it in a buffer, when I connect it to a Audio Source Player and it sounds "right" but if I connect it first to an Resampling Audio Source i get a downsampled sound </p>
+<p> </p>
+<p>This is the getNextAudioBlock method I am using:</p>
+<p>
+void CustomAudioSource::getNextAudioBlock (const AudioSourceChannelInfo &amp;bufferToFill)<br />
+{<br />
+    bufferToFill.buffer-&gt;clear();<br />
+    for (int i = 0; i &lt; bufferToFill.numSamples; i++) {<br />
+    if(currentSample&lt;buffer-&gt;getNumSamples())<br />
+        {<br />
+            bufferToFill.buffer-&gt;setSample(0,i,buffer-&gt;getSample(0,currentSample));<br />
+            bufferToFill.buffer-&gt;setSample(0,i,buffer-&gt;getSample(0,currentSample));<br />
+        }<br />
+        else<br />
+        currentSample=-1;//this is to loop the buffer<br />
+        <br />
+        currentSample++;//this is to loop the buffer<br />
+    }<br />
+}</p>
+<p> </p>
+<p>How can I correct this?<br />
+ </p>
+</div></div></div>      </div>
+
+      
+          </div>
+  </div> 
+  <div class="forum-post-footer clearfix">
+    <div class="forum-jump-links">
+      <a href="#forum-topic-top" title="Jump to top of page" class="af-button-small"><span>Top</span></a>
+    </div>
+
+    <div class="forum-post-links">
+      <ul class="links inline"><li class="comment_forbidden first last"><span><a href="/user/login?destination=node/75445%23comment-form">Log in</a> or <a href="/user/register?destination=node/75445%23comment-form">register</a> to post comments</span></li>
+</ul>    </div>
+  </div> </div> 
+<div id="forum-comments" class="comment-wrapper">
+  <a id="comment-307903"></a>
+
+
+<div id="post-307903" class="forum-post clearfix en posted-by-11708 post-by-starter first last odd"  about="/comment/307903#comment-307903" typeof="sioc:Post sioct:Comment">
+  <div class="forum-post-info clearfix">
+    <div class="forum-posted-on">
+      Mon, 13 Oct 2014 - 00:26
+                    
+        
+                  </div>  
+    
+        
+    <span class="forum-post-number"><a href="/comment/307903#comment-307903" class="permalink" rel="bookmark">#2</a></span>
+  </div> 
+  <div class="forum-post-wrapper">
+    <div class="forum-post-panel-sub">
+              
+
+<div class="author-pane">
+ <div class="author-pane-inner">
+        <div class="author-pane-section author-pane-general">
+            <div class="author-pane-line author-name">
+        <span class="username" xml:lang="" about="/users/bk8" typeof="sioc:UserAccount" property="foaf:name" datatype="">BK8</span>      </div>
+
+                    
+      
+                    <div class="author-pane-line author-offline">
+           Offline        </div>
+      
+                    <div class="author-pane-line">
+           <span class="author-pane-label">Last seen:</span> 1 month 3 weeks ago        </div>
+      
+            
+            
+                    <div class="author-pane-line author-joined">
+          <span class="author-pane-label">Joined:</span> 1 Sep 2013 - 23:13        </div>
+      
+            
+                </div>
+
+        <div class="author-pane-section author-pane-contact">
+            
+            
+            
+                </div>
+
+        <div class="author-pane-section author-pane-admin">
+            
+              </div>
+  </div>
+</div>
+          </div>
+
+    <div class="forum-post-panel-main clearfix">
+              <div class="forum-post-title">
+          Now I see the problem....        </div>
+      
+      <div class="forum-post-content">
+        <span rel="sioc:reply_of" resource="/forum/topic/resampling-audio-source-downsamplig-custom-audio-source" class="rdf-meta"></span><div class="field field-name-comment-body field-type-text-long field-label-hidden"><div class="field-items"><div class="field-item even" property="content:encoded"><p>I was clearing the buffer and losing data...</p>
+<p>void CustomAudioSource::getNextAudioBlock (const AudioSourceChannelInfo &amp;bufferToFill)<br />
+{<br />
+    //bufferToFill.buffer-&gt;clear(); commenting this it is solved<br />
+    for (int i = 0; i &lt; bufferToFill.numSamples; i++) {<br />
+    if(currentSample&lt;buffer-&gt;getNumSamples())<br />
+        {<br />
+            bufferToFill.buffer-&gt;setSample(0,bufferToFill.startSample +i,buffer-&gt;getSample(0,currentSample));//And also this<br />
+            bufferToFill.buffer-&gt;setSample(0,bufferToFill.startSample +i,buffer-&gt;getSample(0,currentSample));<br />
+        }<br />
+        else<br />
+        currentSample=-1;//this is to loop the buffer<br />
+        <br />
+        currentSample++;//this is to loop the buffer<br />
+    }<br />
+}</p>
+</div></div></div>      </div>
+
+      
+          </div>
+  </div> 
+  <div class="forum-post-footer clearfix">
+    <div class="forum-jump-links">
+      <a href="#forum-topic-top" title="Jump to top of page" class="af-button-small"><span>Top</span></a>
+    </div>
+
+    <div class="forum-post-links">
+      <ul class="links inline"><li class="comment_forbidden first last"><span><a href="/user/login?destination=node/75445%23comment-form">Log in</a> or <a href="/user/register?destination=node/75445%23comment-form">register</a> to post comments</span></li>
+</ul>    </div>
+  </div> </div> 
+        </div>
+          </div><!-- /#content -->
+
+    
+    
+  </div><!-- /#main -->
+
+  
+</div><!-- /#page -->
+
+  <div class="region region-bottom">
+    <div id="block-block-10" class="block block-block social-media-links first odd">
+
+      
+  <p><a href="https://twitter.com/JUCElibrary" target="_blank" title="Follow JUCE on Twitter"><img alt="Follow JUCE on Twitter" src="/sites/default/files/images/template/twitter.png" /></a><a href="https://www.facebook.com/jucelibrary" target="_blank" title="Follow JUCE on Facebook"><img alt="Follow JUCE on Facebook" src="/sites/default/files/images/template/facebook.png" /></a></p>
+
+</div>
+<div id="block-block-11" class="block block-block juce-ownership even">
+
+      
+  <p>JUCE is owned by <a href="https://www.roli.com/developers/juce/" target="_blank">ROLI Ltd</a>.  <a href="/forum/topic/juce-has-been-acquired-roli" target="_parent">Learn more</a>.</p>
+
+</div>
+<div id="block-menu-menu-footer-menu-002" class="block block-menu footer-menu last odd" role="navigation">
+
+      
+  <ul class="menu"><li class="menu__item is-leaf first leaf"><a href="/made-juce" title="" class="menu__link">Made with JUCE</a></li>
+<li class="menu__item is-leaf leaf"><a href="/history-and-development" title="" class="menu__link">History</a></li>
+<li class="menu__item is-leaf leaf"><a href="/privacy-policy" title="" class="menu__link">Privacy Policy</a></li>
+<li class="menu__item is-leaf leaf"><a href="/cookies-policy" title="" class="menu__link">Cookies Policy</a></li>
+<li class="menu__item is-leaf leaf"><a href="/contact" title="" class="menu__link">Contact</a></li>
+<li class="menu__item is-leaf last leaf"><a href="https://www.roli.com/careers" title="ROLI is hiring" class="menu__link">Careers</a></li>
+</ul>
+</div>
+  </div>
+  <script src="http://www.juce.com/sites/default/files/js/js_Rk5YIkK6m2gKTGH-GrMu0pM_PlMKXnI0ktQUgXw1XgA.js"></script>
+<script src="http://www.juce.com/sites/default/files/js/js_Dpwj9_jdZx11LB9vWakYPT-NglBvlNPbjDg8kKHykyQ.js"></script>
+</body>
+</html>
