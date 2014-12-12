@@ -79,11 +79,19 @@ private:
     
 // Added by Ryan Foo
 public:
-    // global gui variables    
+    // global gui variables
+    
+    // Delay for flanger (?)
+    float delayVal;
+    // LFO ms increases the delay by at the maximum
     float depthVal;
+    // LFO frequency
     float rateVal;
+    // LFO waveform
     int lfoWaveformVal;
-    float resonanceVal;
+    // Feedback Level (?)
+    float feedbackVal;
+    // Dry/Wet mix
     float mixVal;
     
     Flanger flanger;

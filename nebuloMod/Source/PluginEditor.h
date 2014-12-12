@@ -40,10 +40,14 @@ private:
     
     Slider gainSlider;
     
+    // Sliders
     Slider depthSlider;
     Slider rateSlider;
-    Slider resonanceSlider;
+    Slider feedBackSlider;
     Slider mixSlider;
+    
+    // Buttons
+    // MenuBarComponent modEffectSwitch;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (NebuloModAudioProcessorEditor)
 };

@@ -132,7 +132,7 @@ void NebuloModAudioProcessor::updateFlanger(void)
     flangerParams.depth = depthVal;
     flangerParams.rate = rateVal;
     flangerParams.lfoWaveform = lfoWaveformVal;
-    flangerParams.resonance = resonanceVal;
+    flangerParams.feedback = feedbackVal;
     flangerParams.mix = mixVal;
 }
 
@@ -146,7 +146,7 @@ void NebuloModAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBl
     mixVal = 0.5;
     depthVal= 0.5;
     rateVal = 0.5;
-    resonanceVal = 0.5;
+    feedbackVal = 50.0;
     lfoWaveformVal = 0;
     
     // Set Our Flanger Sample Rate

@@ -52,10 +52,11 @@ NebuloModAudioProcessorEditor::NebuloModAudioProcessorEditor (NebuloModAudioProc
     // Create dah sliders!!!
     createSlider(depthSlider, Slider::Rotary, processor.depthVal, 0.0, 1.0, 0.01, "Depth");
     createSlider(rateSlider, Slider::Rotary, processor.rateVal, 0.0, 1.0, 0.01, "Rate");
-    createSlider(resonanceSlider, Slider::Rotary, processor.resonanceVal, 0.0, 1.0, 0.01, "Rate");
+    createSlider(feedBackSlider, Slider::Rotary, processor.feedbackVal, 0.0, 100.0, 1.0, "Feedback");
     
     createSlider(mixSlider, Slider::Rotary, processor.mixVal, 0.0, 1.0, 0.01, "Volume");
     
+    // Mode Switch
 }
 
 NebuloModAudioProcessorEditor::~NebuloModAudioProcessorEditor()
@@ -82,7 +83,7 @@ void NebuloModAudioProcessorEditor::resized()
     // Knobs!!!
     depthSlider.setBounds(125, 150, 50, 50);
     rateSlider.setBounds(225, 150, 50, 50);
-    resonanceSlider.setBounds(325, 150, 50, 50);
+    feedBackSlider.setBounds(325, 150, 50, 50);
     mixSlider.setBounds(425, 150, 50, 50);
 }
 
@@ -99,8 +100,8 @@ void NebuloModAudioProcessorEditor::sliderValueChanged(Slider* slider)
     else if (slider->getComponentID().compare("Rate") == 0) {
         processor.rateVal = slider->getValue();
     }
-    else if (slider->getComponentID().compare("Resonance") == 0) {
-        processor.resonanceVal = slider->getValue();
+    else if (slider->getComponentID().compare("Feedback") == 0) {
+        processor.feedbackVal = slider->getValue();
     }
     
     processor.updateFlanger();
