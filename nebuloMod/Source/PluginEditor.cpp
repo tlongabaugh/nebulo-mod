@@ -28,16 +28,17 @@ void NebuloModAudioProcessorEditor::createSlider(Slider &slider, Slider::SliderS
     slider.setVisible(false);
     
     slider.setComponentID(name);
+    slider.isAlwaysOnTop();
 }
 
 void NebuloModAudioProcessorEditor::createLabel(Label &label, std::string name)
 {
-    label.setFont(25);
+    label.setSize(100,50);
     label.setEnabled(true);
     label.setText(name, dontSendNotification);
-    label.setName(name);
     addAndMakeVisible(label);
     label.setVisible(false);
+    label.isAlwaysOnTop();
 }
 
 //==============================================================================
@@ -46,28 +47,51 @@ NebuloModAudioProcessorEditor::NebuloModAudioProcessorEditor (NebuloModAudioProc
 {
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
-    setSize (600, 450);
+    setSize (700, 550);
+    
+    // EFFECT PARAMETER SIDE
     
     // Menu
     modMenu.setText("Select Modulation");
     modMenu.addItem("Flanger", 1);
     modMenu.addItem("Phaser", 2);
     modMenu.setEnabled(true);
-    modMenu.setSize(160, 30);
+    modMenu.setSize(180, 30);
     addAndMakeVisible(&modMenu);
     modMenu.addListener(this);
     
     // Create dah sliders!!!
-    createSlider(depthSlider, Slider::Rotary, processor.flDepthVal, 0.0, 1.0, 0.01, "Depth");
-    createSlider(rateSlider, Slider::Rotary, processor.flRateVal, 0.0, 1.0, 0.01, "Rate");
-    createSlider(feedBackSlider, Slider::Rotary, processor.flFeedbackVal, 0.0, 100.0, 1.0, "Feedback");
-    createSlider(mixSlider, Slider::Rotary, processor.flMixVal, 0.0, 1.0, 0.01, "Volume");
+    createSlider(depthSlider, Slider::LinearHorizontal, processor.flDepthVal, 0.0, 1.0, 0.01, " Depth");
+    createSlider(rateSlider, Slider::LinearHorizontal, processor.flRateVal, 0.0, 1.0, 0.01, " Rate");
+    createSlider(feedBackSlider, Slider::LinearHorizontal, processor.flFeedbackVal, 0.0, 100.0, 1.0, " Feedback");
+    createSlider(mixSlider, Slider::LinearHorizontal, processor.flMixVal, 0.0, 1.0, 0.01, " Volume");
     
     // Create texts!
     createLabel(depthText, "Depth");
     createLabel(rateText, "Rate");
     createLabel(feedbackText, "Feedback");
     createLabel(mixText, "Mix");
+    
+    fxText.setSize(200, 50);
+    
+    // Backgrounds
+    //fxBackground->setColour(Colours::chocolate);
+    //fxBackground->drawRoundedRectangle(0, 0, 300, 300, 5, 5);
+    // fxBackground->fillRect(<#const Rectangle<int> &rectangle#>)
+    
+    
+    // LFO PARAMETER SIDE
+    
+    // Menu
+    lfoMenu.setText("Select LFO Waveform");
+    lfoMenu.addItem("Sine", 1);
+    lfoMenu.addItem("Triangle", 2);
+    lfoMenu.addItem("Sawtooth", 3);
+    lfoMenu.addItem("Square", 4);
+    lfoMenu.addItem("Custom", 5);
+    lfoMenu.setSize(180, 30);
+    addAndMakeVisible(&lfoMenu);
+    lfoMenu.addListener(this);
     
 }
 
@@ -89,58 +113,71 @@ void NebuloModAudioProcessorEditor::resized()
 {
     // This is generally where you'll want to lay out the positions of any
     // subcomponents in your editor..
-    
-    // gainSlider.setBounds(300, 250, 20, 100);
-    
+
     // Knobs!!!
-    depthSlider.setBounds(125, 150, 50, 50);
-    rateSlider.setBounds(225, 150, 50, 50);
-    feedBackSlider.setBounds(325, 150, 50, 50);
-    mixSlider.setBounds(425, 150, 50, 50);
+    depthSlider.setBounds(350, 150, 250, 75);
+    rateSlider.setBounds(350, 200, 250, 75);
+    feedBackSlider.setBounds(350, 250, 250, 75);
+    mixSlider.setBounds(350, 300, 250, 75);
     
     // Menus!!!
-    modMenu.setBounds(60, 50, 200, 200);
+    modMenu.setBounds(390, 120, 200, 200);
+    lfoMenu.setBounds(70, 120, 200, 200);
     
     // Texts!!!
-    depthText.setBounds(125, 205, 25, 25);
-    rateText.setBounds(225, 205, 25, 25);
-    feedbackText.setBounds(325, 205, 25, 25);
-    mixText.setBounds(425, 205, 25, 25);
+    depthText.setBounds(610, 160, 25, 75);
+    rateText.setBounds(610, 210, 25, 75);
+    feedbackText.setBounds(610, 260, 25, 75);
+    mixText.setBounds(610, 310, 25, 75);
+    fxText.setBounds(450, 360, 100, 50);
+    
+    // Backgrounds
 }
 
 void NebuloModAudioProcessorEditor::sliderValueChanged(Slider* slider)
-{
-    // processor.gain = gainSlider.getValue();
-    
-    if (slider->getComponentID().compare("Mix") == 0) {
-        processor.flMixVal = slider->getValue();
-    }
-    else if (slider->getComponentID().compare("Depth") == 0) {
-        processor.flDepthVal = slider->getValue();
-    }
-    else if (slider->getComponentID().compare("Rate") == 0) {
-        processor.flRateVal = slider->getValue();
-    }
-    else if (slider->getComponentID().compare("Feedback") == 0) {
-        processor.flFeedbackVal = slider->getValue();
-    }
-    
+{    
     // Update Flanger
     if (modMenu.getSelectedItemIndex() == 0)
     {
+        if (slider->getComponentID().compare("Mix") == 0) {
+            processor.flMixVal = slider->getValue();
+        }
+        else if (slider->getComponentID().compare("Depth") == 0) {
+            processor.flDepthVal = slider->getValue();
+        }
+        else if (slider->getComponentID().compare("Rate") == 0) {
+            processor.flRateVal = slider->getValue();
+        }
+        else if (slider->getComponentID().compare("Feedback") == 0) {
+            processor.flFeedbackVal = slider->getValue();
+        }
+        
         processor.updateFlanger();
     }
     // Update Phaser
     else if (modMenu.getSelectedItemIndex() == 1)
     {
-        // processor.updatePhaser();
+        if (slider->getComponentID().compare("Mix") == 0) {
+            processor.phsMixVal = slider->getValue();
+        }
+        else if (slider->getComponentID().compare("Depth") == 0) {
+            processor.phsDepthVal = slider->getValue();
+        }
+        else if (slider->getComponentID().compare("Rate") == 0) {
+            processor.phsRateVal = slider->getValue();
+        }
+        else if (slider->getComponentID().compare("Feedback") == 0) {
+            processor.phsFeedbackVal = slider->getValue();
+        }
+        
+        processor.updatePhaser();
     }
 }
 
 void NebuloModAudioProcessorEditor::comboBoxChanged(ComboBox *comboBoxThatHasChanged)
 {
-    // Update Flanger
-    if (modMenu.getSelectedItemIndex() == 0)
+    // Update GUI 
+    if ((modMenu.getSelectedItemIndex() == 0) || (modMenu.getSelectedItemIndex() == 1))
     {
         depthSlider.setVisible(true);
         rateSlider.setVisible(true);
@@ -151,18 +188,17 @@ void NebuloModAudioProcessorEditor::comboBoxChanged(ComboBox *comboBoxThatHasCha
         rateText.setVisible(true);
         feedbackText.setVisible(true);
         mixText.setVisible(true);
-    }
-    // Update Phaser
-    else if (modMenu.getSelectedItemIndex() == 1)
-    {
-        depthSlider.setVisible(false);
-        rateSlider.setVisible(false);
-        feedBackSlider.setVisible(false);
-        mixSlider.setVisible(false);
-    
-        depthText.setVisible(false);
-        rateText.setVisible(false);
-        feedbackText.setVisible(false);
-        mixText.setVisible(false);
+        
+        if (modMenu.getSelectedItemIndex() == 0)
+        {
+            fxText.setText("Flanger", dontSendNotification);
+        }
+        else if (modMenu.getSelectedItemIndex() == 1)
+        {
+            fxText.setText("Phaser", dontSendNotification);
+        }
+        
+        addAndMakeVisible(fxText);
+        fxText.setVisible(true);
     }
 }

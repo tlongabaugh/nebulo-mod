@@ -136,7 +136,10 @@ void NebuloModAudioProcessor::updateFlanger(void)
     flangerParams.lfoWaveform = flLfoWaveformVal;
     flangerParams.feedback = flFeedbackVal;
     flangerParams.mix = flMixVal;
-    
+}
+
+void NebuloModAudioProcessor::updatePhaser(void)
+{
     Phaser::Parameters phaserParams = phaser.getParameters();
     phaserParams.depth = phsDepthVal;
     phaserParams.rate = phsRateVal;
