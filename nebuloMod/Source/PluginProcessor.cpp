@@ -15,7 +15,7 @@
 //==============================================================================
 NebuloModAudioProcessor::NebuloModAudioProcessor()
 {
-    gain = 1.0f;
+    //gain = 1.0f;
 }
 
 NebuloModAudioProcessor::~NebuloModAudioProcessor()
@@ -35,17 +35,19 @@ int NebuloModAudioProcessor::getNumParameters()
 
 float NebuloModAudioProcessor::getParameter (int index)
 {
-    return gain;
+    //return gain;
+    return index;
 }
 
 void NebuloModAudioProcessor::setParameter (int index, float newValue)
 {
-    gain = newValue;
+    //gain = newValue;
+
 }
 
 const String NebuloModAudioProcessor::getParameterName (int index)
 {
-    return "Gain";
+    return "PUT something HERE LATER";
 }
 
 const String NebuloModAudioProcessor::getParameterText (int index)
@@ -129,11 +131,17 @@ void NebuloModAudioProcessor::changeProgramName (int index, const String& newNam
 void NebuloModAudioProcessor::updateFlanger(void)
 {
     Flanger::Parameters flangerParams = flanger.getParameters();
-    flangerParams.depth = depthVal;
-    flangerParams.rate = rateVal;
-    flangerParams.lfoWaveform = lfoWaveformVal;
-    flangerParams.feedback = feedbackVal;
-    flangerParams.mix = mixVal;
+    flangerParams.depth = flDepthVal;
+    flangerParams.rate = flRateVal;
+    flangerParams.lfoWaveform = flLfoWaveformVal;
+    flangerParams.feedback = flFeedbackVal;
+    flangerParams.mix = flMixVal;
+    
+    Phaser::Parameters phaserParams = phaser.getParameters();
+    phaserParams.depth = phsDepthVal;
+    phaserParams.rate = phsRateVal;
+    phaserParams.lfoWaveform = phsLfoWaveformVal;
+    phaserParams.mix = phsMixVal;
 }
 
 //==============================================================================
@@ -143,14 +151,22 @@ void NebuloModAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBl
     // initialisation that you need..
     
     // set Volume
-    mixVal = 0.5;
-    depthVal= 0.5;
-    rateVal = 0.5;
-    feedbackVal = 50.0;
-    lfoWaveformVal = 0;
+    flMixVal = 0.5;
+    flDepthVal= 0.5;
+    flRateVal = 0.5;
+    flFeedbackVal = 50.0;
+    flLfoWaveformVal = 0;
     
-    // Set Our Flanger Sample Rate
+    // set Volume
+    phsMixVal = 0.5;
+    phsDepthVal= 0.5;
+    phsRateVal = 0.5;
+    phsFeedbackVal = 50.0;
+    phsLfoWaveformVal = 0;
+    
+    // Set Our Flanger and phaser Sample Rate
     flanger.setSampleRate(getSampleRate());
+    phaser.setSampleRate(getSampleRate());
 }
 
 void NebuloModAudioProcessor::releaseResources()
@@ -170,47 +186,26 @@ void NebuloModAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffe
     for (int i = getNumInputChannels(); i < getNumOutputChannels(); ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
 
-    // This is the place where you'd normally do the guts of your plugin's
-    // audio processing...
-   /* for (int channel = 0; channel < getNumInputChannels(); ++channel)
-    {
-        float* channelData = buffer.getWritePointer (channel);
-
-        // ..do something to the data...
-    }*/
-    buffer.applyGain(gain);
-  
+    //Written by tom longabaugh and ryan foo
+    /* Perform the necessary audio processing */
+    
     int sampleCount = buffer.getNumSamples();
     
-    // Get samples from left channel
-    float *leftChannel = buffer.getWritePointer(0);
-    
-    // filters?
-    
-    // For effects...
-    if (getNumInputChannels() == 2)
-    {
-        // Get samples from right channel
+    /* Get the samples from the input buffer */
+    if (getNumInputChannels() == 1) {
+        float *monoData = buffer.getWritePointer(0);
+        phaser.processMono(monoData, sampleCount);
+    }
+    else if (getNumInputChannels() == 2) {
+        float *leftChannel = buffer.getWritePointer(0);
         float *rightChannel = buffer.getWritePointer(1);
-        
-        // flanger.processStereoSamples(leftChannel, rightChannel, sampleCount);
+        phaser.processStereo(leftChannel, rightChannel, sampleCount);
     }
-    else if (getNumInputChannels() == 1)
-    {
-        // flanger.processMonoSamples(leftChannel, sampleCount);
-    }
-    
-    // Process audio
-    for (int channel = 0; channel < getNumInputChannels(); ++channel)
-    {
-        float* channelData = buffer.getWritePointer(channel);
-        
-        for (int i =0; i < sampleCount; i++)
-        {
-            channelData[i] = mixVal * channelData[i];
-        }
+    else {
+        // This is wrong, dont' do anything??
     }
 }
+
 
 //==============================================================================
 bool NebuloModAudioProcessor::hasEditor() const

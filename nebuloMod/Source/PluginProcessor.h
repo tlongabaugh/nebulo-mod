@@ -69,35 +69,49 @@ public:
     
     float gain;
 
-private:
+public:
     // Added by Ryan Foo and Tom Longabaugh
-    // Flanger flanger;
-    // Phaser phaser;
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (NebuloModAudioProcessor)
     
-// Added by Ryan Foo
-public:
-    // global gui variables
+    // Added by Ryan Foo
+
+    /* Effect Control variables */
     
     // Delay for flanger (?)
-    float delayVal;
+    float flDelayVal;
     // LFO ms increases the delay by at the maximum
-    float depthVal;
+    float flDepthVal;
     // LFO frequency
-    float rateVal;
+    float flRateVal;
     // LFO waveform
-    int lfoWaveformVal;
+    int flLfoWaveformVal;
     // Feedback Level (?)
-    float feedbackVal;
+    float flFeedbackVal;
     // Dry/Wet mix
-    float mixVal;
+    float flMixVal;
+    
+    // Added by Tom Longabaugh
+    // Delay for flanger (?)
+    float phsDelayVal;
+    // LFO ms increases the delay by at the maximum
+    float phsDepthVal;
+    // LFO frequency
+    float phsRateVal;
+    // LFO waveform
+    int phsLfoWaveformVal;
+    // Feedback Level (?)
+    float phsFeedbackVal;
+    // Dry/Wet mix
+    float phsMixVal;
     
     Flanger flanger;
+    Phaser phaser;
     
     // GUI update functions
     void updateFlanger(void);
+    void updatePhaser();
 };
 
 

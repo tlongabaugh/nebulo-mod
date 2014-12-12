@@ -58,10 +58,10 @@ NebuloModAudioProcessorEditor::NebuloModAudioProcessorEditor (NebuloModAudioProc
     modMenu.addListener(this);
     
     // Create dah sliders!!!
-    createSlider(depthSlider, Slider::Rotary, processor.depthVal, 0.0, 1.0, 0.01, "Depth");
-    createSlider(rateSlider, Slider::Rotary, processor.rateVal, 0.0, 1.0, 0.01, "Rate");
-    createSlider(feedBackSlider, Slider::Rotary, processor.feedbackVal, 0.0, 100.0, 1.0, "Feedback");
-    createSlider(mixSlider, Slider::Rotary, processor.mixVal, 0.0, 1.0, 0.01, "Volume");
+    createSlider(depthSlider, Slider::Rotary, processor.flDepthVal, 0.0, 1.0, 0.01, "Depth");
+    createSlider(rateSlider, Slider::Rotary, processor.flRateVal, 0.0, 1.0, 0.01, "Rate");
+    createSlider(feedBackSlider, Slider::Rotary, processor.flFeedbackVal, 0.0, 100.0, 1.0, "Feedback");
+    createSlider(mixSlider, Slider::Rotary, processor.flMixVal, 0.0, 1.0, 0.01, "Volume");
     
     // Create texts!
     createLabel(depthText, "Depth");
@@ -113,16 +113,16 @@ void NebuloModAudioProcessorEditor::sliderValueChanged(Slider* slider)
     // processor.gain = gainSlider.getValue();
     
     if (slider->getComponentID().compare("Mix") == 0) {
-        processor.mixVal = slider->getValue();
+        processor.flMixVal = slider->getValue();
     }
     else if (slider->getComponentID().compare("Depth") == 0) {
-        processor.depthVal = slider->getValue();
+        processor.flDepthVal = slider->getValue();
     }
     else if (slider->getComponentID().compare("Rate") == 0) {
-        processor.rateVal = slider->getValue();
+        processor.flRateVal = slider->getValue();
     }
     else if (slider->getComponentID().compare("Feedback") == 0) {
-        processor.feedbackVal = slider->getValue();
+        processor.flFeedbackVal = slider->getValue();
     }
     
     // Update Flanger

@@ -11,29 +11,21 @@
 // Constructor
 Phaser::Phaser() : currentSampleRate(SAMPLE_RATE),
 lfoPhase(0.f),
-depth(1.f),
-zm1(1.)
+depth(.1f),
+zm1(.1f)
 {
     setParameters(Parameters());
     setSampleRate(SAMPLE_RATE);
     // default Program Values
     
-    setRange(440.f, 1600.f);
+    setRange(1500.f, 1600.f);
     setRate(0.5f);
 }
-/*
+
 Phaser::~Phaser(void)
 {
-    if (input_buffer)
-    {
-        delete [] input_buffer;
-    }
-    if (output_buffer)
-    {
-        delete [] output_buffer;
-    }
 }
-*/
+
 void Phaser::setParameters (const Parameters& newParams)
 {
     parameters = newParams;
@@ -81,6 +73,7 @@ void Phaser::processMono(float* const samples, const int numSamples) noexcept
 
 float Phaser::processSingleSample (float newSample) noexcept
 {
+    /*
     //calculate and update phaser sweep lfo...
     float delay  = depthMin + (depthMax - depthMin) * ((sin(lfoPhase) + 1.f)/2.f);
     lfoPhase += lfoInc;
@@ -97,5 +90,7 @@ float Phaser::processSingleSample (float newSample) noexcept
     
     zm1 = y;
     
-    return newSample + y * depth;
+    return newSample + y * depth;*/
+    
+    return newSample;
 }

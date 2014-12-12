@@ -30,8 +30,11 @@ public:
     enum
     {
         kDepth,
-        kMix
-    }Params;
+        kRate,
+        kLfowaveform,
+        kFeedback,
+        kMix,
+    };
     
     /* Holds the parameters used by the */
     struct Parameters
@@ -42,6 +45,10 @@ public:
         {}
         
         float depth;
+        float rate;
+        // float lfo;
+        int lfoWaveform;
+        // float manControl;
         float mix;
     };
     
@@ -152,7 +159,7 @@ private:
 
     float depthMin;
     float depthMax; //range
-    float feedBack; //feedback
+    //float feedBack; //feedback
     float lfoPhase;
     float lfoInc;
     float depth;
