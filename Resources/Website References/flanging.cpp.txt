@@ -1,0 +1,360 @@
+//-------------------------------------------------------------------------------------------------------
+// flanging effect plug in
+// Feb 22, 2006, Kevin Kuang
+// http://ccrma.stanford.edu/~kuangzn
+//-------------------------------------------------------------------------------------------------------
+
+#ifndef __flanging_H
+#include "flanging.hpp"
+#endif
+
+#include <stdio.h>
+#include <math.h>
+
+int sign(double);
+
+
+//-------------------------------------------------------------------------------------------------------
+flanging::flanging (audioMasterCallback audioMaster)
+	: AudioEffectX (audioMaster, 1, 6)	// 1 program, 6 parameters
+{
+	fGain		= 1.0;			    // default input gain = 0 dB
+	fDelayMin	= 1.0;				// default Minimum delay = 500Hz
+	fDelayMax	= 1.0;				// default Maximum delay = 2000Hz
+	fWetDry		= 0.5;				// default wet/dry factor = 50%
+	sampleCount = 0;				// reset sample counter
+	// n = 0;
+	fRoom = 0;
+
+	inPointL=0; 
+	inPointR=0; 
+	delayBufferSize=44100;				//maximum delay 44100 samples
+
+	setNumInputs (2);					// stereo in
+	setNumOutputs (2);					// stereo out
+	setUniqueID ('Deli');				// identify
+	canMono ();							// makes sense to feed both inputs with the same signal
+	canProcessReplacing ();				// supports both accumulating and replacing output
+	strcpy (programName, "Default");	// default program name
+	
+	resume();
+
+}
+
+
+//-------------------------------------------------------------------------------------------------------
+flanging::~flanging ()
+{
+	// nothing to do here
+}
+
+//-------------------------------------------------------------------------------------------------------
+void flanging::setProgramName (char *name)
+{
+	strcpy (programName, name);
+}
+
+//-----------------------------------------------------------------------------------------
+void flanging::getProgramName (char *name)
+{
+	strcpy (name, programName);
+}
+
+//------------------------------------------------------------------------
+bool flanging::getEffectName (char* name)
+{
+	strcpy (name, "flanging");
+	return true;
+}
+
+//------------------------------------------------------------------------
+bool flanging::getProductString (char* text)
+{
+	strcpy (text, "flanging");
+	return true;
+}
+
+//------------------------------------------------------------------------
+bool flanging::getVendorString (char* text)
+{
+	strcpy (text, "kk Productions");
+	return true;
+}
+
+//-----------------------------------------------------------------------------------------
+void flanging::setParameter (long index, float value)
+{
+	switch (index)
+	{
+	case kGain:
+		fGain = value;
+		gain = pow(10.0,(60.0*fGain-30.0)/20.0);
+		break;
+	case kWetDry:
+		fWetDry = value;
+		wetdry = fWetDry;
+		break;
+	case kFreq:
+		fFreq = value;
+		freq = fFreq * 10;
+		break;
+	case kDelayMin:
+		fDelayMin = value;
+		delayMin = fDelayMin / 1000 * 44100; // delayMin in ms, fDelayMin in Hz
+		break;
+	case kDelayMax:
+		fDelayMax = value;
+		delayMax = fDelayMax / 1000 * 44100;
+		break;
+	case kRoom:
+		fRoom = value;
+		room = fRoom;
+		break;
+	}
+
+}
+
+//-----------------------------------------------------------------------------------------
+float flanging::getParameter (long index)
+{
+
+	switch (index)
+	{
+		case kGain:
+			return fGain;
+			break;
+		case kDelayMin:
+			return fDelayMin;
+			break;
+		case kDelayMax:
+			return fDelayMax;
+			break;
+		case kWetDry:
+			return fWetDry;
+			break;
+		case kFreq:
+			return fFreq;
+			break;
+		case kRoom:
+			return fRoom;
+			break;
+	}
+
+}
+
+//-----------------------------------------------------------------------------------------
+void flanging::getParameterName (long index, char *label)
+{
+	switch (index)
+	{
+	case kGain:
+		strcpy(label, "Input Gain");
+		break;
+	case kDelayMin:
+		strcpy(label, "Delay Min");
+		break;
+	case kDelayMax:
+		strcpy(label, "Delay Max");
+		break;
+	case kWetDry:
+		strcpy(label, "Wet/Dry");
+		break;
+    case kFreq:
+		strcpy(label, "Dealy Freq");
+		break;
+    case kRoom:
+		strcpy(label, "Decay Factor");
+		break;
+	};
+}
+
+//-----------------------------------------------------------------------------------------
+void flanging::getParameterDisplay (long index, char *text)
+{
+
+	switch (index)
+	{
+	case kGain:
+		float2string(20.0*log10(gain), text);
+		break;
+	case kDelayMin:
+		long2string(delayMin*1000/44100 * 500, text);
+		break;
+	case kDelayMax:
+		long2string(delayMax*1000/44100 * 2000, text);
+		break;
+	case kWetDry:
+		long2string(wetdry*100, text);
+		break;
+	case kFreq:
+		long2string(freq*10, text);
+		break;
+	case kRoom:
+		float2string(room, text);
+		break;
+	};
+}
+
+//-----------------------------------------------------------------------------------------
+void flanging::getParameterLabel(long index, char *label)
+{
+switch (index)
+	{
+	case kGain :
+		strcpy(label, "dB");
+		break;
+	case kDelayMin :
+		strcpy(label, "Hz");
+		break;
+	case kDelayMax :
+		strcpy(label, "Hz");
+		break;
+	case kWetDry :
+		strcpy(label, "%");
+		break;
+	case kFreq :
+		strcpy(label, "Hz");
+		break;
+	case kRoom :
+		strcpy(label, "");
+		break;
+	};
+}
+
+void flanging::clear()
+{
+	for ( int i=0; i<44100; i++){
+	delay_bufferL[i]=0, delay_bufferR[i]=0, listateL[i]=0, listateR[i]=0;}
+	AudioEffectX::resume ();
+}
+
+//
+ 
+
+// sign function
+
+int sign(double sign_input)
+
+{
+	if (sign_input > 0)
+		return 1;
+    else if (sign_input < 0)
+        return -1;             
+    else
+        return 0;
+}
+//
+//// Low Shelf Filter
+float flanging::lowShelf (float inputs_ls)
+{
+    float outputs_ls;
+    float pi = 3.1415926;
+	float fDC = 1, fPI = 0.0891, fWt = pi/2;
+
+        // Map transfer function of the shelf filter in S plane to Z plane with Wt = pi/2
+        // map pi/2 to other frequency to have following:
+        // trick:
+        fFT = sqrt( fDC * fPI );
+
+		if (fPI*fPI + fDC*fDC - 2*fFT*fFT == 0)
+			alpha = 0;
+		else
+			lambda = (fPI*fPI - fDC*fDC) / (fPI*fPI + fDC*fDC - 2*fFT*fFT);
+	
+		alpha = lambda - sign(lambda)*sqrt(lambda*lambda - 1);
+		beta0 = 0.5 * ((fDC + fPI) + (fDC - fPI) * alpha);
+		beta1 = 0.5 * ((fDC - fPI) + (fDC + fPI) * alpha);
+		rho = sin(fWt/2 - pi/4) / sin(fWt/2 + pi/4);
+
+		b0 = (beta0 + rho*beta1) / (1 + rho*alpha);
+		b1 = (beta1 + rho*beta0) / (1 + rho*alpha);
+		a0 = 1;
+		a1 = (rho + alpha)/(1 + rho*alpha);
+
+        double temp1 = inputs_ls;
+        temp1 += buffer1[0]  * a0;    // Poles go first
+        temp1 += buffer1[1] * a1;
+        lastOutput1 = temp1;                         
+        lastOutput1 += (buffer1[0] * b0);
+        lastOutput1 += (buffer1[1] * b1); 
+        buffer1[1] = buffer1[0];                    
+        buffer1[0] = temp1;
+        temp3 =  ( lastOutput1) ;
+        outputs_ls = temp3;
+		return outputs_ls;
+
+}
+//-----------------------------------------------------------------------------------------
+void flanging::process (float **inputs, float **outputs, long sampleFrames)
+{
+
+}
+
+//-----------------------------------------------------------------------------------------
+
+
+void flanging::processReplacing (float **inputs, float **outputs, long sampleFrames)
+{
+    float *in1  =  inputs[0];
+    float *in2  =  inputs[1];
+    float *out1 =  outputs[0];
+    float *out2 =  outputs[1];
+	float T = 1/44100;
+	int di=0, n=0;
+	double pi = 3.1415926;
+	double nT=0, deltai=0, t0=0, t1=0, t2=0, t3=0, b0=0, b1=0, b2=0, b3=0;
+	double feedbackL = 0, feedbackR = 0;
+	
+    while (--sampleFrames >= 0)
+    {
+	n = 1+n;
+	deltai = delayMin + (delayMax-delayMin)/2 *(1+ sin(2 * pi * freq * 1/44100 * n));
+
+	// f(x)=[8/freq]*[sum( sin((2n+1)*x) / (2n+1)^2 )]; fomular for triangle wave
+
+	// Delay line using Lagrange interpolator
+	di = floorf(deltai) - 1;
+	t0 = deltai - di;
+	t1 = t0 - 1;
+	t2 = t0 - 2;
+	t3 = t0 - 3;
+	b0 = -t1*t2*t3/6;
+	b1 =  t0*t2*t3/2;
+	b2 = -t0*t1*t3/2;
+	b3 =  t0*t1*t2/6;
+
+		//Lelf channel
+		if (inPointL == delayBufferSize)
+			inPointL = 0;
+		//pow(10.0, (delayMin*44100)/room)
+		delay_bufferL[inPointL++] = gain*(*in1) +  room * feedbackL;
+		for (i=0;i<4;i++)
+		{
+			outPointL[i] = (inPointL - di + i);
+		if (outPointL[i] < 0)
+			outPointL[i] += delayBufferSize;
+			listateL[i] = delay_bufferL[outPointL[i]];
+		}
+		feedbackL = (b0*listateL[0] + b1*listateL[1] + b2*listateL[2] + b3*listateL[3]);
+		feedbackLOut = lowShelf(feedbackL);
+
+		//Right channel
+		if (inPointR == delayBufferSize)
+			inPointR = 0;
+
+		delay_bufferR[inPointR++] = gain*(*in2) + room * feedbackR;
+		for (j=0;j<4;j++)
+		{
+			outPointR[j] = (inPointR - di + j);
+			if (outPointR[j] < 0)
+				outPointR[j] += delayBufferSize;
+			listateR[j] = delay_bufferR[outPointR[j]];
+		}
+		feedbackR = (b0*listateR[0] + b1*listateR[1] + b2*listateR[2] + b3*listateR[3]);
+		feedbackROut = lowShelf(feedbackR);
+		// output
+		(*out1++) = (*in1++)*.5 + .5 * feedbackL;
+		(*out2++) = (*in2++)*.5 + .5 * feedbackR;
+		
+   }
+}

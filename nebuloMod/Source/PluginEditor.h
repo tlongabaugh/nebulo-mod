@@ -52,12 +52,21 @@ private:
     
     // Menus
     ComboBox modMenu;
+    ComboBox lfoMenu;
     
     // Texts
     Label depthText;
     Label rateText;
     Label feedbackText;
     Label mixText;
+    Label fxText;
+    
+    // Backgrounds
+    //Graphics *fxBackground;
+    Label lfoBackground;
+    
+    // Wavetable
+    OpenGLContext waveTable;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (NebuloModAudioProcessorEditor)
 };

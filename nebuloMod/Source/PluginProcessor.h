@@ -111,7 +111,7 @@ public:
     
     // GUI update functions
     void updateFlanger(void);
-    void updatePhaser();
+    void updatePhaser(void);
 };
 
 
