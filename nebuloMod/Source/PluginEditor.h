@@ -49,7 +49,7 @@ private:
     // Sliders
     Slider depthSlider;
     Slider rateSlider;
-    Slider feedBackSlider;
+    Slider feedbackSlider;
     Slider mixSlider;
     
     // Menus
@@ -62,13 +62,8 @@ private:
     Label feedbackText;
     Label mixText;
     Label fxText;
-    
-    // Backgrounds
-    //Graphics *fxBackground;
-    // Label lfoBackground;
 
-    // Wavetable
-    // Graphics *waveTable;
+    Label debugText;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (NebuloModAudioProcessorEditor)
 };
