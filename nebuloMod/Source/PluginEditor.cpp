@@ -37,17 +37,6 @@ NebuloModAudioProcessorEditor::NebuloModAudioProcessorEditor (NebuloModAudioProc
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
     setSize (600, 450);
-    /*
-    gainSlider.setSliderStyle (Slider::LinearVertical);
-    gainSlider.setRange(0.0, 1.0, 0.01);
-    gainSlider.setTextBoxStyle (Slider::NoTextBox, false, 90, 0);
-    gainSlider.setPopupDisplayEnabled (true, this);
-    gainSlider.setTextValueSuffix(" Volume");
-    gainSlider.setValue(1.0);
-    
-    addAndMakeVisible(gainSlider);
-    gainSlider.addListener(this);
-     */
     
     // Create dah sliders!!!
     createSlider(depthSlider, Slider::Rotary, processor.depthVal, 0.0, 1.0, 0.01, "Depth");
