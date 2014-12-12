@@ -8,7 +8,6 @@
   ==============================================================================
 */
 
-#include "PluginProcessor.h"
 #include "PluginEditor.h"
 
 // Thanks Uri!!! So helpful man!
@@ -26,8 +25,19 @@ void NebuloModAudioProcessorEditor::createSlider(Slider &slider, Slider::SliderS
     
     // this function adds the slider to the editor
     addAndMakeVisible(&slider);
+    slider.setVisible(false);
     
     slider.setComponentID(name);
+}
+
+void NebuloModAudioProcessorEditor::createLabel(Label &label, std::string name)
+{
+    label.setName(name);
+    label.setFont(15);
+    label.setVisible(false);
+    label.setEnabled(true);
+    label.setText(name, dontSendNotification);
+    
 }
 
 //==============================================================================
@@ -49,14 +59,27 @@ NebuloModAudioProcessorEditor::NebuloModAudioProcessorEditor (NebuloModAudioProc
     gainSlider.addListener(this);
      */
     
+    // Menu
+    modMenu.setText("Select Modulation");
+    modMenu.addItem("Flanger", 1);
+    modMenu.addItem("Phaser", 2);
+    modMenu.setEnabled(true);
+    modMenu.setSize(160, 30);
+    addAndMakeVisible(&modMenu);
+    modMenu.addListener(this);
+    
     // Create dah sliders!!!
     createSlider(depthSlider, Slider::Rotary, processor.depthVal, 0.0, 1.0, 0.01, "Depth");
     createSlider(rateSlider, Slider::Rotary, processor.rateVal, 0.0, 1.0, 0.01, "Rate");
     createSlider(feedBackSlider, Slider::Rotary, processor.feedbackVal, 0.0, 100.0, 1.0, "Feedback");
-    
     createSlider(mixSlider, Slider::Rotary, processor.mixVal, 0.0, 1.0, 0.01, "Volume");
     
-    // Mode Switch
+    // Create texts!
+    createLabel(depthText, "Depth");
+    createLabel(rateText, "Rate");
+    createLabel(feedbackText, "Feedback");
+    createLabel(mixText, "Mix");
+    
 }
 
 NebuloModAudioProcessorEditor::~NebuloModAudioProcessorEditor()
@@ -66,11 +89,11 @@ NebuloModAudioProcessorEditor::~NebuloModAudioProcessorEditor()
 //==============================================================================
 void NebuloModAudioProcessorEditor::paint (Graphics& g)
 {
-    g.fillAll (Colours::lightsalmon);
+    g.fillAll (Colours::wheat);
 
     g.setColour (Colours::black);
-    g.setFont (26.0f);
-    g.drawFittedText ("Tom and Ryan make DOPE plug-ins! (This one controls gain)", getLocalBounds(), Justification::centred, 1);
+    g.setFont (28.0f);
+    g.drawFittedText ("Nebulo Mod", getLocalBounds(), Justification::bottomLeft, 1);
 }
 
 void NebuloModAudioProcessorEditor::resized()
@@ -85,6 +108,15 @@ void NebuloModAudioProcessorEditor::resized()
     rateSlider.setBounds(225, 150, 50, 50);
     feedBackSlider.setBounds(325, 150, 50, 50);
     mixSlider.setBounds(425, 150, 50, 50);
+    
+    // Menus!!!
+    modMenu.setBounds(60, 50, 200, 200);
+    
+    // Texts!!!
+    depthText.setBounds(125, 205, 25, 25);
+    rateText.setBounds(225, 205, 25, 25);
+    feedbackText.setBounds(325, 205, 25, 25);
+    mixText.setBounds(425, 205, 25, 25);
 }
 
 void NebuloModAudioProcessorEditor::sliderValueChanged(Slider* slider)
@@ -104,5 +136,44 @@ void NebuloModAudioProcessorEditor::sliderValueChanged(Slider* slider)
         processor.feedbackVal = slider->getValue();
     }
     
-    processor.updateFlanger();
+    // Update Flanger
+    if (modMenu.getSelectedItemIndex() == 0)
+    {
+        processor.updateFlanger();
+    }
+    // Update Phaser
+    else if (modMenu.getSelectedItemIndex() == 1)
+    {
+        // processor.updatePhaser();
+    }
+}
+
+void NebuloModAudioProcessorEditor::comboBoxChanged(ComboBox *comboBoxThatHasChanged)
+{
+    // Update Flanger
+    if (modMenu.getSelectedItemIndex() == 0)
+    {
+        depthSlider.setVisible(true);
+        rateSlider.setVisible(true);
+        feedBackSlider.setVisible(true);
+        mixSlider.setVisible(true);
+        
+        depthText.setVisible(true);
+        rateText.setVisible(true);
+        feedbackText.setVisible(true);
+        mixText.setVisible(true);
+    }
+    // Update Phaser
+    else if (modMenu.getSelectedItemIndex() == 1)
+    {
+        depthSlider.setVisible(false);
+        rateSlider.setVisible(false);
+        feedBackSlider.setVisible(false);
+        mixSlider.setVisible(false);
+    
+        depthText.setVisible(false);
+        rateText.setVisible(false);
+        feedbackText.setVisible(false);
+        mixText.setVisible(false);
+    }
 }

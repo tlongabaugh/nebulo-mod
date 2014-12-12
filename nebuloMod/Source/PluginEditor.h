@@ -18,7 +18,9 @@
 //==============================================================================
 /**
 */
-class NebuloModAudioProcessorEditor  : public AudioProcessorEditor, private Slider::Listener
+class NebuloModAudioProcessorEditor  : public AudioProcessorEditor,
+                                       private Slider::Listener,
+                                       private ComboBox::Listener
 {
 public:
     NebuloModAudioProcessorEditor (NebuloModAudioProcessor&);
@@ -29,6 +31,7 @@ public:
     void resized() override;
     
     void sliderValueChanged (Slider* slider) override;
+    void comboBoxChanged (ComboBox *comboBoxThatHasChanged) override;
 
 private:
     // This reference is provided as a quick way for your editor to
@@ -37,6 +40,7 @@ private:
     
     void createSlider(Slider &slider, Slider::SliderStyle style, double defaultVal,
                       double min, double max, double incr, std::string name);
+    void createLabel(Label &label, std::string name);
     
     Slider gainSlider;
     
@@ -46,8 +50,14 @@ private:
     Slider feedBackSlider;
     Slider mixSlider;
     
-    // Buttons
-    // MenuBarComponent modEffectSwitch;
+    // Menus
+    ComboBox modMenu;
+    
+    // Texts
+    Label depthText;
+    Label rateText;
+    Label feedbackText;
+    Label mixText;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (NebuloModAudioProcessorEditor)
 };

@@ -193,14 +193,14 @@ void NebuloModAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffe
         // Get samples from right channel
         float *rightChannel = buffer.getWritePointer(1);
         
-        flanger.processStereoSamples(leftChannel, rightChannel, sampleCount);
+        // flanger.processStereoSamples(leftChannel, rightChannel, sampleCount);
     }
     else if (getNumInputChannels() == 1)
     {
-        flanger.processMonoSamples(leftChannel, sampleCount);
+        // flanger.processMonoSamples(leftChannel, sampleCount);
     }
     
-    // Process naudio
+    // Process audio
     for (int channel = 0; channel < getNumInputChannels(); ++channel)
     {
         float* channelData = buffer.getWritePointer(channel);
