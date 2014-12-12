@@ -32,12 +32,12 @@ void NebuloModAudioProcessorEditor::createSlider(Slider &slider, Slider::SliderS
 
 void NebuloModAudioProcessorEditor::createLabel(Label &label, std::string name)
 {
-    label.setName(name);
-    label.setFont(15);
-    label.setVisible(false);
+    label.setFont(25);
     label.setEnabled(true);
     label.setText(name, dontSendNotification);
-    
+    label.setName(name);
+    addAndMakeVisible(label);
+    label.setVisible(false);
 }
 
 //==============================================================================
