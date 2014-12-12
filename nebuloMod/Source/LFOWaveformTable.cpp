@@ -18,7 +18,7 @@
 #include "LFOWaveformTable.h"
 
 // Initialize our table buffer
-void LFOTable::initTableBuffer(int *buf, lfoData *userData)
+void LFOWaveformTable::initTableBuffer(int *buf, lfoData *userData)
 {
     // put sine waveform into buffer
     lfoData *data = userData;
@@ -38,7 +38,7 @@ void LFOTable::initTableBuffer(int *buf, lfoData *userData)
 }
 
 // Initialize our waveform graph/table
-void LFOTable::initGraph(int *graph)
+void LFOWaveformTable::initGraph(int *graph)
 {
     // Interact with GUI here
     int i;
@@ -54,7 +54,7 @@ void LFOTable::initGraph(int *graph)
 // Move test points to draw waveform; returns bool if changed;
 // IF true, redraw graph and refill buffer
 // O/W, don't redraw/don't refill buffer
-bool LFOTable::movePointOne(int point, tableData *userData)
+bool LFOWaveformTable::movePointOne(int point, tableData *userData)
 {
     tableData *data = userData;
     
@@ -72,7 +72,7 @@ bool LFOTable::movePointOne(int point, tableData *userData)
     // default return
     return false;
 }
-bool LFOTable::movePointTwo(int point, tableData *userData)
+bool LFOWaveformTable::movePointTwo(int point, tableData *userData)
 {
     tableData *data = userData;
     
@@ -92,7 +92,7 @@ bool LFOTable::movePointTwo(int point, tableData *userData)
 }
 
 // Manipulate Graph (uses table buffer to draw graph)
-void LFOTable::drawGraph(void)
+void LFOWaveformTable::drawGraph(void)
 {
     // Use tableBuf info to draw the graph
     // Interact with GUI here
@@ -108,7 +108,7 @@ void LFOTable::drawGraph(void)
 }
 
 // Redraw graph when needed (callback everytime a change is detected/maybe only need drawGraph)
-void LFOTable::redrawGraph(int pointOne, int pointTwo, tableData *userData)
+void LFOWaveformTable::redrawGraph(int pointOne, int pointTwo, tableData *userData)
 {
     tableData *data = userData;
 
@@ -121,7 +121,7 @@ void LFOTable::redrawGraph(int pointOne, int pointTwo, tableData *userData)
 }
 
 // Stock Waveform Generation
-float LFOTable::generateSine(lfoData *userData)
+float LFOWaveformTable::generateSine(lfoData *userData)
 {
     float phase, sinSample = 0;
     static float prev_phase;
@@ -140,7 +140,7 @@ float LFOTable::generateSine(lfoData *userData)
     return sinSample;
 }
 
-float LFOTable::generateTriangle(lfoData *userData)
+float LFOWaveformTable::generateTriangle(lfoData *userData)
 {
     static float triSample;
     static float counter = 1;
@@ -168,7 +168,7 @@ float LFOTable::generateTriangle(lfoData *userData)
     return triSample;
 }
 
-float LFOTable::generateSawtooth(lfoData *userData)
+float LFOWaveformTable::generateSawtooth(lfoData *userData)
 {
     static float sawSample;
     lfoData *data = userData;
@@ -184,7 +184,7 @@ float LFOTable::generateSawtooth(lfoData *userData)
     return sawSample;
 }
 
-float LFOTable::generateSquare(lfoData *userData)
+float LFOWaveformTable::generateSquare(lfoData *userData)
 {
     float sqrSample, phase;
     static float prev_phase;

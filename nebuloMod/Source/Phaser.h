@@ -13,10 +13,12 @@
 #include <stdio.h>
 #include <math.h>
 #include "../JuceLibraryCode/JuceHeader.h"
+#include "Biquad.h"
+#include "LFOWaveformTable.h"
 
 #define SAMPLE_RATE 44100
 #define BOTTOM_FREQ 100
-#define PIN(n,min,max) ((n) > (max) ? max : ((n) < (min) ? (min) : (n)))
+//#define PIN(n,min,max) ((n) > (max) ? max : ((n) < (min) ? (min) : (n)))
 
 
 //------------------------------------------------------------------------
@@ -41,6 +43,7 @@ public:
     {
         Parameters() noexcept
         : depth(1.0f),
+        rate(0.5f),
         mix(1.0f)
         {}
         
@@ -68,9 +71,16 @@ public:
     /* Clear the phaser buffers */
     void reset();
     
-    void setRange(float freqMin, float freqMax );
+    // calculates the new filter cutoff from the envelope value
+    float calculateAPFCutoffFreq(float LFOsample, float minFreq, float maxFreq);
     
-    void setRate(float rate);
+    // Calculate BiQuad coeffs (APF)
+    float calculateFirstOrderAPFCoeffsLeft(float LFOsample);
+    float calculateFirstOrderAPFCoeffsRight(float LFOsample);
+    
+    // Helper function for APF calculation
+    void calculateFirstOrderAPFCoeffs(float cutoffFreq, Biquad* BiQuadFilter);
+    
     
     //==============================================================================
     /** Applies effect to two stereo channels of audio data. */
@@ -85,66 +95,51 @@ public:
 protected:
     void setDepth(float newDepth);
     void setMix(float mix);
-/*
-    float _paramSweepRate;		// 0.0-1.0 passed in
-    float _paramWidth;			// ditto
-    float _paramFeedback;		// ditto
-    float _paramStages;			// ditto
-    float _paramMixMode;		// ditto
-    double _sweepRate;			// actual calc'd sweep rate
-    double _width;				// 0-100%
-    double _feedback;			// 0.0 to 1.0
-    double _feedbackPhase;		// -1.0 or 1.0
-    int   _stages;				// calc'd # of stages 2-10
-    int	  _mixMode;				// mapped to supported mix modes
-    
-    double _wp;					// freq param for equation
-    double _minwp;
-    double _maxwp;
-    double _sweepFactor;		// amount to multiply the freq by with each sample
-    
-    // the all pass line
-    double _lx1;
-    double _ly1;
-    double _lx2;
-    double _ly2;
-    double _lx3;
-    double _ly3;
-    double _lx4;
-    double _ly4;
-    double _lx5;
-    double _ly5;
-    double _lx6;
-    double _ly6;
-    double _lx7;
-    double _ly7;
-    double _lx8;
-    double _ly8;
-    double _lx9;
-    double _ly9;
-    double _lx10;
-    double _ly10;
-    
-    // output mixing
-    double _mixLeftWet;
-    double _mixLeftDry;
-    double _mixRightWet;
-    double _mixRightDry;*/
+
     
 private:
+    // Biquad APF filters to be cascaded
+    BiQuad leftAPF_1;
+    BiQuad rightAPF_1;
 
+    BiQuad leftAPF_2;
+    BiQuad rightAPF_2;
+    
+    BiQuad leftAPF_3;
+    BiQuad rightAPF_3;
+    
+    // Holds phaser's parameters
+    Parameters parameters;
+    
+    // min/max vars
+    float minFreqAPF_1;
+    float maxFreqAPF_1;
+    
+    float minFreqAPF_2;
+    float maxFreqAPF_2;
+    
+    float minFreqAPF_3;
+    float maxFreqAPF_3;
+    
+    LFOWaveformTable LFO;
+    
+    double currentSampleRate;
+    
+    /*
     //A Simple Allpass Delay from From www.musicdsp.org/files/phaser.cpp
     class AllpassDelay {
     public:
         AllpassDelay() : a1( 0.f ), zm1( 0.f )
         {}
         
-        void delayAmt(float delay){ //sample delay time
+        void delayAmt(float delay)
+        { //sample delay time
             a1 = (1.f - delay) / (1.f + delay);
         }
         
-        float update(float newSample){
-            float y = newSample * - a1 + zm1;
+        float update(float newSample)
+        {
+            float y = newSample * -a1 + zm1;
             zm1 = y * a1 + newSample;
             
             return y;
@@ -153,7 +148,50 @@ private:
         float a1, zm1;
     };
     
-    AllpassDelay allPass[6];
+    class AllPassFilter
+    {
+    public:
+        AllPassFilter() noexcept  : bufferSize (0), bufferIndex (0) {}
+        
+        void setSize (const int size)
+        {
+            if (size != bufferSize)
+            {
+                bufferIndex = 0;
+                buffer.malloc ((size_t) size);
+                bufferSize = size;
+            }
+            
+            clear();
+        }
+        
+        void clear() noexcept
+        {
+            buffer.clear ((size_t) bufferSize);
+        }
+        
+        inline float process (const float input) noexcept
+        {
+            const float bufferedValue = buffer [bufferIndex];
+            float temp = input + (bufferedValue * 0.5f);
+            JUCE_UNDENORMALISE (temp);
+            buffer [bufferIndex] = temp;
+            bufferIndex = (bufferIndex + 1) % bufferSize;
+            return bufferedValue - input;
+        }
+        
+    private:
+        HeapBlock<float> buffer;
+        int bufferSize, bufferIndex;
+        
+        JUCE_DECLARE_NON_COPYABLE (AllPassFilter)
+    };
+    
+    enum {numChannels = 2, numAllPasses = 4};
+    
+    //AllPassFilter allPass[numChannels][numAllPasses];
+    
+    AllpassDelay allPass[4];
     Parameters parameters;
     double currentSampleRate;
 
@@ -166,8 +204,9 @@ private:
     
     float zm1;
     
-    
+ 
     //JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Phaser);
+ */
 };
 
 #endif /* defined(__NebuloMod__Phaser__) */

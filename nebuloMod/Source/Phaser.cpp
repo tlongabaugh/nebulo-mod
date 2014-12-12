@@ -4,22 +4,24 @@
 //
 //  Created by Ryan Foo on 11/23/14.
 //
-//
+//  Written by Tom Longabaugh, with help from Will Pirkle's "Designing Audio Effects in C++" book
 
 #include "Phaser.h"
 
 // Constructor
-Phaser::Phaser() : currentSampleRate(SAMPLE_RATE),
-lfoPhase(0.f),
-depth(.1f),
-zm1(.1f)
+Phaser::Phaser() : currentSampleRate(SAMPLE_RATE)
 {
     setParameters(Parameters());
     setSampleRate(SAMPLE_RATE);
-    // default Program Values
     
-    setRange(1500.f, 1600.f);
-    setRate(0.5f);
+    minFreqAPF_1 = 16.0;
+    maxFreqAPF_1 = 1600.0;
+    
+    minFreqAPF_2 = 33.0;
+    maxFreqAPF_2 = 3300.0;
+    
+    minFreqAPF_3 = 48.0;
+    maxFreqAPF_3 = 48.0;
 }
 
 Phaser::~Phaser(void)
@@ -39,21 +41,35 @@ void Phaser::setSampleRate (const double sampleRate)
     currentSampleRate = sampleRate;
 }
 
-void Phaser::setRange(float freqMin, float freqMax)
-{ // Hz
-    depthMin = freqMin / (SAMPLE_RATE/2.f);
-    depthMax = freqMax / (SAMPLE_RATE/2.f);
-}
-
-void Phaser::setRate(float rate)
-{ // cps
-    lfoInc = 2.f * M_PI * (rate / SAMPLE_RATE);
-}
-
-void Phaser::setDepth(float newDepth)
+float calculateAPFCutoffFreq(float LFOsample, float minFreq, float maxFreq)
 {
-    depth = newDepth;
+    return LFOsample + (maxFreq - minFreq) + minFreq;
 }
+
+void calculateFirstOrderAPFCoeffs(float cutoffFreq, BiQuad* BiQuadFilter)
+{
+    //coefficient calculation
+    float alphaNum = tan(M_PI * cutoffFreq/(float)SAMPLE_RATE) - 1.0;
+    float alphaDen = tan(M_PI * cutoffFreq/(float)SAMPLE_RATE) + 1.0;
+    float alpha = alphaNum/alphaDen;
+    
+    //Set the coefficients for this filter
+    BiQuadFilter->a0 = alpha;
+    BiQuadFilter->a1 = 1.0;
+    BiQuadFilter->a1 = 0.0;
+    BiQuadFilter->b1 = alpha;
+    BiQuadFilter->b2 = alpha;
+    
+}
+
+
+void Phaser::reset()
+{
+
+}
+
+
+//================================================================================================================
 
 void Phaser::processStereo(float* const left, float* const right, const int numSamples) noexcept
 {
@@ -73,7 +89,6 @@ void Phaser::processMono(float* const samples, const int numSamples) noexcept
 
 float Phaser::processSingleSample (float newSample) noexcept
 {
-    /*
     //calculate and update phaser sweep lfo...
     float delay  = depthMin + (depthMax - depthMin) * ((sin(lfoPhase) + 1.f)/2.f);
     lfoPhase += lfoInc;
@@ -81,16 +96,16 @@ float Phaser::processSingleSample (float newSample) noexcept
         lfoPhase -= M_PI * 2.f;
     
     //update filter coeffs
-    for(int i = 0; i < 6; i++) {
+    for(int i = 0; i < 4; i++) {
         allPass[i].delayAmt(delay);
     }
     
     //calculate output
-    float y = allPass[0].update(allPass[1].update(allPass[2].update(allPass[3].update(allPass[4].update(allPass[5].update(newSample + zm1))))));
+    float y = allPass[0].update(allPass[1].update(allPass[2].update(allPass[3].update(newSample + zm1))));
     
     zm1 = y;
     
-    return newSample + y * depth;*/
+    return newSample + y * depth;
     
-    return newSample;
+
 }

@@ -27,7 +27,7 @@ typedef struct {
     int pointTwo;
 } tableData;
 
-class LFOTable
+class LFOWaveformTable
 {
 public:
     
