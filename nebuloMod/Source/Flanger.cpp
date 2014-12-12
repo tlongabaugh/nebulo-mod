@@ -16,6 +16,9 @@ Flanger::Flanger(void)
     
     // Set Sample Rate (44100 default)
     setSampleRate(SAMPLE_RATE);
+    
+    min_dly = 0;
+    max_dly = 7;
 }
 
 // Deconstructor
@@ -31,18 +34,50 @@ Flanger::~Flanger(void)
     }
 }
 
+/*
+ * Flanger Equation: y[n] = x[n] + wetness*x[n-delay] + feedback*y[n-1]
+ * delay = 0.5*sample_rate / ( center_frequency + mod_depth* LFO[phasor] )
+ */
+
 // MONO AUDIO PROCESSING
 void Flanger::processMonoSamples(float* const samples, const int numSamples)
 {
     // Make sure left channel is not NULL
     jassert (samples != nullptr);
     
+    static float phase = 0;
+    static int delay_buf_len = 0;
+    static int dly_wr_ptr = 0;
+    float *delay_buffer;
+
     for (int i = 0; i < numSamples; ++i)
     {
-        const float input = samples[i] * gain;
-        float output = 0;
+        const float input = samples[i];
+        float delta = 0.0f;
         
-        samples[i] = output * 1 * wet + samples[i] * dry;
+        float current_delay = (0.5f + 0.5f * sinf(2.0 * M_PI * phase));
+        
+        float dly_rd_ptr = fmodf((float)dly_wr_ptr - (float)(current_delay * 44100) + (float)(delay_buf_len - 3.0), (float)delay_buf_len);
+        
+        // Interpolation!!!
+        float fraction = dly_rd_ptr = floorf(dly_rd_ptr);
+        int prev_sample = (int)floorf(dly_rd_ptr);
+        int next_sample = (prev_sample + 1) % delay_buf_len;
+        delta = fraction * delay_buffer[next_sample] + (1.0f - fraction) * delay_buffer[prev_sample];
+        
+        // Store current information in delay buffer
+        delay_buffer[dly_wr_ptr] = input + (delta * params.feedback);
+        
+        if (++dly_wr_ptr >= delay_buf_len)
+            dly_wr_ptr = 0;
+        
+        // Output is this:
+        samples[i] = input + params.depth * delta;
+        
+        // Wrap Phase
+        phase += params.rate * 1/44100;
+        if (phase >= 1.0)
+            phase -= 1.0;
     }
 }
 
@@ -52,14 +87,41 @@ void Flanger::processStereoSamples(float* const left, float* const right, const 
     // Make sure left and right channels are not NULL
     jassert (left != nullptr && right != nullptr);
     
+    static float phase = 0;
+    static int delay_buf_len = 0;
+    static int dly_wr_ptr = 0;
+    float *delay_buffer;
+    
     // Process stereo samples
     for (int i = 0; i < numSamples; ++i)
     {
-        const float input = (left[i] + right[i]) * gain;
-        float outL = 0, outR = 0;
+        const float input = left[i] + right[i];
+        float delta = 0.0f;
         
-        left[i] = outL * wet + left[i] * dry;
-        left[i] = outR * wet + right[i] * dry;
+        float current_delay = (0.5f + 0.5f * sinf(2.0 * M_PI * phase));
+        
+        float dly_rd_ptr = fmodf((float)dly_wr_ptr - (float)(current_delay * 44100) + (float)(delay_buf_len - 3.0), (float)delay_buf_len);
+        
+        // Interpolation!!!
+        float fraction = dly_rd_ptr = floorf(dly_rd_ptr);
+        int prev_sample = (int)floorf(dly_rd_ptr);
+        int next_sample = (prev_sample + 1) % delay_buf_len;
+        delta = fraction * delay_buffer[next_sample] + (1.0f - fraction) * delay_buffer[prev_sample];
+        
+        // Store current information in delay buffer
+        delay_buffer[dly_wr_ptr] = input + (delta * params.feedback);
+        
+        if (++dly_wr_ptr >= delay_buf_len)
+            dly_wr_ptr = 0;
+        
+        // Output is this:
+        left[i] = input + params.depth * delta;
+        right[i] = input + params.depth * delta;
+        
+        // Wrap Phase
+        phase += params.rate * 1/44100;
+        if (phase >= 1.0)
+            phase -= 1.0;
     }
 }
 

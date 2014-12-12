@@ -114,7 +114,7 @@ public:
         depth,
         rate,
         lfowaveform,
-        resonance,
+        feedback,
         mix,
     };
     
@@ -125,7 +125,7 @@ public:
         : depth(0.5f),
           rate(0.5f),
           lfoWaveform(0),
-          resonance(0.5f),
+          feedback(50.0f),
           mix(0.5f)
         {}
         
@@ -133,7 +133,7 @@ public:
         float rate;
         // float lfo;
         int lfoWaveform;
-        float resonance;
+        float feedback;
         // float manControl;
         float mix;
     } Parameters;
@@ -148,6 +148,8 @@ public:
 private:
     Parameters params;
     float gain, wet, dry;
+    float min_dly, max_dly;
+    int n = 0;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Flanger);
     

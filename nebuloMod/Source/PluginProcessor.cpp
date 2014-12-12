@@ -132,7 +132,7 @@ void NebuloModAudioProcessor::updateFlanger(void)
     flangerParams.depth = depthVal;
     flangerParams.rate = rateVal;
     flangerParams.lfoWaveform = lfoWaveformVal;
-    flangerParams.resonance = resonanceVal;
+    flangerParams.feedback = feedbackVal;
     flangerParams.mix = mixVal;
 }
 
@@ -146,7 +146,7 @@ void NebuloModAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBl
     mixVal = 0.5;
     depthVal= 0.5;
     rateVal = 0.5;
-    resonanceVal = 0.5;
+    feedbackVal = 50.0;
     lfoWaveformVal = 0;
     
     // Set Our Flanger Sample Rate
@@ -193,14 +193,14 @@ void NebuloModAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffe
         // Get samples from right channel
         float *rightChannel = buffer.getWritePointer(1);
         
-        flanger.processStereoSamples(leftChannel, rightChannel, sampleCount);
+        // flanger.processStereoSamples(leftChannel, rightChannel, sampleCount);
     }
     else if (getNumInputChannels() == 1)
     {
-        flanger.processMonoSamples(leftChannel, sampleCount);
+        // flanger.processMonoSamples(leftChannel, sampleCount);
     }
     
-    // Process naudio
+    // Process audio
     for (int channel = 0; channel < getNumInputChannels(); ++channel)
     {
         float* channelData = buffer.getWritePointer(channel);
