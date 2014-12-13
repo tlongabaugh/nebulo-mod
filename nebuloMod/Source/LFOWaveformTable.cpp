@@ -17,6 +17,19 @@
 
 #include "LFOWaveformTable.h"
 
+void LFOWaveformTable::prepareToPlay()
+{
+    // set frequency and wave form
+    frequency = 1.0;
+    waveForm = sineWave;
+}
+
+void LFOWaveformTable::setSampleRate(double sampleRate)
+{
+    currentSampleRate = sampleRate;
+}
+
+
 // Initialize our table buffer
 void LFOWaveformTable::initTableBuffer(int *buf, lfoData *userData)
 {
@@ -119,15 +132,6 @@ void LFOWaveformTable::redrawGraph(int pointOne, int pointTwo, tableData *userDa
     // Redraw the graph
     drawGraph();
 }
-
-void LFOWaveformTable::prepareToPlay()
-{
-    // set frequency and wave form
-    frequency = 1.0;
-    waveForm = sineWave;
-}
-
-
 
 float LFOWaveformTable::generateWaveSample()
 {

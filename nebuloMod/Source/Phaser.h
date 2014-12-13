@@ -16,6 +16,7 @@
 #include "Biquad.h"
 #include "LFOWaveformTable.h"
 #include "LFOtest.h"
+#include "dRowAudio_BiquadFilter.h"
 
 #define SAMPLE_RATE 44100
 #define BOTTOM_FREQ 100
@@ -98,8 +99,18 @@ protected:
     void setMix(float mix);
 
     
-private:
-    // Biquad APF filters to be cascaded
+private:    
+    BiquadFilter leftAPF_1;
+    BiquadFilter rightAPF_1;
+    
+    BiquadFilter leftAPF_2;
+    BiquadFilter rightAPF_2;
+    
+    BiquadFilter leftAPF_3;
+    BiquadFilter rightAPF_3;
+
+    
+    /*// Biquad APF filters to be cascaded
     BiQuad leftAPF_1;
     BiQuad rightAPF_1;
 
@@ -107,7 +118,7 @@ private:
     BiQuad rightAPF_2;
     
     BiQuad leftAPF_3;
-    BiQuad rightAPF_3;
+    BiQuad rightAPF_3;*/
     
     // Holds phaser's parameters
     Parameters parameters;
@@ -122,7 +133,9 @@ private:
     float minFreqAPF_3;
     float maxFreqAPF_3;
     
-    LFOtest LFO;
+    //LFOtest LFO;
+    
+    LFOWaveformTable LFO;
     
     double currentSampleRate;
     

@@ -3,6 +3,15 @@
 #include <math.h>
 #include "Biquad.h"
 
+BiQuad::BiQuad()
+{
+    
+}
+
+BiQuad::~BiQuad()
+{
+    
+}
 
 void BiQuad::flushDelays()
 {

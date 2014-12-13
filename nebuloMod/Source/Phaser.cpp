@@ -66,47 +66,73 @@ void Phaser::calculateFirstOrderAPFCoeffsLeft(float LFOsample)
 {
     // All pass 1
     float cutoffFreq = calculateAPFCutoffFreq(LFOsample, minFreqAPF_1, maxFreqAPF_1);
-    calculateFirstOrderAPFCoeffs(cutoffFreq, &leftAPF_1);
+    leftAPF_1.setCoefficients(leftAPF_1.makeAllpass(currentSampleRate, cutoffFreq, 1));
+    //calculateFirstOrderAPFCoeffs(cutoffFreq, &leftAPF_1);
     
     // All pass 2
     cutoffFreq = calculateAPFCutoffFreq(LFOsample, minFreqAPF_2, maxFreqAPF_2);
-    calculateFirstOrderAPFCoeffs(cutoffFreq, &leftAPF_2);
+    leftAPF_2.setCoefficients(leftAPF_2.makeAllpass(currentSampleRate, cutoffFreq, 1));
+    //calculateFirstOrderAPFCoeffs(cutoffFreq, &leftAPF_2);
     
     // All pass 3
     cutoffFreq = calculateAPFCutoffFreq(LFOsample, minFreqAPF_3, maxFreqAPF_3);
-    calculateFirstOrderAPFCoeffs(cutoffFreq, &leftAPF_3);
+    leftAPF_3.setCoefficients(leftAPF_3.makeAllpass(currentSampleRate, cutoffFreq, 1));
+    //calculateFirstOrderAPFCoeffs(cutoffFreq, &leftAPF_3);
 }
 
 void Phaser::calculateFirstOrderAPFCoeffsRight(float LFOsample)
 {
     // All pass 1
     float cutoffFreq = calculateAPFCutoffFreq(LFOsample, minFreqAPF_1, maxFreqAPF_1);
-    calculateFirstOrderAPFCoeffs(cutoffFreq, &rightAPF_1);
+    rightAPF_1.setCoefficients(rightAPF_1.makeAllpass(currentSampleRate, cutoffFreq, 1));
+    //calculateFirstOrderAPFCoeffs(cutoffFreq, &rightAPF_1);
     
     // All pass 2
     cutoffFreq = calculateAPFCutoffFreq(LFOsample, minFreqAPF_2, maxFreqAPF_2);
-    calculateFirstOrderAPFCoeffs(cutoffFreq, &rightAPF_2);
+    rightAPF_2.setCoefficients(rightAPF_2.makeAllpass(currentSampleRate, cutoffFreq, 1));
+    //calculateFirstOrderAPFCoeffs(cutoffFreq, &rightAPF_2);
     
     // All pass 3
     cutoffFreq = calculateAPFCutoffFreq(LFOsample, minFreqAPF_3, maxFreqAPF_3);
-    calculateFirstOrderAPFCoeffs(cutoffFreq, &rightAPF_3);
+    rightAPF_3.setCoefficients(rightAPF_3.makeAllpass(currentSampleRate, cutoffFreq, 1));
+    //calculateFirstOrderAPFCoeffs(cutoffFreq, &rightAPF_3);
 }
 
 void Phaser::prepareToPlay()
 {
-    leftAPF_1.flushDelays();
+    // reset and init with dummy values. cutoff frequencies will be changed later
+    leftAPF_1.reset();
+    leftAPF_1.setCoefficients(leftAPF_1.makeAllpass(currentSampleRate, 100, 0));
+    leftAPF_2.reset();
+    leftAPF_2.setCoefficients(leftAPF_2.makeAllpass(currentSampleRate, 100, 0));
+    leftAPF_2.reset();
+    leftAPF_2.setCoefficients(leftAPF_2.makeAllpass(currentSampleRate, 100, 0));
+    rightAPF_1.reset();
+    rightAPF_1.setCoefficients(rightAPF_1.makeAllpass(currentSampleRate, 100, 0));
+    rightAPF_2.reset();
+    rightAPF_2.setCoefficients(rightAPF_2.makeAllpass(currentSampleRate, 100, 0));
+    rightAPF_3.reset();
+    rightAPF_3.setCoefficients(rightAPF_3.makeAllpass(currentSampleRate, 100, 0));
+    
+    // Init LFO
+    LFO.setSampleRate(currentSampleRate);
+    LFO.prepareToPlay();
+    
+    /*leftAPF_1.flushDelays();
     rightAPF_1.flushDelays();
     leftAPF_2.flushDelays();
     rightAPF_2.flushDelays();
     leftAPF_3.flushDelays();
-    rightAPF_3.flushDelays();
+    rightAPF_3.flushDelays();*/
     
+    
+    /*
     LFO.m_fFrequency_Hz = 440;
     LFO.m_uPolarity = 1;
     LFO.m_uTableMode = 0;
     LFO.m_uOscType = 0;
     LFO.setSampleRate(SAMPLE_RATE);
-    LFO.prepareForPlay();
+    LFO.prepareForPlay();*/
     
 }
 
@@ -119,6 +145,34 @@ void Phaser::prepareToPlay()
 
 void Phaser::processStereo(float* const left, float* const right, const int numSamples) noexcept
 {
+    jassert (left != nullptr && right != nullptr);
+    float lfoSample, dryL, dryR;
+    float depth = 50.0/200.0;
+    
+    for(int i = 0; i < numSamples; i++){
+        lfoSample = LFO.generateWaveSample();
+        calculateFirstOrderAPFCoeffsLeft(lfoSample);
+        calculateFirstOrderAPFCoeffsRight(lfoSample);
+        
+        dryL = left[i];
+        dryR = right[i];
+        
+        leftAPF_1.processSamples(left, 1);
+        leftAPF_2.processSamples(left, 1);
+        leftAPF_3.processSamples(left, 1);
+        
+        rightAPF_1.processSamples(right, 1);
+        rightAPF_2.processSamples(right, 1);
+        rightAPF_3.processSamples(right, 1);
+        
+        left[i] = depth * left[i] + (1.0 - depth)*dryL;
+        right[i] = depth * right[i] + (1.0 - depth)*dryR;
+        
+        //left[i] = lfoSample;
+        //right[i] = lfoSample;
+
+    }
+    /*
     float yn = 0; // to hold lfo output
     float yqn = 0; //quad output (not used)
     float what;
@@ -131,11 +185,29 @@ void Phaser::processStereo(float* const left, float* const right, const int numS
         left[i] = processAudioFrame(left[i], yn, 1);
         right[i] = processAudioFrame(right[i], yn, 1);
 
-    }
+    }*/
+   // left[i]  = outL * wet1 + outR * wet2 + left[i]  * dry;
+   // right[i] = outR * wet1 + outL * wet2 + right[i] * dry;
 }
 
 void Phaser::processMono(float* const samples, const int numSamples) noexcept
 {
+  /*  jassert (samples != nullptr);
+    float lfoSample;
+    float APF1, APF2, APF3;
+    float depth = 50.0/200.0;
+    for(int i = 0; i < numSamples; i++){
+        lfoSample = LFO.generateWaveSample();
+        samples[i] = lfoSample;
+        
+        APF1 = leftAPF_1.processSamples(samples, 1);
+        leftAPF_2.processSamples(left, <#int numSamples#>)
+        
+        
+    }*/
+    
+    
+    /*
     float yn = 0; // to hold lfo output
     float yqn = 0; //quad output (not used)
     
@@ -144,11 +216,14 @@ void Phaser::processMono(float* const samples, const int numSamples) noexcept
         LFO.doOscillate(&yn, &yqn);
         //samples[i] = yn;
         samples[i] = processAudioFrame(samples[i], yn, 1);
-    }
+    }*/
 }
 
 float Phaser::processAudioFrame(float inputSample, float lfoSample, int numChannels)
 {
+    
+    
+   /*
     // APFs
     float APF1, APF2, APF3;
     float outputSample;
@@ -169,6 +244,7 @@ float Phaser::processAudioFrame(float inputSample, float lfoSample, int numChann
     return inputSample;
     
     //calculateFirstOrderAPFCoeffsRight(lfoSample);
-
+*/
+    return inputSample;
     
 }

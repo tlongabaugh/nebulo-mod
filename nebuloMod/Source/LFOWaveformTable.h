@@ -67,6 +67,12 @@ public:
     
     float frequency;
     float waveForm;
+    
+    void setSampleRate(double sampleRate);
+    
+private:
+    
+    double currentSampleRate;
 };
 
 #endif /* defined(__NebuloMod__LFOWaveformTable__) */

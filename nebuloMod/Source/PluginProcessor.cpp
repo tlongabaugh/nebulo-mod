@@ -195,17 +195,17 @@ void NebuloModAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffe
     //Written by tom longabaugh and ryan foo
     /* Perform the necessary audio processing */
     
-    int sampleCount = buffer.getNumSamples();
+    //int sampleCount = buffer.getNumSamples();
     
     /* Get the samples from the input buffer */
     if (getNumInputChannels() == 1) {
         float *monoData = buffer.getWritePointer(0);
-        phaser.processMono(monoData, sampleCount);
+        phaser.processMono(monoData, buffer.getNumSamples());
     }
     else if (getNumInputChannels() == 2) {
         float *leftChannel = buffer.getWritePointer(0);
         float *rightChannel = buffer.getWritePointer(1);
-        phaser.processStereo(leftChannel, rightChannel, sampleCount);
+        phaser.processStereo(leftChannel, rightChannel, buffer.getNumSamples());
     }
     else {
         // This is wrong, dont' do anything??
