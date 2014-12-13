@@ -171,6 +171,8 @@ void NebuloModAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBl
     flanger.setSampleRate(getSampleRate());
     phaser.setSampleRate(getSampleRate());
     phaser.prepareToPlay();
+    
+    //should call reset here
 }
 
 void NebuloModAudioProcessor::releaseResources()

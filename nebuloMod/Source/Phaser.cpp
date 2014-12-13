@@ -101,7 +101,7 @@ void Phaser::prepareToPlay()
     leftAPF_3.flushDelays();
     rightAPF_3.flushDelays();
     
-    LFO.m_fFrequency_Hz = 0.5;
+    LFO.m_fFrequency_Hz = 440;
     LFO.m_uPolarity = 1;
     LFO.m_uTableMode = 0;
     LFO.m_uOscType = 0;
@@ -121,10 +121,13 @@ void Phaser::processStereo(float* const left, float* const right, const int numS
 {
     float yn = 0; // to hold lfo output
     float yqn = 0; //quad output (not used)
-    
+    float what;
     for(int i = 0; i < numSamples; i++) {
         // get lfo sample
         LFO.doOscillate(&yn, &yqn);
+        //left[i] = yn;
+        //right[i] = yn;
+        //what = processAudioFrame(left[i], yn, 1);
         left[i] = processAudioFrame(left[i], yn, 1);
         right[i] = processAudioFrame(right[i], yn, 1);
 
@@ -139,6 +142,7 @@ void Phaser::processMono(float* const samples, const int numSamples) noexcept
     for(int i = 0; i < numSamples; i++) {
         // get lfo sample
         LFO.doOscillate(&yn, &yqn);
+        //samples[i] = yn;
         samples[i] = processAudioFrame(samples[i], yn, 1);
     }
 }
