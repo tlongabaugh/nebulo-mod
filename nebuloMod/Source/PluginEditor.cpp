@@ -61,27 +61,27 @@ NebuloModAudioProcessorEditor::NebuloModAudioProcessorEditor (NebuloModAudioProc
     modMenu.addListener(this);
     
     // Create dah sliders!!!
-    createSlider(depthSlider, Slider::LinearHorizontal, processor.flDepthVal, 0.0, 1.0, 0.01, " Depth");
-    createSlider(rateSlider, Slider::LinearHorizontal, processor.flRateVal, 0.0, 1.0, 0.01, " Rate");
-    createSlider(feedBackSlider, Slider::LinearHorizontal, processor.flFeedbackVal, 0.0, 100.0, 1.0, " Feedback");
-    createSlider(mixSlider, Slider::LinearHorizontal, processor.flMixVal, 0.0, 1.0, 0.01, " Volume");
+    createSlider(depthSlider, Slider::LinearHorizontal, processor.flDepthVal, 0.0, 1.0, 0.01, "Depth");
+    createSlider(rateSlider, Slider::LinearHorizontal, processor.flRateVal, 0.0, 1.0, 0.01, "Rate");
+    createSlider(feedbackSlider, Slider::LinearHorizontal, processor.flFeedbackVal, 0.0, 100.0, 1.0, "Feedback");
+    createSlider(mixSlider, Slider::LinearHorizontal, processor.flMixVal, 0.0, 1.0, 0.01, "Mix");
     
     // Create texts!
     createLabel(depthText, "Depth");
     createLabel(rateText, "Rate");
     createLabel(feedbackText, "Feedback");
     createLabel(mixText, "Mix");
+    createLabel(debugText, "Debugger");
     
     fxText.setSize(200, 50);
     
     // Backgrounds
     //fxBackground->setColour(Colours::chocolate);
     //fxBackground->drawRoundedRectangle(0, 0, 300, 300, 5, 5);
-    // fxBackground->fillRect(<#const Rectangle<int> &rectangle#>)
     
     
     // LFO PARAMETER SIDE
-    
+
     // Menu
     lfoMenu.setText("Select LFO Waveform");
     lfoMenu.addItem("Sine", 1);
@@ -93,6 +93,8 @@ NebuloModAudioProcessorEditor::NebuloModAudioProcessorEditor (NebuloModAudioProc
     addAndMakeVisible(&lfoMenu);
     lfoMenu.addListener(this);
     
+    // LFO Wavetable
+    addAndMakeVisible(debugText);
 }
 
 NebuloModAudioProcessorEditor::~NebuloModAudioProcessorEditor()
@@ -102,11 +104,29 @@ NebuloModAudioProcessorEditor::~NebuloModAudioProcessorEditor()
 //==============================================================================
 void NebuloModAudioProcessorEditor::paint (Graphics& g)
 {
-    g.fillAll (Colours::wheat);
+    // Wavetable graph
+    Path waveRef;
+    waveRef.startNewSubPath(40, 270);
+    waveRef.lineTo(270, 270);
+    float dashes[] = {20, 10};
+    PathStrokeType (3.0f).createDashedStroke (waveRef, waveRef, dashes, 2);
+    
+    // Background
+    g.fillAll (Colours::khaki);
 
+    // Texts and Line Graph
     g.setColour (Colours::black);
     g.setFont (28.0f);
     g.drawFittedText ("Nebulo Mod", getLocalBounds(), Justification::bottomLeft, 1);
+    
+    // Backgrounds son!!!
+    g.setColour(Colours::ivory);
+    g.fillRoundedRectangle(320, 160, 370, 250, 25);
+    g.fillRoundedRectangle(20, 160, 280, 250, 25);
+    
+    // The line graph!!
+    g.setColour(Colours::black);
+    g.fillPath(waveRef);
 }
 
 void NebuloModAudioProcessorEditor::resized()
@@ -115,23 +135,23 @@ void NebuloModAudioProcessorEditor::resized()
     // subcomponents in your editor..
 
     // Knobs!!!
-    depthSlider.setBounds(350, 150, 250, 75);
-    rateSlider.setBounds(350, 200, 250, 75);
-    feedBackSlider.setBounds(350, 250, 250, 75);
-    mixSlider.setBounds(350, 300, 250, 75);
+    depthSlider.setBounds(350, 160, 250, 75);
+    rateSlider.setBounds(350, 210, 250, 75);
+    feedbackSlider.setBounds(350, 260, 250, 75);
+    mixSlider.setBounds(350, 310, 250, 75);
     
     // Menus!!!
     modMenu.setBounds(390, 120, 200, 200);
     lfoMenu.setBounds(70, 120, 200, 200);
     
     // Texts!!!
-    depthText.setBounds(610, 160, 25, 75);
-    rateText.setBounds(610, 210, 25, 75);
-    feedbackText.setBounds(610, 260, 25, 75);
-    mixText.setBounds(610, 310, 25, 75);
+    depthText.setBounds(610, 170, 25, 75);
+    rateText.setBounds(610, 220, 25, 75);
+    feedbackText.setBounds(610, 270, 25, 75);
+    mixText.setBounds(610, 320, 25, 75);
     fxText.setBounds(450, 360, 100, 50);
     
-    // Backgrounds
+    debugText.setBounds(350, 400, 150, 150);
 }
 
 void NebuloModAudioProcessorEditor::sliderValueChanged(Slider* slider)
@@ -144,6 +164,7 @@ void NebuloModAudioProcessorEditor::sliderValueChanged(Slider* slider)
         }
         else if (slider->getComponentID().compare("Depth") == 0) {
             processor.flDepthVal = slider->getValue();
+            debugText.setText("Changing the Depth dawg", dontSendNotification);
         }
         else if (slider->getComponentID().compare("Rate") == 0) {
             processor.flRateVal = slider->getValue();
@@ -181,7 +202,7 @@ void NebuloModAudioProcessorEditor::comboBoxChanged(ComboBox *comboBoxThatHasCha
     {
         depthSlider.setVisible(true);
         rateSlider.setVisible(true);
-        feedBackSlider.setVisible(true);
+        feedbackSlider.setVisible(true);
         mixSlider.setVisible(true);
         
         depthText.setVisible(true);
@@ -192,10 +213,26 @@ void NebuloModAudioProcessorEditor::comboBoxChanged(ComboBox *comboBoxThatHasCha
         if (modMenu.getSelectedItemIndex() == 0)
         {
             fxText.setText("Flanger", dontSendNotification);
+            
+            // set the sliders to saved values
+            depthSlider.setValue(processor.flDepthVal);
+            rateSlider.setValue(processor.flRateVal);
+            feedbackSlider.setValue(processor.flFeedbackVal);
+            mixSlider.setValue(processor.flMixVal);
+            
+            // debugText.setText(std::to_string(mixSlider.getValue()), dontSendNotification);
         }
         else if (modMenu.getSelectedItemIndex() == 1)
         {
             fxText.setText("Phaser", dontSendNotification);
+            
+            // set the sliders to saved values
+            depthSlider.setValue(processor.phsDepthVal);
+            rateSlider.setValue(processor.phsRateVal);
+            feedbackSlider.setValue(processor.phsFeedbackVal);
+            mixSlider.setValue(processor.phsMixVal);
+            
+            // debugText.setText(std::to_string(depthSlider.getValue()), dontSendNotification);
         }
         
         addAndMakeVisible(fxText);
