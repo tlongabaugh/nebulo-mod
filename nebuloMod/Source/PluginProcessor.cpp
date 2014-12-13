@@ -170,6 +170,7 @@ void NebuloModAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBl
     // Set Our Flanger and phaser Sample Rate
     flanger.setSampleRate(getSampleRate());
     phaser.setSampleRate(getSampleRate());
+    phaser.prepareToPlay();
 }
 
 void NebuloModAudioProcessor::releaseResources()

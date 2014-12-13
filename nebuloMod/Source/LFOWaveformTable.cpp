@@ -120,14 +120,44 @@ void LFOWaveformTable::redrawGraph(int pointOne, int pointTwo, tableData *userDa
     drawGraph();
 }
 
+void LFOWaveformTable::prepareToPlay()
+{
+    // set frequency and wave form
+    frequency = 1.0;
+    waveForm = sineWave;
+}
+
+
+
+float LFOWaveformTable::generateWaveSample()
+{
+    float waveSample;
+    if (waveForm == sineWave) {
+        waveSample = generateSine(frequency);
+    }
+    else if (waveForm == triWave) {
+        waveSample = generateTriangle(frequency);
+    }
+    else if (waveForm == sawWave) {
+        waveSample = generateSawtooth(frequency);
+    }
+    else if (waveForm == squareWave) {
+        waveSample = generateSquare(frequency);
+    }
+    else {
+        waveSample = 0; // implement wavetable later
+    }
+    
+    return waveSample;
+}
+
 // Stock Waveform Generation
-float LFOWaveformTable::generateSine(lfoData *userData)
+float LFOWaveformTable::generateSine(float freq)
 {
     float phase, sinSample = 0;
     static float prev_phase;
-    lfoData *data = userData;
     
-    phase = 2 * M_PI * data->frequency / SAMPLE_RATE + prev_phase;
+    phase = 2 * M_PI * freq / SAMPLE_RATE + prev_phase;
     sinSample = sin(phase);
     
     if (phase > (2 * M_PI))
@@ -140,12 +170,12 @@ float LFOWaveformTable::generateSine(lfoData *userData)
     return sinSample;
 }
 
-float LFOWaveformTable::generateTriangle(lfoData *userData)
+float LFOWaveformTable::generateTriangle(float freq)
 {
     static float triSample;
     static float counter = 1;
-    lfoData *data = userData;
-    float T = SAMPLE_RATE / data->frequency;
+
+    float T = SAMPLE_RATE / freq;
     
     if (counter == 1)
     {
@@ -168,11 +198,10 @@ float LFOWaveformTable::generateTriangle(lfoData *userData)
     return triSample;
 }
 
-float LFOWaveformTable::generateSawtooth(lfoData *userData)
+float LFOWaveformTable::generateSawtooth(float freq)
 {
     static float sawSample;
-    lfoData *data = userData;
-    float T = SAMPLE_RATE / data->frequency;
+    float T = SAMPLE_RATE / freq;
     
     sawSample += 2./T;
     
@@ -184,13 +213,12 @@ float LFOWaveformTable::generateSawtooth(lfoData *userData)
     return sawSample;
 }
 
-float LFOWaveformTable::generateSquare(lfoData *userData)
+float LFOWaveformTable::generateSquare(float freq)
 {
     float sqrSample, phase;
     static float prev_phase;
-    lfoData *data = userData;
     
-    phase = 2 * M_PI * data->frequency / SAMPLE_RATE + prev_phase;
+    phase = 2 * M_PI * freq / SAMPLE_RATE + prev_phase;
     sqrSample = sin(phase);
     
     if (sqrSample > 0)

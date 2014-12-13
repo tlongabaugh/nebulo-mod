@@ -15,6 +15,7 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "Biquad.h"
 #include "LFOWaveformTable.h"
+#include "LFOtest.h"
 
 #define SAMPLE_RATE 44100
 #define BOTTOM_FREQ 100
@@ -38,7 +39,7 @@ public:
         kMix,
     };
     
-    /* Holds the parameters used by the */
+    /* Holds the parameters used by the phaser */
     struct Parameters
     {
         Parameters() noexcept
@@ -68,18 +69,18 @@ public:
      called before the process method */
     void setSampleRate(const double sampleRate);
     
-    /* Clear the phaser buffers */
-    void reset();
+    /* Clear the phaser buffers and set up lfo*/
+    void prepareToPlay();
     
     // calculates the new filter cutoff from the envelope value
     float calculateAPFCutoffFreq(float LFOsample, float minFreq, float maxFreq);
     
     // Calculate BiQuad coeffs (APF)
-    float calculateFirstOrderAPFCoeffsLeft(float LFOsample);
-    float calculateFirstOrderAPFCoeffsRight(float LFOsample);
+    void calculateFirstOrderAPFCoeffsLeft(float LFOsample);
+    void calculateFirstOrderAPFCoeffsRight(float LFOsample);
     
     // Helper function for APF calculation
-    void calculateFirstOrderAPFCoeffs(float cutoffFreq, Biquad* BiQuadFilter);
+    void calculateFirstOrderAPFCoeffs(float cutoffFreq, BiQuad* BiQuadFilter);
     
     
     //==============================================================================
@@ -89,8 +90,8 @@ public:
     /** Applies effect single mono channel of audio data. */
     void processMono (float* const samples, const int numSamples) noexcept;
     
-    /* Processes one sample */
-    float processSingleSample (float newSample) noexcept;
+    /* Processes a frame of audio */
+    float processAudioFrame(float inputSample, float lfoSample, int numChannels);
 
 protected:
     void setDepth(float newDepth);
@@ -121,7 +122,7 @@ private:
     float minFreqAPF_3;
     float maxFreqAPF_3;
     
-    LFOWaveformTable LFO;
+    LFOtest LFO;
     
     double currentSampleRate;
     

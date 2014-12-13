@@ -30,6 +30,13 @@ typedef struct {
 class LFOWaveformTable
 {
 public:
+    typedef enum {
+        sineWave,
+        triWave,
+        sawWave,
+        squareWave,
+        tableWave
+    } waveType;
     
     int tableBuf[TABLE_SIZE];
     
@@ -48,11 +55,18 @@ public:
     // Redraw graph when needed (callback everytime a change is detected/maybe only need drawGraph)
     void redrawGraph(int pointOne, int pointTwo, tableData *userData);
     
+    float generateWaveSample();
+    
+    void prepareToPlay();
+    
     // Stock Waveform Generation
-    float generateSine(lfoData *userData);
-    float generateTriangle(lfoData *userData);
-    float generateSawtooth(lfoData *userData);
-    float generateSquare(lfoData *userData);
+    float generateSine(float freq);
+    float generateTriangle(float freq);
+    float generateSawtooth(float freq);
+    float generateSquare(float freq);
+    
+    float frequency;
+    float waveForm;
 };
 
 #endif /* defined(__NebuloMod__LFOWaveformTable__) */
