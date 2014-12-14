@@ -80,6 +80,7 @@ void Phaser::processStereo(float* const left, float* const right, const int numS
     float lfoSample;
     for(int i = 0; i < numSamples; i++) {
         // Get lfo sample
+        LFO.waveForm = parameters.lfoWaveform;
         lfoSample = LFO.generateWaveSample();
         
         // process left and right channels
@@ -95,6 +96,7 @@ void Phaser::processMono(float* const samples, const int numSamples) noexcept
     float lfoSample;
     for(int i = 0; i < numSamples; i++) {
         // get lfo sample, process mono channel
+        LFO.waveForm = parameters.lfoWaveform;
         lfoSample = LFO.generateWaveSample();
         samples[i] = processSample(samples[i], lfoSample);
     }
@@ -114,6 +116,6 @@ float Phaser::processSample(float inSamp, float lfoSample)
     zm1 = y;
     
     // mix dry and phaser output
-    return inSamp*(1.0-parameters.mix) + y * parameters.depth * parameters.mix;
+    return inSamp*(1.0-parameters.mix/2) + y * parameters.depth * parameters.mix/2;
 }
 
