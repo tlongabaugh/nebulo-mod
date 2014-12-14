@@ -43,6 +43,7 @@ private:
     
     void createSlider(Slider &slider, Slider::SliderStyle style, double defaultVal,
                       double min, double max, double incr, std::string name);
+    
     void createLabel(Label &label, std::string name);
     
     Slider gainSlider;

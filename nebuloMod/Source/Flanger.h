@@ -24,64 +24,6 @@
 #define PIN(n, min, max)    ((n) > (max) ? max : ((n) < (min) ? (min) : (n)))
 #define MODF(n, i, f)       ((i) = (int)(n), (f) = (n) - (double)(i))
 
-/*
-// Define the Globals, Parameters, and Variables needed for the Flanger
-enum
-{
-    // Parameter Tags:
-    kDepth,
-    kRate = 0,
-    kLFOWaveform,
-    kResonance,
-    kManualControl,
-    kMix,
-    
-    kNumParams = 6,
-    kNumMixModes = 6,
-};
-*/
-/*
-// Mix Modes to enable Mono/Stereo outputs
-enum
-{
-    kMixMono,
-    kMixMonoMinus,
-    kMixMonoBoth,
-    kMixStereo,
-    kMixStereoMinus,
-    kMixStereoBoth,
-};
-*/
-// For future development for presets
-/*
-class FlangerEffect
-{
-    friend class Flanger;
-// Flanger constructor
-public:
-    FlangerEffect();
-    
-    FlangerEffect(float depth,
-                  float rate,
-                  float lfo,
-                  float resonance,
-                  float manControl,
-                  float mix,
-                  float mixMode);
-    ~FlangerEffect() {}
-    
-// Flanger variables
-private:
-    float paramDepth;
-    float paramRate;
-    float paramLFO;
-    float paramResonance;
-    float paramManCtrl;
-    float paramMix;
-    float paramMixMode;
-};
-*/
-
 // Two Pole Low Pass Filter Needed for Flanger Effect
 class TwoPoleLowPassFilter
 {

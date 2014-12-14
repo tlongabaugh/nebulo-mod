@@ -14,6 +14,7 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "Flanger.h"
 #include "Phaser.h"
+#include "LFOWaveformTable.h"
 
 
 //==============================================================================
@@ -69,7 +70,6 @@ public:
     
     float gain;
 
-public:
     // Added by Ryan Foo and Tom Longabaugh
 
     //==============================================================================
@@ -103,15 +103,17 @@ public:
     int phsLfoWaveformVal;
     // Feedback Level (?)
     float phsFeedbackVal;
-    // Dry/Wet mix
+    // Dry/Wet mix (THIS SHOULD BE 50% MAX)
     float phsMixVal;
-    
-    Flanger flanger;
-    Phaser phaser;
     
     // GUI update functions
     void updateFlanger(void);
     void updatePhaser(void);
+    
+private:
+    Flanger flanger;
+    Phaser phaser;
+    //LFOWaveformTable LFO;
 };
 
 

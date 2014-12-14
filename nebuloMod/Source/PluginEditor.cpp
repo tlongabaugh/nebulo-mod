@@ -17,7 +17,7 @@ void NebuloModAudioProcessorEditor::createSlider(Slider &slider, Slider::SliderS
     slider.setRange(min, max, incr);
     slider.setTextBoxStyle (Slider::NoTextBox, false, 90, 0);
     slider.setPopupDisplayEnabled (true, this);
-    slider.setTextValueSuffix(name);
+    slider.setTextValueSuffix(" " + name);
     slider.setValue(defaultVal);
     
     // set this class as the listener for the slider's callback function
@@ -62,7 +62,7 @@ NebuloModAudioProcessorEditor::NebuloModAudioProcessorEditor (NebuloModAudioProc
     
     // Create dah sliders!!!
     createSlider(depthSlider, Slider::LinearHorizontal, processor.flDepthVal, 0.0, 1.0, 0.01, "Depth");
-    createSlider(rateSlider, Slider::LinearHorizontal, processor.flRateVal, 0.0, 1.0, 0.01, "Rate");
+    createSlider(rateSlider, Slider::LinearHorizontal, processor.flRateVal, 0.0, 20.0, 1.0, "Rate");
     createSlider(feedbackSlider, Slider::LinearHorizontal, processor.flFeedbackVal, 0.0, 100.0, 1.0, "Feedback");
     createSlider(mixSlider, Slider::LinearHorizontal, processor.flMixVal, 0.0, 1.0, 0.01, "Mix");
     
@@ -104,12 +104,18 @@ NebuloModAudioProcessorEditor::~NebuloModAudioProcessorEditor()
 //==============================================================================
 void NebuloModAudioProcessorEditor::paint (Graphics& g)
 {
-    // Wavetable graph
-    Path waveRef;
-    waveRef.startNewSubPath(40, 270);
-    waveRef.lineTo(270, 270);
-    float dashes[] = {20, 10};
-    PathStrokeType (3.0f).createDashedStroke (waveRef, waveRef, dashes, 2);
+    // Wavetable graph init
+    waveRef.startNewSubPath(40, 280);
+    // waveRef.lineTo(270, 280);
+    for (int i = 0; i < 1024; i++)
+    {
+        float x_axis = (i+1) * 15 / 64;
+        //float y_axis = waveTable[i] * 20.0f;
+        
+        waveRef.lineTo(40 + x_axis, 280 /*+ y_axis*/);
+    }
+
+    float lineThickness = 2.0f;
     
     // Background
     g.fillAll (Colours::khaki);
@@ -118,6 +124,8 @@ void NebuloModAudioProcessorEditor::paint (Graphics& g)
     g.setColour (Colours::black);
     g.setFont (28.0f);
     g.drawFittedText ("Nebulo Mod", getLocalBounds(), Justification::bottomLeft, 1);
+    g.setFont(16.0f);
+    g.drawFittedText("by Ryan Foo and Tom Longabaugh", getLocalBounds(), Justification::bottomRight, 2);
     
     // Backgrounds son!!!
     g.setColour(Colours::ivory);
@@ -126,7 +134,7 @@ void NebuloModAudioProcessorEditor::paint (Graphics& g)
     
     // The line graph!!
     g.setColour(Colours::black);
-    g.fillPath(waveRef);
+    g.strokePath(waveRef, PathStrokeType(lineThickness));
 }
 
 void NebuloModAudioProcessorEditor::resized()
@@ -164,7 +172,7 @@ void NebuloModAudioProcessorEditor::sliderValueChanged(Slider* slider)
         }
         else if (slider->getComponentID().compare("Depth") == 0) {
             processor.flDepthVal = slider->getValue();
-            debugText.setText("Changing the Depth dawg", dontSendNotification);
+            // debugText.setText("Changing the Depth dawg", dontSendNotification);
         }
         else if (slider->getComponentID().compare("Rate") == 0) {
             processor.flRateVal = slider->getValue();
@@ -220,6 +228,8 @@ void NebuloModAudioProcessorEditor::comboBoxChanged(ComboBox *comboBoxThatHasCha
             feedbackSlider.setValue(processor.flFeedbackVal);
             mixSlider.setValue(processor.flMixVal);
             
+            //updatePath();
+            
             // debugText.setText(std::to_string(mixSlider.getValue()), dontSendNotification);
         }
         else if (modMenu.getSelectedItemIndex() == 1)
@@ -238,4 +248,26 @@ void NebuloModAudioProcessorEditor::comboBoxChanged(ComboBox *comboBoxThatHasCha
         addAndMakeVisible(fxText);
         fxText.setVisible(true);
     }
+}
+
+void NebuloModAudioProcessorEditor::updatePath(Graphics &g)
+{
+    // Clear the waveform
+    waveRef.clear();
+    // Line thickness
+    float lineThickness = 2.0f;
+    
+    // Select waveform
+    
+    waveRef.startNewSubPath(40, 280);
+    // waveRef.lineTo(270, 280);
+    for (int i = 0; i < 1024; i++)
+    {
+        float x_axis = (i+1) * 15 / 64;
+        // float y_axis = processor.waveformTable[i] * 15 / 64;
+        
+        waveRef.lineTo(40 + x_axis, 300 /*+ y_axis*/);
+    }
+    
+    g.strokePath(waveRef, PathStrokeType(lineThickness));
 }
