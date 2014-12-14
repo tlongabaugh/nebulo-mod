@@ -200,12 +200,14 @@ void NebuloModAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffe
     /* Get the samples from the input buffer */
     if (getNumInputChannels() == 1) {
         float *monoData = buffer.getWritePointer(0);
-        phaser.processMono(monoData, buffer.getNumSamples());
+        //phaser.processMono(monoData, buffer.getNumSamples());
+        flanger.processMono(monoData, buffer.getNumSamples());
     }
     else if (getNumInputChannels() == 2) {
         float *leftChannel = buffer.getWritePointer(0);
         float *rightChannel = buffer.getWritePointer(1);
-        phaser.processStereo(leftChannel, rightChannel, buffer.getNumSamples());
+        //phaser.processStereo(leftChannel, rightChannel, buffer.getNumSamples());
+        flanger.processStereo(leftChannel, rightChannel, buffer.getNumSamples());
     }
     else {
         // This is wrong, dont' do anything??
