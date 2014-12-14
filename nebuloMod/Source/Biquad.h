@@ -18,7 +18,7 @@ class BiQuad
 public:
     BiQuad(void);
     virtual ~BiQuad(void);
-    
+
 protected:
     float m_f_Xz_1; // x z-1 delay element
     float m_f_Xz_2; // x z-2 delay element
