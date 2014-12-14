@@ -25,16 +25,6 @@ public:
     Phaser();
     ~Phaser();
     
-    // Parameter enums
-    enum
-    {
-        kDepth,
-        kRate,
-        kLfowaveform,
-        kFeedback,
-        kMix,
-    };
-    
     /* Holds the parameters used by the phaser */
     struct Parameters
     {
