@@ -50,6 +50,10 @@ void Phaser::setParameters (const Parameters& newParams)
     if (parameters.rate >= 1.0f && parameters.rate <= 15.0f) {
         LFO.frequency = parameters.rate;
     }
+    // change lfo waveform type if it's a valid type
+    if (parameters.lfoWaveform >= 0 && parameters.lfoWaveform <= 4) {
+        LFO.waveForm = parameters.lfoWaveform;
+    }
 }
 
 void Phaser::setSampleRate (const double sampleRate)

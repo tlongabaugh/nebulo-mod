@@ -40,14 +40,12 @@ public:
     {
         Parameters() noexcept
         : depth(1.f),
-        //feedback(0.2f),
         rate(5.f),
         lfoWaveform(0),
         mix(0.5f)
         {}
         
         float depth;
-        //float feedback;
         float rate;
         int lfoWaveform;
         float mix;
@@ -70,16 +68,16 @@ public:
     void prepareToPlay();
     
     /* set the phaser feedback */
-    void setFeedback( float fb);
+    //void setFeedback( float fb);
     
     /* set the phaser depth */
-    void setDepth(float newDepth);
+    //void setDepth(float newDepth);
     
     /* set the lfo rate */
-    void setRate(float newRate);
+    //void setRate(float newRate);
     
     /* set the lfo waveform */
-    void setWaveform(int newWaveform);
+   // void setWaveform(int newWaveform);
 
     //==============================================================================
     /** Applies effect to two stereo channels of audio data. */
