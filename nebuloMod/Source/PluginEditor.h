@@ -32,7 +32,7 @@ public:
     
     void sliderValueChanged (Slider* slider) override;
     void comboBoxChanged (ComboBox *comboBoxThatHasChanged) override;
-    void updatePath(Graphics&);
+    void updatePath();
     
     void initialize_glut(void);
 
@@ -68,6 +68,8 @@ private:
     Label debugText;
     
     Path waveRef;
+    
+    bool initDrawing;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (NebuloModAudioProcessorEditor)
 };

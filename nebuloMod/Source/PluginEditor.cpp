@@ -98,6 +98,7 @@ NebuloModAudioProcessorEditor::NebuloModAudioProcessorEditor (NebuloModAudioProc
     
     processor.flanger_active = false;
     processor.phaser_active = false;
+    initDrawing = true;
 }
 
 NebuloModAudioProcessorEditor::~NebuloModAudioProcessorEditor()
@@ -107,19 +108,6 @@ NebuloModAudioProcessorEditor::~NebuloModAudioProcessorEditor()
 //==============================================================================
 void NebuloModAudioProcessorEditor::paint (Graphics& g)
 {
-    // Wavetable graph init
-    waveRef.startNewSubPath(40, 280);
-    // waveRef.lineTo(270, 280);
-    for (int i = 0; i < 1024; i++)
-    {
-        float x_axis = (i+1) * 15 / 64;
-        //float y_axis = waveTable[i] * 20.0f;
-        
-        waveRef.lineTo(40 + x_axis, 280 /*+ y_axis*/);
-    }
-
-    float lineThickness = 2.0f;
-    
     // Background
     g.fillAll (Colours::khaki);
 
@@ -135,9 +123,26 @@ void NebuloModAudioProcessorEditor::paint (Graphics& g)
     g.fillRoundedRectangle(320, 160, 370, 250, 25);
     g.fillRoundedRectangle(20, 160, 280, 250, 25);
     
-    // The line graph!!
-    g.setColour(Colours::black);
-    g.strokePath(waveRef, PathStrokeType(lineThickness));
+    // Wavetable graph init
+    if (initDrawing)
+    {
+        waveRef.startNewSubPath(40, 280);
+        // waveRef.lineTo(270, 280);
+        for (int i = 0; i < 1024; i++)
+        {
+            float x_axis = (i+1) * 15 / 64;
+            //float y_axis = waveTable[i] * 20.0f;
+            
+            waveRef.lineTo(40 + x_axis, 280 /*+ y_axis*/);
+        }
+        
+        float lineThickness = 2.0f;
+    
+        // The line graph!!
+        g.setColour(Colours::black);
+        g.strokePath(waveRef, PathStrokeType(lineThickness));
+        initDrawing = false;
+    }
 }
 
 void NebuloModAudioProcessorEditor::resized()
@@ -252,7 +257,7 @@ void NebuloModAudioProcessorEditor::comboBoxChanged(ComboBox *comboBoxThatHasCha
             processor.phaser_active = false;
             processor.flanger_active = true;
 
-            //updatePath();
+            // updatePath();
             
             // debugText.setText(std::to_string(mixSlider.getValue()), dontSendNotification);
         }
@@ -285,6 +290,7 @@ void NebuloModAudioProcessorEditor::comboBoxChanged(ComboBox *comboBoxThatHasCha
                 processor.phsLfoWaveformVal = 3;
             }
             
+            feedbackSlider.setEnabled(false);
             processor.flanger_active = false;
             processor.phaser_active = true;
             
@@ -296,7 +302,7 @@ void NebuloModAudioProcessorEditor::comboBoxChanged(ComboBox *comboBoxThatHasCha
     }
 }
 
-void NebuloModAudioProcessorEditor::updatePath(Graphics &g)
+void NebuloModAudioProcessorEditor::updatePath()
 {
     // Clear the waveform
     waveRef.clear();
@@ -315,5 +321,5 @@ void NebuloModAudioProcessorEditor::updatePath(Graphics &g)
         waveRef.lineTo(40 + x_axis, 300 /*+ y_axis*/);
     }
     
-    g.strokePath(waveRef, PathStrokeType(lineThickness));
+    repaint();
 }
