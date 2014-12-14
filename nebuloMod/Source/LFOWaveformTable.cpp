@@ -42,7 +42,7 @@ void LFOWaveformTable::initTableBuffer(int *buf, lfoData *userData)
     // Initialize sine waveform using data frequency and put into tableBuf
     for (i = 0; i < BUFFER_SIZE; i++)
     {
-        phase = 2 * M_PI * data->frequency / SAMPLE_RATE + prev_phase;
+        phase = 2 * M_PI * data->frequency / currentSampleRate + prev_phase;
         sample = sin(phase);
         
         tableBuf[i] = sample;
@@ -161,7 +161,7 @@ float LFOWaveformTable::generateSine(float freq)
     float phase, sinSample = 0;
     static float prev_phase;
     
-    phase = 2 * M_PI * freq / SAMPLE_RATE + prev_phase;
+    phase = 2 * M_PI * freq / currentSampleRate + prev_phase;
     sinSample = sin(phase);
     
     if (phase > (2 * M_PI))
@@ -179,7 +179,7 @@ float LFOWaveformTable::generateTriangle(float freq)
     static float triSample;
     static float counter = 1;
 
-    float T = SAMPLE_RATE / freq;
+    float T = currentSampleRate / freq;
     
     if (counter == 1)
     {
@@ -205,7 +205,7 @@ float LFOWaveformTable::generateTriangle(float freq)
 float LFOWaveformTable::generateSawtooth(float freq)
 {
     static float sawSample;
-    float T = SAMPLE_RATE / freq;
+    float T = currentSampleRate / freq;
     
     sawSample += 2./T;
     
@@ -222,7 +222,7 @@ float LFOWaveformTable::generateSquare(float freq)
     float sqrSample, phase;
     static float prev_phase;
     
-    phase = 2 * M_PI * freq / SAMPLE_RATE + prev_phase;
+    phase = 2 * M_PI * freq / currentSampleRate + prev_phase;
     sqrSample = sin(phase);
     
     if (sqrSample > 0)
