@@ -20,7 +20,7 @@
 void LFOWaveformTable::prepareToPlay()
 {
     // set frequency and wave form
-    frequency = 1.0;
+    frequency = 10.0;
     waveForm = sineWave;
 }
 

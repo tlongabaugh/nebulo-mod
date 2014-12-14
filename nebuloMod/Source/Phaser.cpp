@@ -9,24 +9,32 @@
 #include "Phaser.h"
 
 // Constructor
-Phaser::Phaser() : currentSampleRate(SAMPLE_RATE)
+Phaser::Phaser() : currentSampleRate(SAMPLE_RATE), _depth(1.0), _zm1( 0.f )
 {
     setParameters(Parameters());
     setSampleRate(SAMPLE_RATE);
-    
-    minFreqAPF_1 = 16.0;
-    maxFreqAPF_1 = 1600.0;
-    
-    minFreqAPF_2 = 33.0;
-    maxFreqAPF_2 = 3300.0;
-    
-    minFreqAPF_3 = 48.0;
-    maxFreqAPF_3 = 48.0;
+
+    Range( 440.f, 1600.f );
 }
 
-Phaser::~Phaser(void)
+Phaser::~Phaser()
 {
 }
+
+void Phaser::Range(float fMin, float fMax){ // Hz
+    _dmin = fMin / (currentSampleRate/2.f);
+    _dmax = fMax / (currentSampleRate/2.f);
+}
+
+void Phaser::Feedback(float fb){ // 0 -> <1.
+    _fb = fb;
+}
+
+void Phaser::Depth(float depth){  // 0 -> 1.
+    _depth = depth;
+}
+
+
 
 void Phaser::setParameters (const Parameters& newParams)
 {
@@ -41,210 +49,50 @@ void Phaser::setSampleRate (const double sampleRate)
     currentSampleRate = sampleRate;
 }
 
-float Phaser::calculateAPFCutoffFreq(float LFOsample, float minFreq, float maxFreq)
-{
-    return LFOsample + (maxFreq - minFreq) + minFreq;
-}
-
-void Phaser::calculateFirstOrderAPFCoeffs(float cutoffFreq, BiQuad* BiQuadFilter)
-{
-    //coefficient calculation
-    float alphaNum = tan(M_PI * cutoffFreq/(float)SAMPLE_RATE) - 1.0;
-    float alphaDen = tan(M_PI * cutoffFreq/(float)SAMPLE_RATE) + 1.0;
-    float alpha = alphaNum/alphaDen;
-    
-    //Set the coefficients for this filter
-    BiQuadFilter->a0 = alpha;
-    BiQuadFilter->a1 = 1.0;
-    BiQuadFilter->a1 = 0.0;
-    BiQuadFilter->b1 = alpha;
-    BiQuadFilter->b2 = alpha;
-    
-}
-
-void Phaser::calculateFirstOrderAPFCoeffsLeft(float LFOsample)
-{
-    // All pass 1
-    float cutoffFreq = calculateAPFCutoffFreq(LFOsample, minFreqAPF_1, maxFreqAPF_1);
-    leftAPF_1.setCoefficients(leftAPF_1.makeAllpass(currentSampleRate, cutoffFreq, 1));
-    //calculateFirstOrderAPFCoeffs(cutoffFreq, &leftAPF_1);
-    
-    // All pass 2
-    cutoffFreq = calculateAPFCutoffFreq(LFOsample, minFreqAPF_2, maxFreqAPF_2);
-    leftAPF_2.setCoefficients(leftAPF_2.makeAllpass(currentSampleRate, cutoffFreq, 1));
-    //calculateFirstOrderAPFCoeffs(cutoffFreq, &leftAPF_2);
-    
-    // All pass 3
-    cutoffFreq = calculateAPFCutoffFreq(LFOsample, minFreqAPF_3, maxFreqAPF_3);
-    leftAPF_3.setCoefficients(leftAPF_3.makeAllpass(currentSampleRate, cutoffFreq, 1));
-    //calculateFirstOrderAPFCoeffs(cutoffFreq, &leftAPF_3);
-}
-
-void Phaser::calculateFirstOrderAPFCoeffsRight(float LFOsample)
-{
-    // All pass 1
-    float cutoffFreq = calculateAPFCutoffFreq(LFOsample, minFreqAPF_1, maxFreqAPF_1);
-    rightAPF_1.setCoefficients(rightAPF_1.makeAllpass(currentSampleRate, cutoffFreq, 1));
-    //calculateFirstOrderAPFCoeffs(cutoffFreq, &rightAPF_1);
-    
-    // All pass 2
-    cutoffFreq = calculateAPFCutoffFreq(LFOsample, minFreqAPF_2, maxFreqAPF_2);
-    rightAPF_2.setCoefficients(rightAPF_2.makeAllpass(currentSampleRate, cutoffFreq, 1));
-    //calculateFirstOrderAPFCoeffs(cutoffFreq, &rightAPF_2);
-    
-    // All pass 3
-    cutoffFreq = calculateAPFCutoffFreq(LFOsample, minFreqAPF_3, maxFreqAPF_3);
-    rightAPF_3.setCoefficients(rightAPF_3.makeAllpass(currentSampleRate, cutoffFreq, 1));
-    //calculateFirstOrderAPFCoeffs(cutoffFreq, &rightAPF_3);
-}
-
 void Phaser::prepareToPlay()
 {
-    // reset and init with dummy values. cutoff frequencies will be changed later
-    leftAPF_1.reset();
-    leftAPF_1.setCoefficients(leftAPF_1.makeAllpass(currentSampleRate, 100, 0));
-    leftAPF_2.reset();
-    leftAPF_2.setCoefficients(leftAPF_2.makeAllpass(currentSampleRate, 100, 0));
-    leftAPF_2.reset();
-    leftAPF_2.setCoefficients(leftAPF_2.makeAllpass(currentSampleRate, 100, 0));
-    rightAPF_1.reset();
-    rightAPF_1.setCoefficients(rightAPF_1.makeAllpass(currentSampleRate, 100, 0));
-    rightAPF_2.reset();
-    rightAPF_2.setCoefficients(rightAPF_2.makeAllpass(currentSampleRate, 100, 0));
-    rightAPF_3.reset();
-    rightAPF_3.setCoefficients(rightAPF_3.makeAllpass(currentSampleRate, 100, 0));
-    
     // Init LFO
     LFO.setSampleRate(currentSampleRate);
     LFO.prepareToPlay();
     
-    /*leftAPF_1.flushDelays();
-    rightAPF_1.flushDelays();
-    leftAPF_2.flushDelays();
-    rightAPF_2.flushDelays();
-    leftAPF_3.flushDelays();
-    rightAPF_3.flushDelays();*/
-    
-    
-    /*
-    LFO.m_fFrequency_Hz = 440;
-    LFO.m_uPolarity = 1;
-    LFO.m_uTableMode = 0;
-    LFO.m_uOscType = 0;
-    LFO.setSampleRate(SAMPLE_RATE);
-    LFO.prepareForPlay();*/
-    
 }
-
-
-//TODO: initialize LFO, set it's values
-//TODO: hook up UI
-//todo: finish processaudio function and get that working
 
 //================================================================================================================
 
 void Phaser::processStereo(float* const left, float* const right, const int numSamples) noexcept
 {
-    jassert (left != nullptr && right != nullptr);
-    float lfoSample, dryL, dryR;
-    float depth = 50.0/200.0;
-    
-    for(int i = 0; i < numSamples; i++){
-        lfoSample = LFO.generateWaveSample();
-        calculateFirstOrderAPFCoeffsLeft(lfoSample);
-        calculateFirstOrderAPFCoeffsRight(lfoSample);
-        
-        dryL = left[i];
-        dryR = right[i];
-        
-        leftAPF_1.processSamples(left, 1);
-        leftAPF_2.processSamples(left, 1);
-        leftAPF_3.processSamples(left, 1);
-        
-        rightAPF_1.processSamples(right, 1);
-        rightAPF_2.processSamples(right, 1);
-        rightAPF_3.processSamples(right, 1);
-        
-        left[i] = depth * left[i] + (1.0 - depth)*dryL;
-        right[i] = depth * right[i] + (1.0 - depth)*dryR;
-        
-        //left[i] = lfoSample;
-        //right[i] = lfoSample;
-
-    }
-    /*
-    float yn = 0; // to hold lfo output
-    float yqn = 0; //quad output (not used)
-    float what;
+    float lfoSample;
     for(int i = 0; i < numSamples; i++) {
-        // get lfo sample
-        LFO.doOscillate(&yn, &yqn);
-        //left[i] = yn;
-        //right[i] = yn;
-        //what = processAudioFrame(left[i], yn, 1);
-        left[i] = processAudioFrame(left[i], yn, 1);
-        right[i] = processAudioFrame(right[i], yn, 1);
-
-    }*/
-   // left[i]  = outL * wet1 + outR * wet2 + left[i]  * dry;
-   // right[i] = outR * wet1 + outL * wet2 + right[i] * dry;
+        lfoSample = LFO.generateWaveSample();
+        left[i] = processSample(left[i], lfoSample);
+        right[i] = processSample(right[i], lfoSample);
+    }
 }
 
 void Phaser::processMono(float* const samples, const int numSamples) noexcept
 {
-  /*  jassert (samples != nullptr);
+    jassert (samples != nullptr);
+    
     float lfoSample;
-    float APF1, APF2, APF3;
-    float depth = 50.0/200.0;
-    for(int i = 0; i < numSamples; i++){
-        lfoSample = LFO.generateWaveSample();
-        samples[i] = lfoSample;
-        
-        APF1 = leftAPF_1.processSamples(samples, 1);
-        leftAPF_2.processSamples(left, <#int numSamples#>)
-        
-        
-    }*/
-    
-    
-    /*
-    float yn = 0; // to hold lfo output
-    float yqn = 0; //quad output (not used)
-    
     for(int i = 0; i < numSamples; i++) {
-        // get lfo sample
-        LFO.doOscillate(&yn, &yqn);
-        //samples[i] = yn;
-        samples[i] = processAudioFrame(samples[i], yn, 1);
-    }*/
+        lfoSample = LFO.generateWaveSample();
+        samples[i] = processSample(samples[i], lfoSample);
+    }
 }
 
-float Phaser::processAudioFrame(float inputSample, float lfoSample, int numChannels)
+float Phaser::processSample(float inSamp, float lfoSample)
 {
+    //calculate and update phaser sweep lfo...
+    float d  = _dmin + (_dmax-_dmin) * (lfoSample + 1.f)/2.f;
     
+    //update filter coeffs
+    for( int i=0; i<6; i++ )
+        allPass[i].delay( d );
     
-   /*
-    // APFs
-    float APF1, APF2, APF3;
-    float outputSample;
-
-    // calculate depth (100% when control is 50%)
-    float depth = 50.0/200.0;
-
-    calculateFirstOrderAPFCoeffsLeft(lfoSample);
-    APF1 = leftAPF_1.doBiQuad(inputSample);
-    APF2 = leftAPF_2.doBiQuad(APF1);
-    APF3 = leftAPF_3.doBiQuad(APF2);
+    //calculate output
+    float y = allPass[0].update(allPass[1].update(allPass[2].update(allPass[3].update(allPass[4].update(allPass[5].update(inSamp + _zm1 * _fb ))))));
+    _zm1 = y;
     
-    outputSample = depth * APF3 + (1.0 - depth)*inputSample;
-    
-    // BUSTED RIGHT NOW
-    //return outputSample;
-    
-    return inputSample;
-    
-    //calculateFirstOrderAPFCoeffsRight(lfoSample);
-*/
-    return inputSample;
-    
+    return inSamp + y * _depth;
 }
+
