@@ -239,7 +239,6 @@ void NebuloModAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffe
             // do nothing son!
             // printf("How did you get here guy??? seriously you must've really screwed something up to get over here");
         }
->>>>>>> a4d3c6f6bc61022619c102d8d22c409d1140233c
     }
     else {
         // This is wrong, dont' do anything??
