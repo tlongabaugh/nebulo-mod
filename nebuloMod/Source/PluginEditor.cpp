@@ -62,9 +62,9 @@ NebuloModAudioProcessorEditor::NebuloModAudioProcessorEditor (NebuloModAudioProc
     
     // Create dah sliders!!!
     createSlider(depthSlider, Slider::LinearHorizontal, processor.flDepthVal, 0.0, 1.0, 0.01, "Depth");
-    createSlider(rateSlider, Slider::LinearHorizontal, processor.flRateVal, 0.0, 20.0, 1.0, "Rate");
+    createSlider(rateSlider, Slider::LinearHorizontal, processor.flRateVal, 0.0, 15.0, 0.5, "Rate");
     createSlider(feedbackSlider, Slider::LinearHorizontal, processor.flFeedbackVal, 0.0, 100.0, 1.0, "Feedback");
-    createSlider(mixSlider, Slider::LinearHorizontal, processor.flMixVal, 0.0, 1.0, 0.01, "Mix");
+    createSlider(mixSlider, Slider::LinearHorizontal, processor.flMixVal, 0.0, 1.0, 0.05, "Mix");
     
     // Create texts!
     createLabel(depthText, "Depth");
@@ -95,6 +95,9 @@ NebuloModAudioProcessorEditor::NebuloModAudioProcessorEditor (NebuloModAudioProc
     
     // LFO Wavetable
     addAndMakeVisible(debugText);
+    
+    processor.flanger_active = false;
+    processor.phaser_active = false;
 }
 
 NebuloModAudioProcessorEditor::~NebuloModAudioProcessorEditor()
@@ -227,7 +230,28 @@ void NebuloModAudioProcessorEditor::comboBoxChanged(ComboBox *comboBoxThatHasCha
             rateSlider.setValue(processor.flRateVal);
             feedbackSlider.setValue(processor.flFeedbackVal);
             mixSlider.setValue(processor.flMixVal);
+
+            // Set LFO Waveform my bro
+            if (lfoMenu.getSelectedItemIndex() == 0)
+            {
+                processor.flLfoWaveformVal = 0;
+            }
+            else if (lfoMenu.getSelectedItemIndex() == 1)
+            {
+                processor.flLfoWaveformVal = 1;
+            }
+            else if (lfoMenu.getSelectedItemIndex() == 2)
+            {
+                processor.flLfoWaveformVal = 2;
+            }
+            else if (lfoMenu.getSelectedItemIndex() == 3)
+            {
+                processor.flLfoWaveformVal = 3;
+            }
             
+            processor.phaser_active = false;
+            processor.flanger_active = true;
+
             //updatePath();
             
             // debugText.setText(std::to_string(mixSlider.getValue()), dontSendNotification);
@@ -241,6 +265,28 @@ void NebuloModAudioProcessorEditor::comboBoxChanged(ComboBox *comboBoxThatHasCha
             rateSlider.setValue(processor.phsRateVal);
             feedbackSlider.setValue(processor.phsFeedbackVal);
             mixSlider.setValue(processor.phsMixVal);
+            
+            //changeLFO(1);
+            
+            if (lfoMenu.getSelectedItemIndex() == 0)
+            {
+                processor.phsLfoWaveformVal = 0;
+            }
+            else if (lfoMenu.getSelectedItemIndex() == 1)
+            {
+                processor.phsLfoWaveformVal = 1;
+            }
+            else if (lfoMenu.getSelectedItemIndex() == 2)
+            {
+                processor.phsLfoWaveformVal = 2;
+            }
+            else if (lfoMenu.getSelectedItemIndex() == 3)
+            {
+                processor.phsLfoWaveformVal = 3;
+            }
+            
+            processor.flanger_active = false;
+            processor.phaser_active = true;
             
             // debugText.setText(std::to_string(depthSlider.getValue()), dontSendNotification);
         }

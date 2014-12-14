@@ -106,6 +106,9 @@ public:
     // Dry/Wet mix (THIS SHOULD BE 50% MAX)
     float phsMixVal;
     
+    bool phaser_active;
+    bool flanger_active;
+    
     // GUI update functions
     void updateFlanger(void);
     void updatePhaser(void);

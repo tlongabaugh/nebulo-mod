@@ -136,6 +136,8 @@ void NebuloModAudioProcessor::updateFlanger(void)
     flangerParams.lfoWaveform = flLfoWaveformVal;
     flangerParams.feedback = flFeedbackVal;
     flangerParams.mix = flMixVal;
+    
+    flanger.setParameters(flangerParams);
 }
 
 void NebuloModAudioProcessor::updatePhaser(void)
@@ -145,6 +147,8 @@ void NebuloModAudioProcessor::updatePhaser(void)
     phaserParams.rate = phsRateVal;
     phaserParams.lfoWaveform = phsLfoWaveformVal;
     phaserParams.mix = phsMixVal;
+    
+    phaser.setParameters(phaserParams);
 }
 
 //==============================================================================
@@ -156,14 +160,14 @@ void NebuloModAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBl
     // set Volume
     flMixVal = 0.5;
     flDepthVal= 0.5;
-    flRateVal = 0.5;
+    flRateVal = 7.5;
     flFeedbackVal = 50.0;
     flLfoWaveformVal = 0;
     
     // set Volume
     phsMixVal = 0.5;
     phsDepthVal= 0.5;
-    phsRateVal = 0.5;
+    phsRateVal = 7.5;
     phsFeedbackVal = 50.0;
     phsLfoWaveformVal = 0;
     
@@ -200,12 +204,38 @@ void NebuloModAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffe
     /* Get the samples from the input buffer */
     if (getNumInputChannels() == 1) {
         float *monoData = buffer.getWritePointer(0);
-        phaser.processMono(monoData, buffer.getNumSamples());
+        
+        if (phaser_active)
+        {
+            phaser.processMono(monoData, buffer.getNumSamples());
+        }
+        else if (flanger_active)
+        {
+            // flanger.processMono(monoData, buffer.getNumSamples());
+        }
+        else
+        {
+            // do nothing son!!!
+        }
+            
     }
     else if (getNumInputChannels() == 2) {
         float *leftChannel = buffer.getWritePointer(0);
         float *rightChannel = buffer.getWritePointer(1);
-        phaser.processStereo(leftChannel, rightChannel, buffer.getNumSamples());
+        
+        if (phaser_active)
+        {
+            phaser.processStereo(leftChannel, rightChannel, buffer.getNumSamples());
+        }
+        else if (flanger_active)
+        {
+            // flanger.processStereoSamples(leftChannel, rightChannel, buffer.getNumSamples());
+        }
+        else
+        {
+            // do nothing son!
+            // printf("How did you get here guy??? seriously you must've really fucked something up to get over here");
+        }
     }
     else {
         // This is wrong, dont' do anything??
