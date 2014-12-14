@@ -13,15 +13,10 @@
 #include <stdio.h>
 #include <math.h>
 #include "../JuceLibraryCode/JuceHeader.h"
-#include "Biquad.h"
 #include "LFOWaveformTable.h"
-#include "LFOtest.h"
-#include "dRowAudio_BiquadFilter.h"
 
 #define SAMPLE_RATE 44100
 #define BOTTOM_FREQ 100
-//#define PIN(n,min,max) ((n) > (max) ? max : ((n) < (min) ? (min) : (n)))
-
 
 //------------------------------------------------------------------------
 class Phaser
@@ -44,16 +39,17 @@ public:
     struct Parameters
     {
         Parameters() noexcept
-        : depth(1.0f),
-        rate(0.5f),
-        mix(1.0f)
+        : depth(1.f),
+        //feedback(0.2f),
+        rate(5.f),
+        lfoWaveform(0),
+        mix(0.5f)
         {}
         
         float depth;
+        //float feedback;
         float rate;
-        // float lfo;
         int lfoWaveform;
-        // float manControl;
         float mix;
     };
     
@@ -73,18 +69,18 @@ public:
     /* Clear the phaser buffers and set up lfo*/
     void prepareToPlay();
     
-    // calculates the new filter cutoff from the envelope value
-    float calculateAPFCutoffFreq(float LFOsample, float minFreq, float maxFreq);
+    /* set the phaser feedback */
+    void setFeedback( float fb);
     
-    // Calculate BiQuad coeffs (APF)
-    void calculateFirstOrderAPFCoeffsLeft(float LFOsample);
-    void calculateFirstOrderAPFCoeffsRight(float LFOsample);
+    /* set the phaser depth */
+    void setDepth(float newDepth);
     
-    // Helper function for APF calculation
-    void calculateFirstOrderAPFCoeffs(float cutoffFreq, BiQuad* BiQuadFilter);
+    /* set the lfo rate */
+    void setRate(float newRate);
     
-    //float processSample(float inSamp);
-    
+    /* set the lfo waveform */
+    void setWaveform(int newWaveform);
+
     //==============================================================================
     /** Applies effect to two stereo channels of audio data. */
     void processStereo (float* const left, float* const right, const int numSamples) noexcept;
@@ -94,18 +90,12 @@ public:
     
     /* applies phaser to one sample */
     float processSample(float inSamp, float lfoSample);
-    
-    void Range(float fMin, float fMax);
-    void Feedback( float fb);
-    
-    void Depth(float depth);
 
 protected:
-    void setDepth(float newDepth);
-    void setMix(float mix);
-
+    void range(float fMin, float fMax);
     
 private:
+    // A simple AllPass class from www.musicdsp.org/files/phaser.cpp
     class AllpassDelay{
     public:
         AllpassDelay()
@@ -136,10 +126,8 @@ private:
     
     double currentSampleRate;
     
-    float _dmin, _dmax; //range
-    float _fb; //feedback
-    float _depth;
-    float _zm1;
+    float depthMin, depthMax; //range
+    float zm1;
 };
 
 #endif /* defined(__NebuloMod__Phaser__) */

@@ -9,38 +9,48 @@
 #include "Phaser.h"
 
 // Constructor
-Phaser::Phaser() : currentSampleRate(SAMPLE_RATE), _depth(1.0), _zm1( 0.f )
+Phaser::Phaser() : currentSampleRate(SAMPLE_RATE), zm1( 0.f )
 {
     setParameters(Parameters());
     setSampleRate(SAMPLE_RATE);
 
-    Range( 440.f, 1600.f );
+    range(440.f, 1600.f);
 }
 
 Phaser::~Phaser()
 {
 }
 
-void Phaser::Range(float fMin, float fMax){ // Hz
-    _dmin = fMin / (currentSampleRate/2.f);
-    _dmax = fMax / (currentSampleRate/2.f);
+void Phaser::range(float fMin, float fMax){ // Hz
+    depthMin = fMin / (currentSampleRate/2.f);
+    depthMax = fMax / (currentSampleRate/2.f);
 }
 
-void Phaser::Feedback(float fb){ // 0 -> <1.
-    _fb = fb;
+/*
+void Phaser::setFeedback(float fb)
+{   // 0 -> <1.
+    parameters.feedback = fb;
 }
 
-void Phaser::Depth(float depth){  // 0 -> 1.
-    _depth = depth;
+void Phaser::setDepth(float newDepth)
+{   // 0 -> 1.
+    parameters.depth = newDepth;
 }
 
-
+void Phaser::setRate(float newRate)
+{   // 1 = 15
+    parameters.rate = newRate;
+}*/
 
 void Phaser::setParameters (const Parameters& newParams)
 {
     parameters = newParams;
+    
+    // change LFO frequency if it's between our bounds (we should be checking/scaling for this anyways in GUI)
+    if (parameters.rate >= 1.0f && parameters.rate <= 15.0f) {
+        LFO.frequency = parameters.rate;
+    }
 }
-
 
 void Phaser::setSampleRate (const double sampleRate)
 {
@@ -61,9 +71,14 @@ void Phaser::prepareToPlay()
 
 void Phaser::processStereo(float* const left, float* const right, const int numSamples) noexcept
 {
+    jassert (left != nullptr && right != nullptr);
+    
     float lfoSample;
     for(int i = 0; i < numSamples; i++) {
+        // Get lfo sample
         lfoSample = LFO.generateWaveSample();
+        
+        // process left and right channels
         left[i] = processSample(left[i], lfoSample);
         right[i] = processSample(right[i], lfoSample);
     }
@@ -75,6 +90,7 @@ void Phaser::processMono(float* const samples, const int numSamples) noexcept
     
     float lfoSample;
     for(int i = 0; i < numSamples; i++) {
+        // get lfo sample, process mono channel
         lfoSample = LFO.generateWaveSample();
         samples[i] = processSample(samples[i], lfoSample);
     }
@@ -82,17 +98,18 @@ void Phaser::processMono(float* const samples, const int numSamples) noexcept
 
 float Phaser::processSample(float inSamp, float lfoSample)
 {
-    //calculate and update phaser sweep lfo...
-    float d  = _dmin + (_dmax-_dmin) * (lfoSample + 1.f)/2.f;
+    // Calculate sweep based on lfoSample and depth controls
+    float d  = depthMin + (depthMax-depthMin) * (lfoSample + 1.f)/2.f;
     
-    //update filter coeffs
+    // Update the filter coefficients
     for( int i=0; i<6; i++ )
         allPass[i].delay( d );
     
-    //calculate output
-    float y = allPass[0].update(allPass[1].update(allPass[2].update(allPass[3].update(allPass[4].update(allPass[5].update(inSamp + _zm1 * _fb ))))));
-    _zm1 = y;
+    // Calculate the phased output
+    float y = allPass[0].update(allPass[1].update(allPass[2].update(allPass[3].update(allPass[4].update(allPass[5].update(inSamp + zm1 * 0.1))))));
+    zm1 = y;
     
-    return inSamp + y * _depth;
+    // mix dry and phaser output
+    return inSamp*(1.0-parameters.mix) + y * parameters.depth * parameters.mix;
 }
 

@@ -73,6 +73,7 @@ public:
 private:
     
     double currentSampleRate;
+    
 };
 
 #endif /* defined(__NebuloMod__LFOWaveformTable__) */
