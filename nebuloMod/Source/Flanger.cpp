@@ -2,31 +2,42 @@
 //  Flanger.cpp
 //  NebuloMod
 //
-//  Created by Ryan Foo on 11/23/14.
+//  Written by Tom Longabaugh
 //
 //
 
 #include "Flanger.h"
 
-Flanger::Flanger(void) : currentSampleRate(INIT_SAMPLE_RATE)
+Flanger::Flanger(void) : currentSampleRate(INIT_SAMPLE_RATE), avgDelay(100.0)
 {
     // Set Paramaters
     setParameters(Parameters());
     // Set Sample Rate (44100 default, updated right before playback)
     setSampleRate(INIT_SAMPLE_RATE);
     
-    delayLine = new DelayLine(2047, 4095);
+    delayLineL = new DelayLine(100, 4095);
+    delayLineR = new DelayLine(100, 4095);
     
 }
 
 Flanger::~Flanger(void)
 {
-    delete [] delayLine;
+    delete [] delayLineL;
+    delete [] delayLineR;
 }
 
 void Flanger::setParameters(const Parameters& newParam)
 {
     parameters = newParam;
+    
+    // change LFO frequency if it's between our bounds (we should be checking/scaling for this anyways in GUI)
+    if (parameters.rate >= 1.0f && parameters.rate <= 15.0f) {
+        LFO.frequency = parameters.rate;
+    }
+    // change lfo waveform type if it's a valid type
+    if (parameters.lfoWaveform >= 0 && parameters.lfoWaveform <= 4) {
+        LFO.waveForm = parameters.lfoWaveform;
+    }
 }
 
 void Flanger::setSampleRate (const double sampleRate)
@@ -43,10 +54,9 @@ void Flanger::prepareToPlay()
     LFO.prepareToPlay();
     
     // reset delay line
-    delayLine->clear();
-    
+    delayLineL->clear();
+    delayLineR->clear();
 }
-
 
 
 //AUDIO PROCESSING (stereo, mono, which both call processSamples())
@@ -56,22 +66,51 @@ void Flanger::processMono(float* const samples, const int numSamples)
 {
     // Make sure left channel is not NULL
     jassert (samples != nullptr);
-    for (int i = 0; i < numSamples; i++) {
-        samples[i] = (samples[i] + delayLine->processSample(samples[i]))/2.0;
-    }
     
-
+    float lfoSample;
+    
+    for (int i = 0; i < numSamples; i++) {
+        // Get LFO sample
+        LFO.waveForm = parameters.lfoWaveform;
+        lfoSample = LFO.generateWaveSample() + 1.0; // get into correct non-negative range
+        
+        // process samples
+        delayLineL->setDelay(avgDelay*lfoSample*10);
+        //samples[i] = samples[i]*(1.0-parameters.mix/2) + parameters.depth*(delayLineL->processSample(samples[i]))*parameters.mix/2;
+        
+    }
 }
 
 void Flanger::processStereo(float* const left, float* const right, const int numSamples)
 {
     // Make sure left and right channels are not NULL
     jassert (left != nullptr && right != nullptr);
-    for (int i = 0; i < numSamples; i++) {
-        left[i] = (left[i] + delayLine->processSample(left[i]))/2.0;
-        right[i] = (right[i] + delayLine->processSample(right[i]))/2.0;
-    }
     
+    float lfoSample;
+    
+    for (int i = 0; i < numSamples; i++) {
+        // Get LFO sample
+        LFO.waveForm = parameters.lfoWaveform;
+        lfoSample = LFO.generateWaveSample() + 1.1; // get into correct non-negative range
+        
+        // process samples
+        float delay = (avgDelay*lfoSample*10);//   avgDelay*lfoSample*10;
+        delayLineL->setDelay(delay);
+        delayLineR->setDelay(delay);
+        //left[i] = left[i]*(1.0-parameters.mix/2) + parameters.depth*(delayLineL->processSample(left[i]))*parameters.mix/2;
+        //right[i] = right[i]*(1.0-parameters.mix/2) + parameters.depth*(delayLineR->processSample(right[i]))*parameters.mix/2;
+        
+        
+        
+    }
 }
+
+
+
+
+
+
+
+
 
 

@@ -12,12 +12,8 @@ DelayLine::DelayLine(float delay, unsigned long maxDelay)
 {
     _maxDelay = maxDelay;
     // Raise assert if expression is not true
-    jassert(delay > 0.0);
+    jassert(delay >= 0.0);
     jassert(delay < (float)maxDelay);
-    
-    //declare sample buffer and set max delay
-    //this->setMaxDelay(maxDelay);
-    
     
     // declare the sample buffer...make sure to delete!
     _sampBuffer = new float[maxDelay];
@@ -54,7 +50,7 @@ inline void DelayLine::setDelay(float delay)
 {
     // make sure the delay is valid
     jassert(delay < (float)_maxDelay);
-    jassert(delay > 0.0);
+    jassert(delay >= 0.0);
     
     // read follows write
     float outPointer = _inPoint - delay;
@@ -85,6 +81,7 @@ float DelayLine::getDelay()
     return _delay;
 }
 
+/*
 float DelayLine::tapOut(unsigned long tapDelay)
 {
     // set the tap point
@@ -109,7 +106,7 @@ void DelayLine::tapIn(float value, unsigned long tapDelay)
     }
     
     _sampBuffer[tap] = value;
-}
+}*/
 
 inline float DelayLine::nextOut()
 {
@@ -119,7 +116,7 @@ inline float DelayLine::nextOut()
         _nextOutput = _sampBuffer[_outPoint] * _omAlpha;
         // second part of interpolation (fractional)
         if (_outPoint + 1 < _maxDelay) {
-            _nextOutput += _sampBuffer[_outPoint +1] * _alpha;
+            _nextOutput += _sampBuffer[_outPoint+1] * _alpha;
         }
         else {
             _nextOutput += _sampBuffer[0] * _alpha;

@@ -61,6 +61,7 @@ void Phaser::processMono(float* const samples, const int numSamples) noexcept
     jassert (samples != nullptr);
     
     float lfoSample;
+    
     for(int i = 0; i < numSamples; i++) {
         // get lfo sample, process mono channel
         LFO.waveForm = parameters.lfoWaveform;
@@ -77,6 +78,7 @@ void Phaser::processStereo(float* const left, float* const right, const int numS
     jassert (left != nullptr && right != nullptr);
     
     float lfoSample;
+    
     for(int i = 0; i < numSamples; i++) {
         // Get lfo sample
         LFO.waveForm = parameters.lfoWaveform;

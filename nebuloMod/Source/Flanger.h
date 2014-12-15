@@ -2,7 +2,7 @@
 //  Flanger.h
 //  NebuloMod
 //
-//  Created by Ryan Foo on 11/23/14.
+//  Written by Tom Longabaugh
 //
 //
 
@@ -72,9 +72,11 @@ public:
 
 private:
     Parameters parameters;      // Flanger parameters
-    DelayLine *delayLine;       // Pointer to linear-interpolated delay line
+    DelayLine *delayLineL;       // Pointer to linear-interpolated delay line
+    DelayLine *delayLineR;
     LFOWaveformTable LFO;       // LFO for the flanger
     double currentSampleRate;   // Current sample rate of Flanger
+    float avgDelay;             // Average delay time
     
 };
 
