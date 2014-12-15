@@ -25,7 +25,7 @@ void NebuloModAudioProcessorEditor::createSlider(Slider &slider, Slider::SliderS
     
     // this function adds the slider to the editor
     addAndMakeVisible(&slider);
-    slider.setVisible(false);
+    slider.setVisible(true);
     
     slider.setComponentID(name);
     slider.isAlwaysOnTop();
@@ -37,7 +37,7 @@ void NebuloModAudioProcessorEditor::createLabel(Label &label, std::string name)
     label.setEnabled(true);
     label.setText(name, dontSendNotification);
     addAndMakeVisible(label);
-    label.setVisible(false);
+    label.setVisible(true);
     label.isAlwaysOnTop();
 }
 
@@ -88,14 +88,23 @@ NebuloModAudioProcessorEditor::NebuloModAudioProcessorEditor (NebuloModAudioProc
     addAndMakeVisible(&lfoMenu);
     lfoMenu.addListener(this);
     
-    // LFO Wavetable
+    // Inits:
+    modMenu.setSelectedItemIndex(1);
+    lfoMenu.setSelectedItemIndex(1);
+    LFO.waveForm = 1;
+    feedbackSlider.setEnabled(false);
+    fxText.setText("Phaser", dontSendNotification);
+    LFO.waveForm = processor.phsLfoWaveformVal;
+    // Update Phaser
+    processor.updatePhaser();
+    
+    // Debugging Text
     addAndMakeVisible(debugText);
     
+    // Flags
     processor.flanger_active = false;
-    processor.phaser_active = false;
+    processor.phaser_active = true;
     initDrawing = true;
-    effectChanged = 0;
-    LFO.waveForm = 1;
 }
 
 NebuloModAudioProcessorEditor::~NebuloModAudioProcessorEditor()
@@ -126,13 +135,21 @@ void NebuloModAudioProcessorEditor::paint (Graphics& g)
     if (initDrawing)
     {
         waveRef.startNewSubPath(40, 280);
-        // waveRef.lineTo(270, 280);
         for (int i = 0; i < 1024; i++)
         {
+            // reaches to 270 by the end
             float x_axis = (i+1) * 15 / 64;
-            //float y_axis = waveTable[i] * 20.0f;
+            static float init_y_axis;
             
-            waveRef.lineTo(40 + x_axis, 280 /*+ y_axis*/);
+            if (i < 256)
+                init_y_axis = (i+1) * -25 / 64;              // get to 180
+            else if (i < 768)
+                init_y_axis = ((i+1) * 25 / 64) - 200;       // get to 390
+            else if (i < 1023)
+                init_y_axis = ((i+1) * -25 / 64) + 400;      // get to 280
+            
+            
+            waveRef.lineTo(40 + x_axis, 280 + init_y_axis);
         }
     
         // The line graph!!
@@ -142,6 +159,7 @@ void NebuloModAudioProcessorEditor::paint (Graphics& g)
     }
     else
     {
+        // Update the path graph
         updatePath();
         g.setColour(Colours::black);
         g.strokePath(waveRef, PathStrokeType(lineThickness));
@@ -399,6 +417,7 @@ void NebuloModAudioProcessorEditor::comboBoxChanged(ComboBox *comboBoxThatHasCha
         // Repaint the GUI for new waveform drawing!
         repaint(20, 160, 280, 250);
     }
+    /*
     // If this is our first time ;)
     else if (!(processor.flanger_active) && !(processor.phaser_active))
     {
@@ -477,7 +496,7 @@ void NebuloModAudioProcessorEditor::comboBoxChanged(ComboBox *comboBoxThatHasCha
             }
         }
     }
-    
+    */
     // Visualize our text!
     addAndMakeVisible(fxText);
     fxText.setVisible(true);
