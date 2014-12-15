@@ -6,27 +6,25 @@
 //
 //
 
-// with help from //github.com/xffff/flanger
-
 #ifndef __NebuloMod__Flanger__
 #define __NebuloMod__Flanger__
 
-#include <stdio.h>
-#include <math.h>
+//#include <stdio.h>
+//#include <math.h>
 
 #include "DelayLine.h"
 #include "LFOWaveformTable.h"
 #include "../JuceLibraryCode/JuceHeader.h"
 
 // Global Definitions
-#define SAMPLE_RATE         44100
+#define INIT_SAMPLE_RATE         44100
 #define INIT_LFO_FREQ       10
 // BSZ is 1/5 of a second at 44100 Hz sample rate/must be power of 2
-#define BSZ                 8192
+/*#define BSZ                 8192
 #define ROUND(n)            ((int)((double)(n) + 0.5))
 #define PIN(n, min, max)    ((n) > (max) ? max : ((n) < (min) ? (min) : (n)))
 #define MODF(n, i, f)       ((i) = (int)(n), (f) = (n) - (double)(i))
-
+*/
 
 
 //---------------------------------------------------------------------------------------------
@@ -49,10 +47,8 @@ public:
         
         float depth;
         float rate;
-        // float lfo;
         int lfoWaveform;
         float feedback;
-        // float manControl;
         float mix;
     } Parameters;
     
@@ -67,19 +63,12 @@ public:
     float currentSampleRate;
     
 protected:
-    float *delayline;
-    float rate;
-    float delaysize;
-    float fwdhop;
-    float readpos;
-    int writepos;
-    float gain;
-    float depth;
-    float delta;
     
 private:
     Parameters parameters;
+    DelayLine *delayLine;
     LFOWaveformTable LFO;
+    
 };
 
 /*

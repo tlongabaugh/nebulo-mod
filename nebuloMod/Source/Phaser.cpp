@@ -102,7 +102,7 @@ void Phaser::processMono(float* const samples, const int numSamples) noexcept
     }
 }
 
-float Phaser::processSample(float inSamp, float lfoSample)
+inline float Phaser::processSample(float inSamp, float lfoSample)
 {
     // Calculate sweep based on lfoSample and depth controls
     float d  = depthMin + (depthMax-depthMin) * (lfoSample + 1.f)/2.f;
