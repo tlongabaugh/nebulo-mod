@@ -10,9 +10,14 @@
 
 DelayLine::DelayLine(float delay, unsigned long maxDelay)
 {
-    // Raise assert if the values are not right
-    jassert(delay < 0.0);
-    jassert(delay > (float)maxDelay);
+    _maxDelay = maxDelay;
+    // Raise assert if expression is not true
+    jassert(delay > 0.0);
+    jassert(delay < (float)maxDelay);
+    
+    //declare sample buffer and set max delay
+    //this->setMaxDelay(maxDelay);
+    
     
     // declare the sample buffer...make sure to delete!
     _sampBuffer = new float[maxDelay];
@@ -21,7 +26,7 @@ DelayLine::DelayLine(float delay, unsigned long maxDelay)
     _inPoint = 0;
     this->setDelay(delay);
     _doNextOut = true;
-    _maxDelay = maxDelay;
+
     
 }
 
@@ -48,8 +53,8 @@ void DelayLine::setMaxDelay(unsigned long delay)
 inline void DelayLine::setDelay(float delay)
 {
     // make sure the delay is valid
-    jassert(delay > (float)_maxDelay);
-    jassert(delay < 0);
+    jassert(delay < (float)_maxDelay);
+    jassert(delay > 0.0);
     
     // read follows write
     float outPointer = _inPoint - delay;
@@ -123,7 +128,7 @@ inline float DelayLine::nextOut()
     return _nextOutput;
 }
 
-inline float DelayLine::processSample(float inputSample)
+float DelayLine::processSample(float inputSample)
 {
     float output;
     

@@ -213,7 +213,7 @@ void NebuloModAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffe
         }
         else if (flanger_active)
         {
-            // flanger.processMono(monoData, buffer.getNumSamples());
+            flanger.processMono(monoData, buffer.getNumSamples());
         }
         else
         {
@@ -232,7 +232,7 @@ void NebuloModAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffe
         }
         else if (flanger_active)
         {
-            // flanger.processStereoSamples(leftChannel, rightChannel, buffer.getNumSamples());
+            flanger.processStereo(leftChannel, rightChannel, buffer.getNumSamples());
         }
         else
         {

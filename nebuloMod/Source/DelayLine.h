@@ -10,11 +10,15 @@
 #ifndef __NebuloMod__DelayLine__
 #define __NebuloMod__DelayLine__
 
+#include <stdio.h>
+#include <math.h>
+
 #include "../JuceLibraryCode/JuceHeader.h"
 
 class DelayLine
 {
 public:
+    DelayLine();
     DelayLine(float delay = 0, unsigned long maxDelay = 2047);
     ~DelayLine();
     
@@ -51,9 +55,9 @@ protected:
     float _nextOutput;
     bool _doNextOut; 
     float *_sampBuffer;
-    
-private:
     unsigned long _maxDelay;
 };
+
+
 
 #endif /* defined(__NebuloMod__DelayLine__) */

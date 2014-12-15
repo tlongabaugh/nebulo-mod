@@ -15,7 +15,9 @@ Flanger::Flanger(void) : currentSampleRate(INIT_SAMPLE_RATE)
     setParameters(Parameters());
     // Set Sample Rate (44100 default, updated right before playback)
     setSampleRate(INIT_SAMPLE_RATE);
-
+    
+    delayLine = new DelayLine(100, 2047);
+    
 }
 
 // Deconstructor
@@ -29,6 +31,9 @@ void Flanger::processMono(float* const samples, const int numSamples)
 {
     // Make sure left channel is not NULL
     jassert (samples != nullptr);
+    for (int i = 0; i < numSamples; i++) {
+        samples[i] = (samples[i] + delayLine->processSample(samples[i]))/2.0;
+    }
     
 
 }
@@ -38,7 +43,10 @@ void Flanger::processStereo(float* const left, float* const right, const int num
 {
     // Make sure left and right channels are not NULL
     jassert (left != nullptr && right != nullptr);
-
+    for (int i = 0; i < numSamples; i++) {
+        left[i] = (left[i] + delayLine->processSample(left[i]))/2.0;
+        right[i] = (right[i] + delayLine->processSample(right[i]))/2.0;
+    }
     
 }
 
