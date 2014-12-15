@@ -8,15 +8,16 @@
   ==============================================================================
 */
 
+// Written by Ryan Foo
+
 #ifndef PLUGINEDITOR_H_INCLUDED
 #define PLUGINEDITOR_H_INCLUDED
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "PluginProcessor.h"
 #include "LFOWaveformTable.h"
-//#include "LookupTable.h"
 
-
+// Lookup Tables
 static float our_sineTable[1024] = {0.006, 0.012, 0.018, 0.025, 0.031, 0.037, 0.043, 0.049, 0.055, 0.061,
     0.067, 0.073, 0.080, 0.086, 0.092, 0.098, 0.104, 0.110, 0.116, 0.122, 0.128, 0.134, 0.140, 0.147,
     0.153, 0.159, 0.165, 0.171, 0.177, 0.183, 0.189, 0.195, 0.201, 0.207, 0.213, 0.219, 0.225, 0.231,
@@ -191,28 +192,23 @@ public:
     ~NebuloModAudioProcessorEditor();
 
     //==============================================================================
+    // Overrided Methods from Component Classes (including Slider/ComboBox)
     void paint (Graphics&) override;
     void resized() override;
-    
     void sliderValueChanged (Slider* slider) override;
     void comboBoxChanged (ComboBox *comboBoxThatHasChanged) override;
+    // Draw our path
     void updatePath();
-    
-    void initialize_glut(void);
-    
-    void createTables(void);
 
 private:
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
     NebuloModAudioProcessor& processor;
     
+    // Create GUI methods
     void createSlider(Slider &slider, Slider::SliderStyle style, double defaultVal,
                       double min, double max, double incr, std::string name);
-    
     void createLabel(Label &label, std::string name);
-    
-    Slider gainSlider;
     
     // Sliders
     Slider depthSlider;
@@ -231,15 +227,17 @@ private:
     Label mixText;
     Label fxText;
 
+    // Debugging Text
     Label debugText;
     
+    // LFO Waveform Drawing
     Path waveRef;
     LFOWaveformTable LFO;
     
+    // Flags
     bool initDrawing;
-    bool firstTime_flanger;
-    bool firstTime_phaser;
 
+    // Movable Points
     Point<float> marker_one;
     Point<float> marker_two;
     

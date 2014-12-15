@@ -15,7 +15,6 @@
 //==============================================================================
 NebuloModAudioProcessor::NebuloModAudioProcessor()
 {
-    //gain = 1.0f;
 }
 
 NebuloModAudioProcessor::~NebuloModAudioProcessor()
@@ -35,14 +34,11 @@ int NebuloModAudioProcessor::getNumParameters()
 
 float NebuloModAudioProcessor::getParameter (int index)
 {
-    //return gain;
     return index;
 }
 
 void NebuloModAudioProcessor::setParameter (int index, float newValue)
 {
-    //gain = newValue;
-
 }
 
 const String NebuloModAudioProcessor::getParameterName (int index)
@@ -157,6 +153,8 @@ void NebuloModAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBl
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
     
+    // Initial Flanger/Phaser Values:
+    
     // set Volume
     flMixVal = 0.5;
     flDepthVal= 0.5;
@@ -204,10 +202,10 @@ void NebuloModAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffe
     
     /* Get the samples from the input buffer */
     if (getNumInputChannels() == 1) {
+        // Obtain data from channel 1
         float *monoData = buffer.getWritePointer(0);
-        //phaser.processMono(monoData, buffer.getNumSamples());
-        //flanger.processMono(monoData, buffer.getNumSamples());
         
+        // Check Flag status to determine which effect to process
         if (phaser_active)
         {
             phaser.processMono(monoData, buffer.getNumSamples());
@@ -222,11 +220,11 @@ void NebuloModAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffe
         }
     }
     else if (getNumInputChannels() == 2) {
+        // Obtain data from channels 1 + 2
         float *leftChannel = buffer.getWritePointer(0);
         float *rightChannel = buffer.getWritePointer(1);
-        //phaser.processStereo(leftChannel, rightChannel, buffer.getNumSamples());
-        //flanger.processStereo(leftChannel, rightChannel, buffer.getNumSamples());
-        
+
+        // Check Flag status to determine which effect to process        
         if (phaser_active)
         {
             phaser.processStereo(leftChannel, rightChannel, buffer.getNumSamples());

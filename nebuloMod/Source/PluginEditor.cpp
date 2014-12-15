@@ -8,6 +8,8 @@
   ==============================================================================
 */
 
+// Written by Ryan Foo
+
 #include "PluginEditor.h"
 
 // Thanks Uri!!! So helpful man!
@@ -380,7 +382,7 @@ void NebuloModAudioProcessorEditor::comboBoxChanged(ComboBox *comboBoxThatHasCha
         processor.phaser_active = false;
         
         // Enable the feedback slider
-        feedbackSlider.setVisible(true);
+        feedbackSlider.setEnabled(true);
         
         // Text
         fxText.setText("Flanger", dontSendNotification);
