@@ -234,7 +234,7 @@ void NebuloModAudioProcessorEditor::comboBoxChanged(ComboBox *comboBoxThatHasCha
             processor.phsLfoWaveformVal = LFO.waveForm;
         }
         
-        repaint();
+        repaint(20, 160, 280, 250);
     }
     else if (lfoMenu.getSelectedItemIndex() == 1)
     {
@@ -251,7 +251,7 @@ void NebuloModAudioProcessorEditor::comboBoxChanged(ComboBox *comboBoxThatHasCha
             processor.updatePhaser();
         }
         
-        repaint();
+        repaint(20, 160, 280, 250);
     }
     else if (lfoMenu.getSelectedItemIndex() == 2)
     {
@@ -268,7 +268,7 @@ void NebuloModAudioProcessorEditor::comboBoxChanged(ComboBox *comboBoxThatHasCha
             processor.updatePhaser();
         }
         
-        repaint();
+        repaint(20, 160, 280, 250);
     }
     else if (lfoMenu.getSelectedItemIndex() == 3)
     {
@@ -285,9 +285,9 @@ void NebuloModAudioProcessorEditor::comboBoxChanged(ComboBox *comboBoxThatHasCha
             processor.updatePhaser();
         }
         
-        repaint();
+        repaint(20, 160, 280, 250);
     }
-    else
+    else if (lfoMenu.getSelectedItemIndex() == 4)
     {
         debugText.setText("Switching to the custom!!!", dontSendNotification);
         LFO.waveForm = 4;
@@ -302,7 +302,7 @@ void NebuloModAudioProcessorEditor::comboBoxChanged(ComboBox *comboBoxThatHasCha
             processor.updatePhaser();
         }
         
-        repaint();
+        repaint(20, 160, 280, 250);
     }
     
     // Switch to phaser...
@@ -325,6 +325,7 @@ void NebuloModAudioProcessorEditor::comboBoxChanged(ComboBox *comboBoxThatHasCha
         rateSlider.setValue(processor.phsRateVal);
         feedbackSlider.setValue(processor.phsFeedbackVal);
         mixSlider.setValue(processor.phsMixVal);
+        lfoMenu.setSelectedItemIndex(processor.phsLfoWaveformVal);
         
         // Set our LFO
         if (lfoMenu.getSelectedItemIndex() == 0)
@@ -349,7 +350,7 @@ void NebuloModAudioProcessorEditor::comboBoxChanged(ComboBox *comboBoxThatHasCha
         processor.updatePhaser();
         
         // Repaint the GUI for new waveform drawing!
-        repaint();
+        repaint(20, 160, 280, 250);
     }
     // Switch to flanger...
     else if (processor.phaser_active && (modMenu.getSelectedItemIndex() == 0))
@@ -368,6 +369,7 @@ void NebuloModAudioProcessorEditor::comboBoxChanged(ComboBox *comboBoxThatHasCha
         rateSlider.setValue(processor.flRateVal);
         feedbackSlider.setValue(processor.flFeedbackVal);
         mixSlider.setValue(processor.flMixVal);
+        lfoMenu.setSelectedItemIndex(processor.flLfoWaveformVal);
         
         // Set our LFO
         if (lfoMenu.getSelectedItemIndex() == 0)
@@ -392,7 +394,7 @@ void NebuloModAudioProcessorEditor::comboBoxChanged(ComboBox *comboBoxThatHasCha
         processor.updateFlanger();
         
         // Repaint the GUI for new waveform drawing!
-        repaint();
+        repaint(20, 160, 280, 250);
     }
     // If this is our first time ;)
     else if (!(processor.flanger_active) && !(processor.phaser_active))
@@ -434,7 +436,7 @@ void NebuloModAudioProcessorEditor::comboBoxChanged(ComboBox *comboBoxThatHasCha
                 processor.updateFlanger();
                 
                 // Repaint the GUI
-                repaint();
+                repaint(20, 160, 280, 250);
                 
                 // Set Flags
                 processor.phaser_active = false;
@@ -461,7 +463,7 @@ void NebuloModAudioProcessorEditor::comboBoxChanged(ComboBox *comboBoxThatHasCha
                 processor.updatePhaser();
                 
                 // Repaint the GUI
-                repaint();
+                repaint(20, 160, 280, 250);
                 
                 // Disable feedback slider
                 feedbackSlider.setEnabled(false);
