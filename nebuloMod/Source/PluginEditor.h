@@ -75,6 +75,7 @@ private:
     bool initDrawing;
     bool firstTime_flanger;
     bool firstTime_phaser;
+    int effectChanged;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (NebuloModAudioProcessorEditor)
 };
