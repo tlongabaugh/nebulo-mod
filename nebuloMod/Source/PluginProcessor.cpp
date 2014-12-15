@@ -160,14 +160,14 @@ void NebuloModAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBl
     // set Volume
     flMixVal = 0.5;
     flDepthVal= 0.5;
-    flRateVal = 7.5;
+    flRateVal = 8.0;
     flFeedbackVal = 50.0;
     flLfoWaveformVal = 0;
     
     // set Volume
     phsMixVal = 0.5;
     phsDepthVal= 0.5;
-    phsRateVal = 7.5;
+    phsRateVal = 8.0;
     phsFeedbackVal = 50.0;
     phsLfoWaveformVal = 0;
     

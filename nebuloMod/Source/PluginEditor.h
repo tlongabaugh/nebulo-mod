@@ -13,6 +13,8 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "PluginProcessor.h"
+#include "LFOWaveformTable.h"
+// #include "SineTable.h"
 
 
 //==============================================================================
@@ -68,9 +70,12 @@ private:
     Label debugText;
     
     Path waveRef;
+    LFOWaveformTable LFO;
     
     bool initDrawing;
-
+    bool firstTime_flanger;
+    bool firstTime_phaser;
+    
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (NebuloModAudioProcessorEditor)
 };
 
