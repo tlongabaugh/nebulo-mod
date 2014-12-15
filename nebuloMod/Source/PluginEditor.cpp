@@ -361,6 +361,9 @@ void NebuloModAudioProcessorEditor::comboBoxChanged(ComboBox *comboBoxThatHasCha
         processor.flanger_active = true;
         processor.phaser_active = false;
         
+        // Enable the feedback slider
+        feedbackSlider.setVisible(true);
+        
         // Text
         fxText.setText("Flanger", dontSendNotification);
         
