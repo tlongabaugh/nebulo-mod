@@ -153,14 +153,12 @@ float DelayLine::processSample(float inputSample)
     return output;
 }
 
-
-
-
-
-
-
-
-
+void DelayLine::clear()
+{
+    if (_sampBuffer) {
+        memset((void*)_sampBuffer, 0, sizeof(float)*_maxDelay);
+    }
+}
 
 
 

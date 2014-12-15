@@ -8,7 +8,6 @@
 
 #include "Flanger.h"
 
-// Constructor
 Flanger::Flanger(void) : currentSampleRate(INIT_SAMPLE_RATE)
 {
     // Set Paramaters
@@ -20,13 +19,39 @@ Flanger::Flanger(void) : currentSampleRate(INIT_SAMPLE_RATE)
     
 }
 
-// Deconstructor
 Flanger::~Flanger(void)
 {
-
+    delete [] delayLine;
 }
 
-// MONO AUDIO PROCESSING
+void Flanger::setParameters(const Parameters& newParam)
+{
+    parameters = newParam;
+}
+
+void Flanger::setSampleRate (const double sampleRate)
+{
+    // Make sure sample rate is valid
+    jassert (sampleRate > 0);
+    currentSampleRate = sampleRate;
+}
+
+void Flanger::prepareToPlay()
+{
+    // Init LFO
+    LFO.setSampleRate(currentSampleRate);
+    LFO.prepareToPlay();
+    
+    // reset delay line
+    delayLine->clear();
+    
+}
+
+
+
+//AUDIO PROCESSING (stereo, mono, which both call processSamples())
+//================================================================================================================
+
 void Flanger::processMono(float* const samples, const int numSamples)
 {
     // Make sure left channel is not NULL
@@ -38,7 +63,6 @@ void Flanger::processMono(float* const samples, const int numSamples)
 
 }
 
-// STEREO AUDIO PROCESSING
 void Flanger::processStereo(float* const left, float* const right, const int numSamples)
 {
     // Make sure left and right channels are not NULL
@@ -51,40 +75,3 @@ void Flanger::processStereo(float* const left, float* const right, const int num
 }
 
 
-
-
-void Flanger::prepareToPlay()
-{
-    // Init LFO
-    LFO.setSampleRate(currentSampleRate);
-    LFO.prepareToPlay();
-    
-}
-
-// Get the parameters of the flanger
-Flanger::Parameters& Flanger::getParameters(void)
-{
-    return parameters;
-}
-
-// Set the parameters of the flanger
-void Flanger::setParameters(const Parameters& newParam)
-{
-    parameters = newParam;
-}
-
-// Set the sample rate of the flanger
-void Flanger::setSampleRate (const double sampleRate)
-{
-    // Make sure sample rate is above 0 (NO NEGATIVE VALUES ACCEPTED)
-    jassert (sampleRate > 0);
-    currentSampleRate = sampleRate;
-
-}
-
-// flush the buffers and parameters once we exit DAW
-void Flanger::flush(void)
-{/*
-    input_buffer = NULL;
-    output_buffer = NULL;*/
-}

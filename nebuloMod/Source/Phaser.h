@@ -3,20 +3,16 @@
 //  Phaser.h
 //  NebuloMod
 //
-//  Created by Ryan Foo on 11/23/14.
 //
 //
 
 #ifndef __NebuloMod__Phaser__
 #define __NebuloMod__Phaser__
 
-#include <stdio.h>
-#include <math.h>
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "LFOWaveformTable.h"
 
-#define SAMPLE_RATE 44100
-#define BOTTOM_FREQ 100
+#define INIT_SAMPLE_RATE 44100
 
 //------------------------------------------------------------------------
 class Phaser
@@ -25,7 +21,7 @@ public:
     Phaser();
     ~Phaser();
     
-    /* Holds the parameters used by the phaser */
+    /* Struct that holds the parameters used by the phaser */
     struct Parameters
     {
         Parameters() noexcept
@@ -51,39 +47,28 @@ public:
     void setParameters (const Parameters& newParams);
     
     /* Sets the sample rate that the phaser will use. This needs to be
-     called before the process method */
+       called before the process method */
     void setSampleRate(const double sampleRate);
     
     /* Clear the phaser buffers and set up lfo*/
     void prepareToPlay();
     
-    /* set the phaser feedback */
-    //void setFeedback( float fb);
-    
-    /* set the phaser depth */
-    //void setDepth(float newDepth);
-    
-    /* set the lfo rate */
-    //void setRate(float newRate);
-    
-    /* set the lfo waveform */
-   // void setWaveform(int newWaveform);
-
-    //==============================================================================
-    /** Applies effect to two stereo channels of audio data. */
-    void processStereo (float* const left, float* const right, const int numSamples) noexcept;
-    
+    //============================================================================
     /** Applies effect single mono channel of audio data. */
     void processMono (float* const samples, const int numSamples) noexcept;
+    
+    /** Applies effect to two stereo channels of audio data. */
+    void processStereo (float* const left, float* const right, const int numSamples) noexcept;
     
     /* applies phaser to one sample */
     float processSample(float inSamp, float lfoSample);
 
 protected:
+    /* sets the range of the phasers depth */
     void range(float fMin, float fMax);
     
 private:
-    // A simple AllPass class from www.musicdsp.org/files/phaser.cpp
+    /* A simple AllPass filter class built from www.musicdsp.org/files/phaser.cpp */
     class AllpassDelay{
     public:
         AllpassDelay()
@@ -91,10 +76,12 @@ private:
         , _zm1( 0.f )
         {}
         
+        // sets the delay time
         void delay(float delay){ //sample delay time
             _a1 = (1.f - delay) / (1.f + delay);
         }
         
+        // processes a sample
         float update(float inSamp){
             float y = inSamp * -_a1 + _zm1;
             _zm1 = y * _a1 + inSamp;
@@ -105,17 +92,12 @@ private:
         float _a1, _zm1;
     };
     
-    AllpassDelay allPass[6];
-    
-    // Holds phaser's parameters
-    Parameters parameters;
-    
-    LFOWaveformTable LFO;
-    
-    double currentSampleRate;
-    
-    float depthMin, depthMax; //range
-    float zm1;
+    AllpassDelay allPass[6]; // Six all pass filters to be cascaded for the phaser
+    Parameters parameters; // Holds phaser's parameters
+    LFOWaveformTable LFO; // The LFO for the phaser
+    double currentSampleRate; // The sample rate to run the phaser at
+    float depthMin, depthMax; // Range for the phaser
+    float zm1; // coeff
 };
 
 #endif /* defined(__NebuloMod__Phaser__) */

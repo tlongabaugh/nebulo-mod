@@ -2,17 +2,15 @@
 //  Phaser.cpp
 //  NebuloMod
 //
-//  Created by Ryan Foo on 11/23/14.
-//
-//  Written by Tom Longabaugh, with help from Will Pirkle's "Designing Audio Effects in C++" book
+//  Written by Tom Longabaugh
 
 #include "Phaser.h"
 
 // Constructor
-Phaser::Phaser() : currentSampleRate(SAMPLE_RATE), zm1( 0.f )
+Phaser::Phaser() : currentSampleRate(INIT_SAMPLE_RATE), zm1( 0.f )
 {
     setParameters(Parameters());
-    setSampleRate(SAMPLE_RATE);
+    setSampleRate(INIT_SAMPLE_RATE);
 
     range(440.f, 1600.f);
 }
@@ -25,22 +23,6 @@ void Phaser::range(float fMin, float fMax){ // Hz
     depthMin = fMin / (currentSampleRate/2.f);
     depthMax = fMax / (currentSampleRate/2.f);
 }
-
-/*
-void Phaser::setFeedback(float fb)
-{   // 0 -> <1.
-    parameters.feedback = fb;
-}
-
-void Phaser::setDepth(float newDepth)
-{   // 0 -> 1.
-    parameters.depth = newDepth;
-}
-
-void Phaser::setRate(float newRate)
-{   // 1 = 15
-    parameters.rate = newRate;
-}*/
 
 void Phaser::setParameters (const Parameters& newParams)
 {
@@ -68,13 +50,30 @@ void Phaser::prepareToPlay()
     // Init LFO
     LFO.setSampleRate(currentSampleRate);
     LFO.prepareToPlay();
-    
 }
 
+//AUDIO PROCESSING (stereo, mono, which both call processSample())
 //================================================================================================================
+
+void Phaser::processMono(float* const samples, const int numSamples) noexcept
+{
+    // Make sure samples channel is not NULL
+    jassert (samples != nullptr);
+    
+    float lfoSample;
+    for(int i = 0; i < numSamples; i++) {
+        // get lfo sample, process mono channel
+        LFO.waveForm = parameters.lfoWaveform;
+        lfoSample = LFO.generateWaveSample();
+        
+        // Process channel
+        samples[i] = processSample(samples[i], lfoSample);
+    }
+}
 
 void Phaser::processStereo(float* const left, float* const right, const int numSamples) noexcept
 {
+    // Make sure left and right channels are not NULL
     jassert (left != nullptr && right != nullptr);
     
     float lfoSample;
@@ -86,19 +85,6 @@ void Phaser::processStereo(float* const left, float* const right, const int numS
         // process left and right channels
         left[i] = processSample(left[i], lfoSample);
         right[i] = processSample(right[i], lfoSample);
-    }
-}
-
-void Phaser::processMono(float* const samples, const int numSamples) noexcept
-{
-    jassert (samples != nullptr);
-    
-    float lfoSample;
-    for(int i = 0; i < numSamples; i++) {
-        // get lfo sample, process mono channel
-        LFO.waveForm = parameters.lfoWaveform;
-        lfoSample = LFO.generateWaveSample();
-        samples[i] = processSample(samples[i], lfoSample);
     }
 }
 

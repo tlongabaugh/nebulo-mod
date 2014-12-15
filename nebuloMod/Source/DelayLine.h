@@ -10,9 +10,6 @@
 #ifndef __NebuloMod__DelayLine__
 #define __NebuloMod__DelayLine__
 
-#include <stdio.h>
-#include <math.h>
-
 #include "../JuceLibraryCode/JuceHeader.h"
 
 class DelayLine
@@ -45,6 +42,9 @@ public:
     
     /* processes a sample in the delay line */
     float processSample(float inputSample);
+    
+    // clears the delay buffer
+    void clear();
     
 protected:
     unsigned long _inPoint; //write point
