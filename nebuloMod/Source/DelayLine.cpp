@@ -60,8 +60,9 @@ inline void DelayLine::setDelay(float delay)
     float outPointer = _inPoint - delay;
     _delay = delay;
     
+    // wrap pointer
     while (outPointer < 0) {
-        outPointer += _maxDelay; // mods the maximum length
+        outPointer += _maxDelay;
     }
     
     // integer part of delay

@@ -4,7 +4,7 @@
 //
 //  Created by Tom Longabaugh on 12/13/14.
 //
-//  Based on code from the STK github.com/thestk/stk/blob/master/include/DelayL.h and
+//  with help from the STK github.com/thestk/stk/blob/master/include/DelayL.h and
 //  github.com/thestk/stk/blob/master/include/DelayL.cpp
 
 #ifndef __NebuloMod__DelayLine__
@@ -19,7 +19,7 @@ class DelayLine
 {
 public:
     DelayLine();
-    DelayLine(float delay = 0, unsigned long maxDelay = 2047);
+    DelayLine(float delay = 0, unsigned long maxDelay = 4095);
     ~DelayLine();
     
     /* returns the maximum amount of delay */

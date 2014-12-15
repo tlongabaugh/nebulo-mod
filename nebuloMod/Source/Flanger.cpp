@@ -16,7 +16,7 @@ Flanger::Flanger(void) : currentSampleRate(INIT_SAMPLE_RATE)
     // Set Sample Rate (44100 default, updated right before playback)
     setSampleRate(INIT_SAMPLE_RATE);
     
-    delayLine = new DelayLine(100, 2047);
+    delayLine = new DelayLine(2047, 4095);
     
 }
 
