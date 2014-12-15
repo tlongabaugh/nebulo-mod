@@ -46,7 +46,7 @@ void DelayLine::setMaxDelay(unsigned long delay)
 }
 
 
-inline void DelayLine::setDelay(float delay)
+void DelayLine::setDelay(float delay)
 {
     // make sure the delay is valid
     jassert(delay < (float)_maxDelay);
@@ -108,7 +108,7 @@ void DelayLine::tapIn(float value, unsigned long tapDelay)
     _sampBuffer[tap] = value;
 }*/
 
-inline float DelayLine::nextOut()
+float DelayLine::nextOut()
 {
     // if delay is greater than 0
     if (_doNextOut) {
