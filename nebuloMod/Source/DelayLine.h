@@ -15,7 +15,7 @@
 class DelayLine
 {
 public:
-    DelayLine(float delay = 0.0, unsigned long maxDelay = 44100);
+    DelayLine(double delay = 0.0, unsigned long maxDelay = 4095);
     ~DelayLine();
     
     /* returns the maximum amount of delay */
@@ -25,10 +25,10 @@ public:
     void setMaxDelay(unsigned long delay);
     
     /* sets the delay line delay */
-    void setDelay(float delay);
+    void setDelay(double delay);
     
     /* returns the delay amount */
-    float getDelay();
+    double getDelay();
     
     /* return the value at tapDelay samples from delay line input */
     //float tapOut(unsigned long tapDelay);
@@ -48,10 +48,10 @@ public:
 protected:
     unsigned long _inPoint; //write point
     unsigned long _outPoint; // read point
-    float _delay; // delay amount
-    float _alpha;
-    float _omAlpha;
-    float _nextOutput;
+    double _delay; // delay amount
+    double _alpha;
+    double _omAlpha;
+    double _nextOutput;
     bool _doNextOut; 
     float *_sampBuffer;
     unsigned long _maxDelay;

@@ -61,7 +61,10 @@ public:
     void processStereo (float* const left, float* const right, const int numSamples) noexcept;
     
     /* applies phaser to one sample */
-    float processSample(float inSamp, float lfoSample);
+    float processSampleL(float inSamp, float lfoSample);
+    
+    /* applies phaser to one sample */
+    float processSampleR(float inSamp, float lfoSample);
 
 protected:
     /* sets the range of the phasers depth */
@@ -92,7 +95,8 @@ private:
         float _a1, _zm1;
     };
     
-    AllpassDelay allPass[6]; // Six all pass filters to be cascaded for the phaser
+    AllpassDelay allPassL[6]; // Six all pass filters to be cascaded for the phaser
+    AllpassDelay allPassR[6]; // Six all pass filters for right channel
     Parameters parameters; // Holds phaser's parameters
     LFOWaveformTable LFO; // The LFO for the phaser
     double currentSampleRate; // The sample rate to run the phaser at

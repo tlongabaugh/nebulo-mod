@@ -67,8 +67,14 @@ void Phaser::processMono(float* const samples, const int numSamples) noexcept
         LFO.waveForm = parameters.lfoWaveform;
         lfoSample = LFO.generateWaveSample();
         
-        // Process channel
-        samples[i] = processSample(samples[i], lfoSample);
+        // Process channel, add unique stereo spread
+        if(i % 2 == 0)
+        {
+            samples[i] = processSampleL(samples[i], lfoSample);
+        }
+        else {
+            samples[i] = processSampleR(samples[i], lfoSample);
+        }
     }
 }
 
@@ -85,22 +91,43 @@ void Phaser::processStereo(float* const left, float* const right, const int numS
         lfoSample = LFO.generateWaveSample();
         
         // process left and right channels
-        left[i] = processSample(left[i], lfoSample);
-        right[i] = processSample(right[i], lfoSample);
+        left[i] = processSampleL(left[i], lfoSample);
+        right[i] = processSampleR(right[i], lfoSample);
     }
 }
 
-inline float Phaser::processSample(float inSamp, float lfoSample)
+inline float Phaser::processSampleL(float inSamp, float lfoSample)
 {
     // Calculate sweep based on lfoSample and depth controls
     float d  = depthMin + (depthMax-depthMin) * (lfoSample + 1.f)/2.f;
     
     // Update the filter coefficients
     for( int i=0; i<6; i++ )
-        allPass[i].delay( d );
+    {
+        allPassL[i].delay(d);
+    }
     
     // Calculate the phased output
-    float y = allPass[0].update(allPass[1].update(allPass[2].update(allPass[3].update(allPass[4].update(allPass[5].update(inSamp + zm1 * 0.1))))));
+    float y = allPassL[0].update(allPassL[1].update(allPassL[2].update(allPassL[3].update(allPassL[4].update(allPassL[5].update(inSamp + zm1 * 0.2))))));
+    zm1 = y;
+    
+    // mix dry and phaser output
+    return inSamp*(1.0-parameters.mix/2) + y * parameters.depth * parameters.mix/2;
+}
+
+inline float Phaser::processSampleR(float inSamp, float lfoSample)
+{
+    // Calculate sweep based on lfoSample and depth controls
+    float d  = depthMin + (depthMax-depthMin) * (lfoSample + 1.f)/2.f;
+    
+    // Update the filter coefficients
+    for( int i=0; i<6; i++ )
+    {
+        allPassR[i].delay(d);
+    }
+    
+    // Calculate the phased output
+    float y = allPassR[0].update(allPassR[1].update(allPassR[2].update(allPassR[3].update(allPassR[4].update(allPassR[5].update(inSamp + zm1 * 0.1))))));
     zm1 = y;
     
     // mix dry and phaser output

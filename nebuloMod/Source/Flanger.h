@@ -77,7 +77,7 @@ private:
     LFOWaveformTable LFO;       // LFO for the flanger
     double currentSampleRate;   // Current sample rate of Flanger
     float avgDelay;             // Average delay time
-    float _maxFlanging;         // Max flanging time
+    double _maxFlanging;         // Max flanging time
     
 };
 

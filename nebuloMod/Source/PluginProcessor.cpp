@@ -198,10 +198,10 @@ void NebuloModAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffe
     //Written by tom longabaugh and ryan foo
     /* Perform the necessary audio processing */
     
-    //int sampleCount = buffer.getNumSamples();
-    
     /* Get the samples from the input buffer */
-    if (getNumInputChannels() == 1) {
+    
+    // Mono -> Mono
+    if (getNumInputChannels() == 1 && getNumOutputChannels() == 1) {
         // Obtain data from channel 1
         float *monoData = buffer.getWritePointer(0);
         
@@ -216,7 +216,26 @@ void NebuloModAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffe
         }
         else
         {
-            // do nothing son!!!
+            // do nothing
+        }
+    }// Mono -> Stereo
+    if (getNumInputChannels() == 1 && getNumOutputChannels() == 2) {
+        // Obtain data from channel 1
+        float *monoDataL = buffer.getWritePointer(0);
+        float *monoDataR = buffer.getWritePointer(1);
+        
+        // Check Flag status to determine which effect to process
+        if (phaser_active)
+        {
+            phaser.processMono(monoDataL, buffer.getNumSamples());
+        }
+        else if (flanger_active)
+        {
+            flanger.processMono(monoDataR, buffer.getNumSamples());
+        }
+        else
+        {
+            // do nothing
         }
     }
     else if (getNumInputChannels() == 2) {
@@ -236,11 +255,10 @@ void NebuloModAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffe
         else
         {
             // do nothing son!
-            // printf("How did you get here guy??? seriously you must've really screwed something up to get over here");
         }
     }
     else {
-        // This is wrong, dont' do anything??
+        // We should never get here, since plug-in can't initialize except for those in/out combos
     }
 }
 

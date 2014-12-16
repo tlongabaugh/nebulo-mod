@@ -8,7 +8,7 @@
 
 #include "DelayLine.h"
 
-DelayLine::DelayLine(float delay, unsigned long maxDelay)
+DelayLine::DelayLine(double delay, unsigned long maxDelay)
 {
     _maxDelay = maxDelay;
     // Raise assert if expression is not true
@@ -28,7 +28,9 @@ DelayLine::DelayLine(float delay, unsigned long maxDelay)
 
 DelayLine::~DelayLine()
 {
-    delete [] _sampBuffer;
+    if(_sampBuffer){
+        delete [] _sampBuffer;
+    }
 }
 
 unsigned long DelayLine::getMaxDelay()
@@ -46,19 +48,19 @@ void DelayLine::setMaxDelay(unsigned long delay)
 }
 
 
-void DelayLine::setDelay(float delay)
+void DelayLine::setDelay(double delay)
 {
     // make sure the delay is valid
     jassert(delay < (float)_maxDelay);
     jassert(delay >= 0.0);
     
     // read follows write
-    float outPointer = _inPoint - delay;
+    double outPointer = _inPoint - delay;
     _delay = delay;
     
     // wrap pointer
     while (outPointer < 0) {
-        outPointer += _maxDelay;
+        outPointer += (double)_maxDelay;
     }
     
     // integer part of delay
@@ -66,7 +68,7 @@ void DelayLine::setDelay(float delay)
     
     // fractional part of delay
     _alpha = outPointer - _outPoint;
-    _omAlpha = 1.0 - _alpha;
+    _omAlpha = (double)1.0 - _alpha;
     
     // wrap the buffer
     if (_outPoint == _maxDelay) {
@@ -76,7 +78,7 @@ void DelayLine::setDelay(float delay)
     _doNextOut = true;
 }
 
-float DelayLine::getDelay()
+double DelayLine::getDelay()
 {
     return _delay;
 }
