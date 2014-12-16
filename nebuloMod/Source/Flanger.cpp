@@ -91,6 +91,8 @@ void Flanger::processStereo(float* const left, float* const right, const int num
     jassert (left != nullptr && right != nullptr);
     float phase;
     static float prev_phase;
+    static float triSample;
+    static float counter = 1;
     
     float lfoSample;
     
@@ -104,10 +106,31 @@ void Flanger::processStereo(float* const left, float* const right, const int num
         
         prev_phase = phase;
         
+        /*float T = currentSampleRate / parameters.rate;
+        
+        if (counter == 1)
+        {
+            lfoSample += (2./T +1.01)/2.0;
+        }
+        else
+        {
+            lfoSample -= (2./T +1.01)/2.0;
+        }
+        
+        if (lfoSample >= 1.0)
+        {
+            counter = 0;
+        }
+        else if (lfoSample <= -1.0)
+        {
+            counter = 1;
+        }*/
+
+        
         
         // Get LFO sample
-        //LFO.waveForm = parameters.lfoWaveform;
-        //lfoSample = (LFO.generateWaveSample() + 1.01) / 2.0 ; // get into 0-1 range
+        LFO.waveForm = parameters.lfoWaveform;
+        lfoSample = (LFO.generateWaveSample() + 1.01) / 2.0 ; // get into 0-1 range
         
         // process samples
         //double delay = i/2000.0 * _maxFlanging;
@@ -117,16 +140,14 @@ void Flanger::processStereo(float* const left, float* const right, const int num
         delayLineR.setDelay(delay);
         
         
-       // right[i] = parameters.depth*delayLineR.processSample(right[i]);
-        //left[i] = left[i];
-        left[i] = (left[i] + parameters.depth * delayLineL.processSample(left[i]))/2.0; // make this mix better
-        right[i] = (right[i] + parameters.depth * delayLineR.processSample(right[i]))/2.0; // make this mix better
+        right[i] = parameters.depth*delayLineR.processSample(right[i]);
+        left[i] = left[i];
+        //left[i] = (left[i] + parameters.depth * delayLineL.processSample(left[i]))/2.0; // make this mix better
+        //right[i] = (right[i] + parameters.depth * delayLineR.processSample(right[i]))/2.0; // make this mix better
         
         
         //left[i] = left[i]*(1.0-parameters.mix/2) + parameters.depth*(delayLineL->processSample(left[i]))*parameters.mix/2;
         //right[i] = right[i]*(1.0-parameters.mix/2) + parameters.depth*(delayLineR->processSample(right[i]))*parameters.mix/2;
-        
-        float a;
         
     }
 }

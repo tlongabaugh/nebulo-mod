@@ -248,10 +248,12 @@ void NebuloModAudioProcessorEditor::comboBoxChanged(ComboBox *comboBoxThatHasCha
         if (processor.flanger_active)
         {
             processor.flLfoWaveformVal = LFO.waveForm;
+            processor.updateFlanger();
         }
         else if (processor.phaser_active)
         {
             processor.phsLfoWaveformVal = LFO.waveForm;
+            processor.updatePhaser();
         }
         
         repaint(20, 160, 280, 250);
