@@ -194,6 +194,9 @@ void WaveformComponent::enablePoints(bool isEnabled)
 }
 
 // Refill buffer scales new points in the GUI and waveformTable
+// We have three points here: (x1,y1) [first marker], (x2,y2) [midpoint], and (x3,y3) [second marker].
+// These points are used to redraw the graph.
+// The bezier curve is applied to the first marker and midpoint and another curve is applied to the midpoint and second marker.
 void WaveformComponent::refillBuffer (float x1, float y1, float x2, float y2, float x3, float y3)
 {
     // Determined by size of buffer (1024) and increment (i = 1)
@@ -242,24 +245,30 @@ void WaveformComponent::refillBuffer (float x1, float y1, float x2, float y2, fl
 // Reset the buffer with default values
 void WaveformComponent::resetBuffer()
 {
+    // Set default values
     for (int i = 0; i < 1024; ++i)
     {
         waveformTable[i] = defaults[i];
     }
     
+    // Set Flags
     secondTime = false;
     initBuffer = true;
     
+    // Reset our Points
     resetPoints();
+    // Redraw the line graph
     refreshPath(4);
 }
 
 // Reset points to default positions
 void WaveformComponent::resetPoints()
 {
+    // Get the width and height of GUI
     const int w = getWidth();
     const int h = getHeight();
     
+    // Default Point Values
     float x1 = w * 0.25f - 4.5;
     float y1 = (h/2) - waveformTable[240] * h/2.02;
     
@@ -269,9 +278,11 @@ void WaveformComponent::resetPoints()
     float x3 = w * 0.75f - 5;
     float y3 = (h/2) - waveformTable[767] * h/2.21;
     
+    // Set the curve points
     curvePoints[0]->setBounds ((int) (x1), (int) (y1), 10, 10);
     curvePoints[1]->setBounds ((int) (x2), (int) (y2), 10, 10);
     curvePoints[2]->setBounds ((int) (x3), (int) (y3), 10, 10);
     
+    // Don't let curve point 1 be visible
     curvePoints[1]->setVisible(false);
 }
