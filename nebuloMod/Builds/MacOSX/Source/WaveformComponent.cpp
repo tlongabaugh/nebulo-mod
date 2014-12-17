@@ -15,7 +15,6 @@ WaveformComponent::WaveformComponent():isInitialised(false)
         curvePoints.add(new CurvePoint());
         curvePoints[i]->addComponentListener(this);
         addAndMakeVisible(curvePoints[i]);
-        printf("Curve Points Coords: %d,%d\n", curvePoints[i]->getX(), curvePoints[i]->getY());
     }
 }
 
@@ -65,13 +64,7 @@ void WaveformComponent::paint (Graphics& g)
     g.strokePath (path, PathStrokeType (2.0f));
 }
 
-void WaveformComponent::bufferChanged()
-{
-    // if (changedBuffer == &customTable)
-        refreshPath();
-}
-
-void WaveformComponent::componentMovedOrResized (Component& component, bool wasMoved, bool wasResized)
+void WaveformComponent::componentMovedOrResized (Component& component, bool /*wasMoved*/, bool /*wasResized*/)
 {
     if (&component == curvePoints[0] || &component == curvePoints[1])
     {
@@ -81,7 +74,7 @@ void WaveformComponent::componentMovedOrResized (Component& component, bool wasM
         float x2 = (curvePoints[1]->getX() + (0.5f * curvePoints[1]->getWidth())) / (float) getWidth();
         float y2 = ((getHeight() - curvePoints[1]->getY()) - (0.5f * curvePoints[1]->getHeight())) / (float) getHeight();
         
-        refillBuffer (x1, y1, x2, y2);
+        // refillBuffer (x1, y1, x2, y2);
     }
 }
 
@@ -92,48 +85,50 @@ void WaveformComponent::refreshPath()
     const int h = getHeight();
     
     const float xScale = (float) w / (float) 1024;
-    const float yScale = (float) h/ (float) 2.05;
+    const float yScale = (float) h;
     
     path.clear();
     path.startNewSubPath (0.0f, (float) h);
     
     for (int i = 0; i < 1024; ++i)
     {
-        // Draw the Waveform!
-        path.lineTo(i * xScale, (h/2) - (waveformTable[i-1] * yScale));
+        path.lineTo (i * xScale, h - (waveformTable[i] * yScale));
     }
     
     repaint();
 }
-
+/*
 void WaveformComponent::refillBuffer (float x1, float y1, float x2, float y2)
 {
-    // const float bufferScale = 1.0f / (float) bufferSize;
+    float* bufferData = buffer.getData();
+    const int bufferSize = buffer.getSize();
+    const float bufferScale = 1.0f / (float) bufferSize;
     
-    for (int i = 0; i < 1024; ++i)
+    for (int i = 0; i < bufferSize; ++i)
     {
-        // float x = jlimit (0.0f, 1.0f, i * bufferScale);
-        /*bufferData[i] = BezierCurve::cubicBezierNearlyThroughTwoPoints (x,
+        float x = jlimit (0.0f, 1.0f, i * bufferScale);
+        bufferData[i] = BezierCurve::cubicBezierNearlyThroughTwoPoints (x,
                                                                         x1, y1,
-                                                                        x2, y2);*/
-        
-        // Reset our buffer to default values
-        waveformTable[i] = defaults[i];
+                                                                        x2, y2);
     }
     
-    //buffer.updateListeners();
+    buffer.updateListeners();
 }
-
+*/
+/*
 void WaveformComponent::resetBuffer()
 {
-    for (int i = 0; i < 1024; ++i)
-    {
-        waveformTable[i] = defaults[i];
-    }
+    float* bufferData = buffer.getData();
+    const int bufferSize = buffer.getSize();
+    const float bufferScale = 1.0f / bufferSize;
+    
+    for (int i = 0; i < bufferSize; ++i)
+        bufferData[i] = bufferScale * i;
     
     resetPoints();
-    //buffer.updateListeners();
+    buffer.updateListeners();
 }
+ */
 
 void WaveformComponent::resetPoints()
 {
@@ -143,14 +138,12 @@ void WaveformComponent::resetPoints()
     const int bufferSize = 1024;
     const float* bufferData = waveformTable;
     
-    float x1 = w * 0.25f - 4.5;
-    //float y1 = h * linearInterpolate (bufferData, bufferSize, bufferSize * 0.75f);
-    float y1 = (h/2) - waveformTable[240] * h/2.02;
+    float x1 = w * 0.25f;
+    // float y1 = h * linearInterpolate (bufferData, bufferSize, bufferSize * 0.75f);
     
-    float x2 = w * 0.75f - 5;
-    //float y2 = h * linearInterpolate (bufferData, bufferSize, bufferSize * 0.25f);
-    float y2 = (h/2) - waveformTable[767] * h/2.21;
+    float x2 = w * 0.75f;
+    // float y2 = h * linearInterpolate (bufferData, bufferSize, bufferSize * 0.25f);
     
-    curvePoints[0]->setBounds ((int) (x1), (int) (y1), 10, 10);
-    curvePoints[1]->setBounds ((int) (x2), (int) (y2), 10, 10);
+    //curvePoints[0]->setBounds ((int) (x1 - 5), (int) (y1 - 5), 10, 10);
+    //curvePoints[1]->setBounds ((int) (x2 - 5), (int) (y2 - 5), 10, 10);
 }

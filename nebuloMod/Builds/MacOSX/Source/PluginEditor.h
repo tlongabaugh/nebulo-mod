@@ -16,7 +16,6 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "PluginProcessor.h"
 #include "LFOWaveformTable.h"
-#include "WaveformComponent.h"
 
 // Lookup Tables
 static float our_sineTable[1024] = {0.006, 0.012, 0.018, 0.025, 0.031, 0.037, 0.043, 0.049, 0.055, 0.061,
@@ -251,8 +250,7 @@ private:
     Point<float> marker_one;
     Point<float> marker_two;
     
-    // Waveform Component
-    WaveformComponent wavComponent;
+    
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (NebuloModAudioProcessorEditor)
 };

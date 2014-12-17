@@ -99,14 +99,12 @@ NebuloModAudioProcessorEditor::NebuloModAudioProcessorEditor (NebuloModAudioProc
     processor.flLfoWaveformVal = LFO.waveForm;
     processor.phsLfoWaveformVal = LFO.waveForm;
     
+    
     // Update Phaser
     processor.updateFlanger();
     
     // Debugging Text
     addAndMakeVisible(debugText);
-    
-    // Waveform Component (??)
-    addAndMakeVisible(&wavComponent);
     
     // Flags
     processor.flanger_active = true;
@@ -140,7 +138,6 @@ void NebuloModAudioProcessorEditor::paint (Graphics& g)
     
     float lineThickness = 2.0f;
     
-    /*
     // Wavetable graph init
     if (initDrawing)
     {
@@ -167,7 +164,6 @@ void NebuloModAudioProcessorEditor::paint (Graphics& g)
         g.setColour(Colours::black);
         g.strokePath(waveRef, PathStrokeType(lineThickness));
     }
-     */
 }
 
 void NebuloModAudioProcessorEditor::resized()
@@ -191,9 +187,6 @@ void NebuloModAudioProcessorEditor::resized()
     feedbackText.setBounds(610, 270, 25, 75);
     mixText.setBounds(610, 320, 25, 75);
     fxText.setBounds(450, 360, 100, 50);
-    
-    // Waveform Component
-    wavComponent.setBounds(35, 180, 250, 210);          // 250 210
     
     debugText.setBounds(350, 400, 150, 150);
 }
