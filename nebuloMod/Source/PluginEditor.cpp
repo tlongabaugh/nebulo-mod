@@ -263,7 +263,8 @@ void NebuloModAudioProcessorEditor::comboBoxChanged(ComboBox *comboBoxThatHasCha
             processor.updatePhaser();
         }
         
-        repaint(20, 160, 280, 250);
+        wavComponent.refreshPath();    
+        //repaint(20, 160, 280, 250);
     }
     else if (lfoMenu.getSelectedItemIndex() == 1)
     {
@@ -280,7 +281,8 @@ void NebuloModAudioProcessorEditor::comboBoxChanged(ComboBox *comboBoxThatHasCha
             processor.updatePhaser();
         }
         
-        repaint(20, 160, 280, 250);
+        wavComponent.refreshPath();
+        //repaint(20, 160, 280, 250);
     }
     else if (lfoMenu.getSelectedItemIndex() == 2)
     {
@@ -297,7 +299,8 @@ void NebuloModAudioProcessorEditor::comboBoxChanged(ComboBox *comboBoxThatHasCha
             processor.updatePhaser();
         }
         
-        repaint(20, 160, 280, 250);
+        wavComponent.refreshPath();
+        //repaint(20, 160, 280, 250);
     }
     else if (lfoMenu.getSelectedItemIndex() == 3)
     {
@@ -314,7 +317,8 @@ void NebuloModAudioProcessorEditor::comboBoxChanged(ComboBox *comboBoxThatHasCha
             processor.updatePhaser();
         }
         
-        repaint(20, 160, 280, 250);
+        //repaint(20, 160, 280, 250);
+        wavComponent.refreshPath();
     }
     else if (lfoMenu.getSelectedItemIndex() == 4)
     {
@@ -331,7 +335,8 @@ void NebuloModAudioProcessorEditor::comboBoxChanged(ComboBox *comboBoxThatHasCha
             processor.updatePhaser();
         }
         
-        repaint(20, 160, 280, 250);
+        //repaint(20, 160, 280, 250);
+        wavComponent.refreshPath();
     }
     
     // Switch to phaser...
@@ -382,7 +387,8 @@ void NebuloModAudioProcessorEditor::comboBoxChanged(ComboBox *comboBoxThatHasCha
         processor.updatePhaser();
         
         // Repaint the GUI for new waveform drawing!
-        repaint(20, 160, 280, 250);
+        //repaint(20, 160, 280, 250);
+        wavComponent.refreshPath();
     }
     // Switch to flanger...
     else if (processor.phaser_active && (modMenu.getSelectedItemIndex() == 0))
@@ -431,7 +437,8 @@ void NebuloModAudioProcessorEditor::comboBoxChanged(ComboBox *comboBoxThatHasCha
         processor.updateFlanger();
         
         // Repaint the GUI for new waveform drawing!
-        repaint(20, 160, 280, 250);
+        //repaint(20, 160, 280, 250);
+        wavComponent.refreshPath();
     }
     
     // Visualize our text!

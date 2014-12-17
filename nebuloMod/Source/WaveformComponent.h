@@ -13,6 +13,7 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "dRowAudio_MathsUtilities.h"
 #include "dRowAudio_BezierCurve.h"
+#include "LFOWaveformTable.h"
 
 static float waveformTable[1024] = {0.006, 0.012, 0.018, 0.025, 0.031, 0.037, 0.043, 0.049, 0.055, 0.061,
     0.067, 0.073, 0.080, 0.086, 0.092, 0.098, 0.104, 0.110, 0.116, 0.122, 0.128, 0.134, 0.140, 0.147,
@@ -189,6 +190,7 @@ public:
     void bufferChanged();
     void componentMovedOrResized(Component& component, bool wasMoved, bool wasResized);
     void resetBuffer();
+    void refreshPath();
     
 private:
     enum CurvePoints
@@ -197,6 +199,8 @@ private:
         pointY1,
         pointX2,
         pointY2,
+        pointX3,
+        pointY3,
         numPoints,
     };
     
@@ -205,12 +209,15 @@ private:
     OwnedArray<CurvePoint> curvePoints;
     OwnedArray<Value> values;
     
-    void refreshPath();
-    void refillBuffer(float x1, float y1, float x2, float y2);
+    void refillBuffer(float x1, float y1, float x2, float y2, float x3, float y3);
     void resetPoints();
     
     Image background;
     bool isInitialised;
+    bool initBuffer;
+    bool secondTime;
+    
+    LFOWaveformTable lfo;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WaveformComponent);
 };
