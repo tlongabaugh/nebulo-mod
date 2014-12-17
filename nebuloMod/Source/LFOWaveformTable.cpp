@@ -23,6 +23,7 @@ LFOWaveformTable::LFOWaveformTable()
     _inPoint = 0;
     _outPoint = 1;
     
+    setSampleRate(INIT_SAMPLE_RATE);
     fillLFOTable(waveformTable);
 }
 
@@ -33,17 +34,18 @@ LFOWaveformTable::~LFOWaveformTable()
 void LFOWaveformTable::prepareToPlay()
 {
     // set frequency and wave form
-    frequency = 5.0;
+    frequency = 0.2;
     waveForm = sineWave;
 }
 
 void LFOWaveformTable::setSampleRate(double sampleRate)
 {
     currentSampleRate = sampleRate;
+    lowpass.setCoefficients(coeffs.makeLowPass(currentSampleRate, 450));
 }
 
 // Initialize our table buffer
-void LFOWaveformTable::fillLFOTable(float *table)
+void LFOWaveformTable::fillLFOTable(volatile float table[])
 {
     // Initialize sine waveform and put into tableBuf
     for (int i = 0; i < TABLE_SIZE; i++)
@@ -79,7 +81,7 @@ float LFOWaveformTable::nextOut()
             _nextOutput += tableBuf[_outPoint+1] * _alpha;
         }
         else {
-            _nextOutput += _sampBuffer[0] * _alpha;
+            _nextOutput += tableBuf[0] * _alpha;
         }
         _doNextOut = false;
     }
@@ -133,7 +135,7 @@ float LFOWaveformTable::generateWaveSample()
         waveSample = generateSquare(frequency);
     }
     else {
-        waveSample = generateLFOTable(frequency); // implement wavetable later
+        waveSample = generateLFOTableSample(frequency); // implement wavetable later
     }
     
     return waveSample;
@@ -162,17 +164,18 @@ float LFOWaveformTable::generateTriangle(float freq)
 {
     // Generate triangle wave by absolute valuing saw
     static float triSample;
-    static float sawSample;
+    static float sawSample2;
     
     float T = currentSampleRate / freq;
     
-    sawSample += 2./T;
-    triSample = fabsf(sawSample) * 2 - 1;
+    sawSample2 += 2./T;
+    triSample = fabsf(sawSample2) * 2. - 1.;
     
-    if (sawSample >= 1)
+    if (sawSample2 >= 1)
     {
-        sawSample -= 2;
+        sawSample2 -= 2;
     }
+    
     
     return triSample;
 }
@@ -189,6 +192,7 @@ float LFOWaveformTable::generateSawtooth(float freq)
         sawSample -= 2;
     }
     
+    sawSample = lowpass.processSingleSampleRaw(sawSample);
     return sawSample;
     
 }
@@ -219,7 +223,7 @@ float LFOWaveformTable::generateSquare(float freq)
     return sawSample;
 }
 
-float LFOWaveformTable::generateLFOTable(float freq)
+float LFOWaveformTable::generateLFOTableSample(float freq)
 {
     float tableSample;
     // Number of samples per period

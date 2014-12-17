@@ -96,6 +96,7 @@ void Flanger::processStereo(float* const left, float* const right, const int num
     for (int i = 0; i < numSamples; i++) {
         // Get LFO sample
         LFO.waveForm = parameters.lfoWaveform;
+        //LFO.frequency = parameters.rate*100;
         lfoSample = (LFO.generateWaveSample() + 1.0)/2.0; // get into 0-1 range
 
         // change delay time
@@ -111,6 +112,8 @@ void Flanger::processStereo(float* const left, float* const right, const int num
         left[i] = left[i]*(1.0-parameters.mix) + parameters.depth*dOutL*parameters.mix;
         right[i] = right[i]*(1.0-parameters.mix) + parameters.depth*dOutR*parameters.mix;
         
+        //left[i] = lfoSample;
+        //right[i] = lfoSample;
     }
 }
 
