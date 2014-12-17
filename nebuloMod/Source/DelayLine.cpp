@@ -12,8 +12,8 @@ DelayLine::DelayLine(double delay, unsigned long maxDelay)
 {
     _maxDelay = maxDelay;
     // Raise assert if expression is not true
-    jassert(delay >= 0.0);
-    jassert(delay < (float)maxDelay);
+    jassert(delay > 0.0);
+    jassert(delay <= (float)maxDelay);
     
     // declare the sample buffer...make sure to delete!
     _sampBuffer = new float[maxDelay];

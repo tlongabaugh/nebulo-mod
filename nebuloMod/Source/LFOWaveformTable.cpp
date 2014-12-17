@@ -17,6 +17,19 @@
 
 #include "LFOWaveformTable.h"
 
+LFOWaveformTable::LFOWaveformTable()
+{
+    _maxDelay = TABLE_SIZE;
+    _inPoint = 0;
+    _outPoint = 1;
+    
+    fillLFOTable(waveformTable);
+}
+
+LFOWaveformTable::~LFOWaveformTable()
+{
+}
+
 void LFOWaveformTable::prepareToPlay()
 {
     // set frequency and wave form
@@ -29,109 +42,80 @@ void LFOWaveformTable::setSampleRate(double sampleRate)
     currentSampleRate = sampleRate;
 }
 
-
 // Initialize our table buffer
-void LFOWaveformTable::initTableBuffer(int *buf, lfoData *userData)
+void LFOWaveformTable::fillLFOTable(float *table)
 {
-    // put sine waveform into buffer
-    lfoData *data = userData;
-    float sample, phase;
-    static float prev_phase;
-    int i;
-    
-    // Initialize sine waveform using data frequency and put into tableBuf
-    for (i = 0; i < BUFFER_SIZE; i++)
+    // Initialize sine waveform and put into tableBuf
+    for (int i = 0; i < TABLE_SIZE; i++)
     {
-        phase = 2 * M_PI * data->frequency / currentSampleRate + prev_phase;
-        sample = sin(phase);
-        
-        tableBuf[i] = sample;
-    }
-    
-}
-
-// Initialize our waveform graph/table
-void LFOWaveformTable::initGraph(int *graph)
-{
-    // Interact with GUI here
-    int i;
-    
-    for (i = 0; i < TABLE_SIZE; i++)
-    {
-        // poistion 0
-        tableBuf[i] = 0;
-        // use point to draw one point on the graph
+        tableBuf[i] = table[i];
     }
 }
 
-// Move test points to draw waveform; returns bool if changed;
-// IF true, redraw graph and refill buffer
-// O/W, don't redraw/don't refill buffer
-bool LFOWaveformTable::movePointOne(int point, tableData *userData)
+float LFOWaveformTable::tableLookup()
 {
-    tableData *data = userData;
+    float output;
     
-    // If we detect a move:
-    //  Then draw something and then return true
-    if (point != data->pointOne)
-    {
-        data->pointOne = point;
-        
-        // Set the point in tableBuf
-        tableBuf[512] = data->pointOne;
-        return true;
+    // get output value, set to find output value again
+    output = nextOut();
+    _doNextOut = true;
+    
+    // wrap outpointer if necessary
+    if (++_outPoint == _maxDelay) {
+        _outPoint = 0;
     }
     
-    // default return
-    return false;
+    return output;
 }
-bool LFOWaveformTable::movePointTwo(int point, tableData *userData)
+
+float LFOWaveformTable::nextOut()
 {
-    tableData *data = userData;
+    // if delay is greater than 0 (always will be for this class)
+    if (_doNextOut) {
+        // first part of interpolation
+        _nextOutput = tableBuf[_outPoint] * _omAlpha;
+        // second part of interpolation (fractional)
+        if (_outPoint + 1 < _maxDelay) {
+            _nextOutput += tableBuf[_outPoint+1] * _alpha;
+        }
+        else {
+            _nextOutput += _sampBuffer[0] * _alpha;
+        }
+        _doNextOut = false;
+    }
+    return _nextOutput;
+}
+
+void LFOWaveformTable::setIncrement(double increment)
+{
+    // make sure the delay is valid
+    jassert(increment <= (float)_maxDelay);
+    jassert(increment >= 0.0);
     
-    // If we detect a move:
-    //  Then draw something and then return true
-    if (point != data->pointTwo)
-    {
-        data->pointTwo = point;
-        
-        // Set the point in tableBuf
-        tableBuf[1536] = data->pointTwo;
-        return true;
+    // read follows write
+    double outPointer = _inPoint - increment;
+    _delay = increment;
+    
+    // wrap pointer
+    while (outPointer < 0) {
+        outPointer += (double)_maxDelay;
     }
     
-    // default return
-    return false;
-}
-
-// Manipulate Graph (uses table buffer to draw graph)
-void LFOWaveformTable::drawGraph(void)
-{
-    // Use tableBuf info to draw the graph
-    // Interact with GUI here
-    int i;
-    float point;
+    // integer part of delay
+    _outPoint = (long)outPointer;
     
-    for (i = 0; i < TABLE_SIZE; i++)
-    {
-        // Write tableBuf to position
-        point = tableBuf[i];
-        // use point to draw one point on the graph
+    // fractional part of delay
+    _alpha = outPointer - _outPoint;
+    _omAlpha = (double)1.0 - _alpha;
+    
+    // wrap the buffer
+    if (_outPoint == _maxDelay) {
+        _outPoint = 0;
     }
+    
+    _doNextOut = true;
 }
 
-// Redraw graph when needed (callback everytime a change is detected/maybe only need drawGraph)
-void LFOWaveformTable::redrawGraph(int pointOne, int pointTwo, tableData *userData)
-{
-    tableData *data = userData;
-
-    // Move Points
-    movePointOne(pointOne, data);
-    movePointTwo(pointTwo, data);
-
-    // Redraw the graph
-    drawGraph();
-}
 
 float LFOWaveformTable::generateWaveSample()
 {
@@ -149,7 +133,7 @@ float LFOWaveformTable::generateWaveSample()
         waveSample = generateSquare(frequency);
     }
     else {
-        waveSample = 0; // implement wavetable later
+        waveSample = generateLFOTable(frequency); // implement wavetable later
     }
     
     return waveSample;
@@ -196,7 +180,6 @@ float LFOWaveformTable::generateTriangle(float freq)
 float LFOWaveformTable::generateSawtooth(float freq)
 {
     static float sawSample;
-    static int smooth = 50;
     float T = currentSampleRate / freq;
 
     sawSample += 2./T;
@@ -235,3 +218,30 @@ float LFOWaveformTable::generateSquare(float freq)
     
     return sawSample;
 }
+
+float LFOWaveformTable::generateLFOTable(float freq)
+{
+    float tableSample;
+    // Number of samples per period
+    float T = currentSampleRate / freq;
+    static float tableIncr = 0.0;
+    
+    // Fractionally increment the table value
+    tableIncr += (double)(_maxDelay / T);
+    
+    // wrap the table increment
+    if (tableIncr >= 1024.0) {
+        tableIncr = 0.0;
+    }
+    setIncrement(tableIncr);
+    
+    tableSample = tableLookup();
+    
+    return tableSample;
+}
+
+
+
+
+
+
