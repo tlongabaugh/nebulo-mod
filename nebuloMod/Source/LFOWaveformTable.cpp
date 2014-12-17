@@ -176,27 +176,18 @@ float LFOWaveformTable::generateSine(float freq)
 
 float LFOWaveformTable::generateTriangle(float freq)
 {
+    // Generate triangle wave by absolute valuing saw
     static float triSample;
-    static float counter = 1;
-
+    static float sawSample;
+    
     float T = currentSampleRate / freq;
     
-    if (counter == 1)
-    {
-        triSample += 2./T;
-    }
-    else
-    {
-        triSample -= 2./T;
-    }
+    sawSample += 2./T;
+    triSample = fabsf(sawSample) * 2 - 1;
     
-    if (triSample >= 1)
+    if (sawSample >= 1)
     {
-        counter = 0;
-    }
-    else if (triSample <= -1)
-    {
-        counter = 1;
+        sawSample -= 2;
     }
     
     return triSample;
@@ -205,8 +196,9 @@ float LFOWaveformTable::generateTriangle(float freq)
 float LFOWaveformTable::generateSawtooth(float freq)
 {
     static float sawSample;
+    static int smooth = 50;
     float T = currentSampleRate / freq;
-    
+
     sawSample += 2./T;
     
     if (sawSample >= 1)
@@ -215,24 +207,25 @@ float LFOWaveformTable::generateSawtooth(float freq)
     }
     
     return sawSample;
+    
 }
 
 float LFOWaveformTable::generateSquare(float freq)
 {
-    float sqrSample, phase;
+    float phase, sawSample = 0;
     static float prev_phase;
     
     phase = 2 * M_PI * freq / currentSampleRate + prev_phase;
-    sqrSample = sin(phase);
+    sawSample = sin(phase);
+    if(sawSample >= 0.2){
+        sawSample = 0.2;
+    }
+    else if (sawSample <= -0.2){
+        sawSample = -0.2;
+    }
     
-    if (sqrSample > 0)
-    {
-        sqrSample = 1;
-    }
-    else
-    {
-        sqrSample = -1;
-    }
+    sawSample *= 5;
+    
     if (phase > (2 * M_PI))
     {
         phase -= (2 * M_PI);
@@ -240,5 +233,5 @@ float LFOWaveformTable::generateSquare(float freq)
     
     prev_phase = phase;
     
-    return sqrSample;
+    return sawSample;
 }

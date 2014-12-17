@@ -97,40 +97,19 @@ void Flanger::processStereo(float* const left, float* const right, const int num
     float lfoSample;
     
     for (int i = 0; i < numSamples; i++) {
-        phase = 2 * M_PI * (parameters.rate) / currentSampleRate + prev_phase;
+        /*phase = 2 * M_PI * (parameters.rate*100) / currentSampleRate + prev_phase;
         lfoSample = (sin(phase) + 1.0) / 2.0;
         if (phase > (2 * M_PI))
         {
             phase -= (2 * M_PI);
         }
         
-        prev_phase = phase;
-        
-        /*float T = currentSampleRate / parameters.rate;
-        
-        if (counter == 1)
-        {
-            lfoSample += (2./T +1.01)/2.0;
-        }
-        else
-        {
-            lfoSample -= (2./T +1.01)/2.0;
-        }
-        
-        if (lfoSample >= 1.0)
-        {
-            counter = 0;
-        }
-        else if (lfoSample <= -1.0)
-        {
-            counter = 1;
-        }*/
-
-        
+        prev_phase = phase;*/
         
         // Get LFO sample
         LFO.waveForm = parameters.lfoWaveform;
-        lfoSample = (LFO.generateWaveSample() + 1.01) / 2.0 ; // get into 0-1 range
+        //LFO.frequency = 40.0;
+        lfoSample = (LFO.generateWaveSample() + 1.0)/2.0; // get into 0-1 range
         
         // process samples
         //double delay = i/2000.0 * _maxFlanging;

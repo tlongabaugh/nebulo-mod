@@ -15,7 +15,7 @@
 class DelayLine
 {
 public:
-    DelayLine(double delay = 0.0, unsigned long maxDelay = 4095);
+    DelayLine(double delay = 0.0, unsigned long maxDelay = 4096);
     ~DelayLine();
     
     /* returns the maximum amount of delay */
