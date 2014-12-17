@@ -73,7 +73,6 @@ NebuloModAudioProcessorEditor::NebuloModAudioProcessorEditor (NebuloModAudioProc
     createLabel(rateText, "Rate");
     createLabel(feedbackText, "Feedback");
     createLabel(mixText, "Mix");
-    createLabel(debugText, "Debugger");
     
     fxText.setSize(200, 50);
     
@@ -104,10 +103,7 @@ NebuloModAudioProcessorEditor::NebuloModAudioProcessorEditor (NebuloModAudioProc
     // Update Phaser
     processor.updateFlanger();
     
-    // Debugging Text
-    addAndMakeVisible(debugText);
-    
-    // Waveform Component (??)
+    // Waveform Component
     addAndMakeVisible(&wavComponent);
     
     // Flags
@@ -162,8 +158,6 @@ void NebuloModAudioProcessorEditor::resized()
     
     // Waveform Component
     wavComponent.setBounds(35, 180, 250, 210);          // 250 210
-    
-    debugText.setBounds(350, 400, 150, 150);
 }
 
 // Update our GUI when a slider is changed
@@ -215,7 +209,6 @@ void NebuloModAudioProcessorEditor::comboBoxChanged(ComboBox *comboBoxThatHasCha
     // Set our LFO
     if (lfoMenu.getSelectedItemIndex() == 0)
     {
-        debugText.setText("Switching to the sine!!!", dontSendNotification);
         LFO.waveForm = 0;
         if (processor.flanger_active)
         {
@@ -233,7 +226,6 @@ void NebuloModAudioProcessorEditor::comboBoxChanged(ComboBox *comboBoxThatHasCha
     }
     else if (lfoMenu.getSelectedItemIndex() == 1)
     {
-        debugText.setText("Switching to the tri!!!", dontSendNotification);
         LFO.waveForm = 1;
         if (processor.flanger_active)
         {
@@ -251,7 +243,6 @@ void NebuloModAudioProcessorEditor::comboBoxChanged(ComboBox *comboBoxThatHasCha
     }
     else if (lfoMenu.getSelectedItemIndex() == 2)
     {
-        debugText.setText("Switching to the saw!!!", dontSendNotification);
         LFO.waveForm = 2;
         if (processor.flanger_active)
         {
@@ -269,7 +260,6 @@ void NebuloModAudioProcessorEditor::comboBoxChanged(ComboBox *comboBoxThatHasCha
     }
     else if (lfoMenu.getSelectedItemIndex() == 3)
     {
-        debugText.setText("Switching to the square!!!", dontSendNotification);
         LFO.waveForm = 3;
         if (processor.flanger_active)
         {
@@ -287,7 +277,6 @@ void NebuloModAudioProcessorEditor::comboBoxChanged(ComboBox *comboBoxThatHasCha
     }
     else if (lfoMenu.getSelectedItemIndex() == 4)
     {
-        debugText.setText("Switching to the custom!!!", dontSendNotification);
         LFO.waveForm = 4;
         if (processor.flanger_active)
         {
@@ -307,8 +296,6 @@ void NebuloModAudioProcessorEditor::comboBoxChanged(ComboBox *comboBoxThatHasCha
     // Switch to phaser...
     if (processor.flanger_active && (modMenu.getSelectedItemIndex() == 1))
     {
-        debugText.setText("Switching to the phaser!!!", dontSendNotification);
-        
         // Set flags
         processor.flanger_active = false;
         processor.phaser_active = true;
@@ -346,6 +333,10 @@ void NebuloModAudioProcessorEditor::comboBoxChanged(ComboBox *comboBoxThatHasCha
         {
             processor.phsLfoWaveformVal = 3;
         }
+        else if (lfoMenu.getSelectedItemIndex() == 4)
+        {
+            processor.phsLfoWaveformVal = 4;
+        }
         LFO.waveForm = processor.phsLfoWaveformVal;
         
         // Update the Phaser variables!
@@ -357,8 +348,6 @@ void NebuloModAudioProcessorEditor::comboBoxChanged(ComboBox *comboBoxThatHasCha
     // Switch to flanger...
     else if (processor.phaser_active && (modMenu.getSelectedItemIndex() == 0))
     {
-        debugText.setText("Switching to the flanger!!!", dontSendNotification);
-        
         // Set flags
         processor.flanger_active = true;
         processor.phaser_active = false;
@@ -394,6 +383,10 @@ void NebuloModAudioProcessorEditor::comboBoxChanged(ComboBox *comboBoxThatHasCha
         else if (lfoMenu.getSelectedItemIndex() == 3)
         {
             processor.flLfoWaveformVal = 3;
+        }
+        else if (lfoMenu.getSelectedItemIndex() == 4)
+        {
+            processor.flLfoWaveformVal = 4;
         }
         LFO.waveForm = processor.flLfoWaveformVal;
         

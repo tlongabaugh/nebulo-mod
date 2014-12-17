@@ -227,9 +227,6 @@ private:
     Label mixText;
     Label fxText;
 
-    // Debugging Text
-    Label debugText;
-    
     // LFO Waveform Drawing
     Path waveRef;
     LFOWaveformTable LFO;

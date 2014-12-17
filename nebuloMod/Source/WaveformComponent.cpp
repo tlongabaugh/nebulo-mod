@@ -54,7 +54,6 @@ void WaveformComponent::resized()
         g.drawHorizontalLine((int) (i * yScale), 0.0f, (float) w);
         g.drawVerticalLine((int) (i * xScale), 0.0f, (float) h);
     }
-    // g.drawLine (0.0f, (float) h, (float) w, 0.0f);
     
     refreshPath(0);
 }
@@ -79,16 +78,13 @@ void WaveformComponent::componentMovedOrResized (Component& component, bool wasM
         
         float x3 = (curvePoints[2]->getX() + (0.5f * curvePoints[2]->getWidth())) / (float) getWidth();
         float y3 = ((getHeight() - curvePoints[2]->getY()) - (0.5f * curvePoints[2]->getHeight())) / (float) getHeight();
-        
-        // printf("Marker Two: %d %d\n", curvePoints[1]->getX(), curvePoints[1]->getY());
-        
+                
         refillBuffer (x1, y1, x2, y2, x3, y3);
     }
 }
 
 void WaveformComponent::refreshPath(int lfo_wave)
 {
-    //const int bufferSize = buffer.getSize();
     const int w = getWidth();
     const int h = getHeight();
     
@@ -113,7 +109,7 @@ void WaveformComponent::refreshPath(int lfo_wave)
     {
         if (lfo_wave == 0)
         {
-            path.lineTo(i * xScale, (h/2) - (waveformTable[i-1] * yScale));
+            path.lineTo(i * xScale, (h/2) - (defaults[i-1] * yScale));
         }
         else if (lfo_wave == 1)
         {
