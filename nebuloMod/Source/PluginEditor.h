@@ -31,11 +31,14 @@ public:
     ~NebuloModAudioProcessorEditor();
 
     //==============================================================================
-    // Overrided Methods from Component Classes (including Slider/ComboBox)
+    // Component Override Methods
     void paint (Graphics&) override;
     void resized() override;
+    // Slider Override Method
     void sliderValueChanged (Slider* slider) override;
+    // Combo Box Override Method
     void comboBoxChanged (ComboBox *comboBoxThatHasChanged) override;
+    // Button Override Method
     void buttonClicked(Button*) override;
     void buttonStateChanged(Button*) override;
 

@@ -13,6 +13,7 @@
 #include "PluginEditor.h"
 
 // Thanks Uri!!! So helpful man!
+// Creates a Slider with customized params
 void NebuloModAudioProcessorEditor::createSlider(Slider &slider, Slider::SliderStyle style, double defaultVal, double min, double max, double incr, std::string name) {
     // these define the parameters of our slider object
     slider.setSliderStyle(style);
@@ -33,6 +34,7 @@ void NebuloModAudioProcessorEditor::createSlider(Slider &slider, Slider::SliderS
     slider.isAlwaysOnTop();
 }
 
+// Creates a label with customized params
 void NebuloModAudioProcessorEditor::createLabel(Label &label, std::string name)
 {
     label.setSize(100,50);
@@ -106,13 +108,11 @@ NebuloModAudioProcessorEditor::NebuloModAudioProcessorEditor (NebuloModAudioProc
     // Waveform Component
     addAndMakeVisible(&wavComponent);
     
-    //&resetLFO = new TextButton("Reset LFO");
-    
+    // LFO Reset Button
     resetLFO.setEnabled(false);
     resetLFO.setSize(100, 25);
     resetLFO.setButtonText("Reset LFO");
     resetLFO.addListener(this);
-
     addAndMakeVisible(resetLFO);
     
     // Flags
@@ -165,6 +165,7 @@ void NebuloModAudioProcessorEditor::resized()
     mixText.setBounds(610, 320, 25, 75);
     fxText.setBounds(450, 360, 100, 50);
     
+    // Buttons!
     resetLFO.setBounds(110, 430, 75, 25);
     resetLFO.changeWidthToFitText();
     
@@ -218,7 +219,18 @@ void NebuloModAudioProcessorEditor::sliderValueChanged(Slider* slider)
 // AUTOMATIC CALLBACK
 void NebuloModAudioProcessorEditor::comboBoxChanged(ComboBox *comboBoxThatHasChanged)
 {
-    // Set our LFO
+    /*
+     * Set our LFO when the LFO Box is changed
+     * Process of how LFO is changed and set:
+     * 1) Check which item is selected (sine wave, tri wave, etc)
+     * 2) Set LFOWaveformTable waveForm
+     * 3) Check active effect flag
+     * 4) Set Processor's Waveform Value (for saving) and update effect
+     * 5) Enable GUI point markers if we are using Custom selection. O/W set to false
+     * 6) Enable Reset LFO button if we are using Custom selection. O/W set to false
+     * 7) Refresh the line path graph to correct drawing
+     */
+    // Sine Wave
     if (lfoMenu.getSelectedItemIndex() == 0)
     {
         LFO.waveForm = 0;
@@ -237,6 +249,7 @@ void NebuloModAudioProcessorEditor::comboBoxChanged(ComboBox *comboBoxThatHasCha
         resetLFO.setEnabled(false);
         wavComponent.refreshPath(LFO.waveForm);
     }
+    // Triangle Wave
     else if (lfoMenu.getSelectedItemIndex() == 1)
     {
         LFO.waveForm = 1;
@@ -255,6 +268,7 @@ void NebuloModAudioProcessorEditor::comboBoxChanged(ComboBox *comboBoxThatHasCha
         resetLFO.setEnabled(false);
         wavComponent.refreshPath(LFO.waveForm);
     }
+    // Sawtooth Wave
     else if (lfoMenu.getSelectedItemIndex() == 2)
     {
         LFO.waveForm = 2;
@@ -273,6 +287,7 @@ void NebuloModAudioProcessorEditor::comboBoxChanged(ComboBox *comboBoxThatHasCha
         resetLFO.setEnabled(false);
         wavComponent.refreshPath(LFO.waveForm);
     }
+    // Square Wave
     else if (lfoMenu.getSelectedItemIndex() == 3)
     {
         LFO.waveForm = 3;
@@ -291,6 +306,7 @@ void NebuloModAudioProcessorEditor::comboBoxChanged(ComboBox *comboBoxThatHasCha
         resetLFO.setEnabled(false);
         wavComponent.refreshPath(LFO.waveForm);
     }
+    // Custom Wave
     else if (lfoMenu.getSelectedItemIndex() == 4)
     {
         LFO.waveForm = 4;
@@ -309,6 +325,19 @@ void NebuloModAudioProcessorEditor::comboBoxChanged(ComboBox *comboBoxThatHasCha
         resetLFO.setEnabled(true);
         wavComponent.refreshPath(LFO.waveForm);
     }
+    
+    /**
+     * Set our Modulation Effect when the Effect Box is Changed
+     * Process of how Modulation Effect is changed:
+     * 1) Check flag status and which item is selected
+     * 2) Set new flags
+     * 3) Enable feedback slider depending on the selected effect
+     * 4) Reset slider ranges
+     * 5) Revert to saved slider values of effect
+     * 6) Set LFO
+     * 7) Update Effect Status
+     * 8) Refresh line path graph
+     */
     
     // Switch to phaser...
     if (processor.flanger_active && (modMenu.getSelectedItemIndex() == 1))
@@ -429,15 +458,19 @@ void NebuloModAudioProcessorEditor::comboBoxChanged(ComboBox *comboBoxThatHasCha
     fxText.setVisible(true);
 }
 
+// Button Click Override
+// When the button is clicked, reset the buffer
 void NebuloModAudioProcessorEditor::buttonClicked(Button* b)
 {
+    // If it's our button, reset the buffer
     if (b)
     {
         wavComponent.resetBuffer();
     }
 }
 
-
+// Button State Change Override
+// Don't do anything here
 void NebuloModAudioProcessorEditor::buttonStateChanged(Button* b)
 {
 

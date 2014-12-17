@@ -68,8 +68,6 @@ public:
     void getStateInformation (MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
     
-    float gain;
-
     // Added by Ryan Foo and Tom Longabaugh
 
     //==============================================================================
@@ -103,7 +101,6 @@ public:
 private:
     Flanger flanger;
     Phaser phaser;
-
 };
 
 

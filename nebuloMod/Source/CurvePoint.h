@@ -5,6 +5,10 @@
 //  Created by Ryan Foo on 12/16/14.
 //
 //  Original file created by David Rowland (Look at drowAudio github)
+/**
+ * Gives our drawn points to have mouse listeners
+ * We use this to allow us to use the points to move the waveform and customize it.
+ */
 
 #ifndef NebuloMod_CurvePoint_h
 #define NebuloMod_CurvePoint_h

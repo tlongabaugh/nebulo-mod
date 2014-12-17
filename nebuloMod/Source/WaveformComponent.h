@@ -4,7 +4,11 @@
 //
 //  Created by Ryan Foo on 12/16/14.
 //
-//
+//  Adapted from drowaudio's distortioncomponent class
+/**
+ * This Component draws our LFO waveform and customization.
+ * Customization of the LFO waveform uses the Bezier Curve to scale moved points
+ */
 
 #ifndef __NebuloMod__WaveformComponent__
 #define __NebuloMod__WaveformComponent__
@@ -13,12 +17,9 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "dRowAudio_MathsUtilities.h"
 #include "dRowAudio_BezierCurve.h"
-// #include "LFOWaveformTable.h"
 #include "LookupTable.h"
 
-/* WARNING: IF YOU CHANGE THE SIZE OF THIS TABLE YOU MUST ALSO CHANGE THE SIZE OF
- THE tableBuffer IN LFOWaveformTable!!!!!!!! */
-
+// Default Sine wave lookup table
 static float defaults[1024] = {0.006, 0.012, 0.018, 0.025, 0.031, 0.037, 0.043, 0.049, 0.055, 0.061,
     0.067, 0.073, 0.080, 0.086, 0.092, 0.098, 0.104, 0.110, 0.116, 0.122, 0.128, 0.134, 0.140, 0.147,
     0.153, 0.159, 0.165, 0.171, 0.177, 0.183, 0.189, 0.195, 0.201, 0.207, 0.213, 0.219, 0.225, 0.231,
@@ -104,17 +105,23 @@ class WaveformComponent : public Component,
                           public ComponentListener
 {
 public:
+    // Constructor + Deconstrutor
     WaveformComponent();
     ~WaveformComponent();
     
+    // Component Override Methods
     void resized();
     void paint (Graphics& g);
     void componentMovedOrResized(Component& component, bool wasMoved, bool wasResized);
+    // Reset our buffer to default lookup values
     void resetBuffer();
+    // Refresh the line path graph, takes in lfowaveform type
     void refreshPath(int lfo_wave);
+    // Enable points, takes in boolean status
     void enablePoints(bool isEnabled);
     
 private:
+    // Store our points into this array
     enum CurvePoints
     {
         pointX1,
@@ -126,15 +133,20 @@ private:
         numPoints,
     };
     
+    // Line graph
     Path path;
     
+    // Array of CurvePoint
     OwnedArray<CurvePoint> curvePoints;
     OwnedArray<Value> values;
     
+    // Refill the buffer when we want to draw a new waveform
     void refillBuffer(float x1, float y1, float x2, float y2, float x3, float y3);
+    // Reset the points
     void resetPoints();
 
     Image background;
+    // Flags
     bool isInitialised;
     bool initBuffer;
     bool secondTime;

@@ -8,10 +8,13 @@
 
 #include "WaveformComponent.h"
 
+// Called from extern waveformTable in LookupTable.h
 volatile float waveformTable[1024];
 
+// Construtor
 WaveformComponent::WaveformComponent():isInitialised(false)
 {
+    // Initialize our waveform points
     for (int i = 0; i < 3; ++i)
     {
         curvePoints.add(new CurvePoint());
@@ -19,23 +22,28 @@ WaveformComponent::WaveformComponent():isInitialised(false)
         addAndMakeVisible(curvePoints[i]);
     }
     
+    // Set flags
     secondTime = false;
     initBuffer = true;
     
+    // Initialize our table values to default sine wave lookup table values
     for (int i = 0; i < 1024; i++)
     {
         waveformTable[i] = defaults[i];
     }
 }
 
+// Deconstrutor
 WaveformComponent::~WaveformComponent()
 {
+    // remove component listeners from our waveform points
     for (int i = 0; i < 2; ++i)
     {
         curvePoints[i]->removeComponentListener(this);
     }
 }
 
+// When something in the component is resized, redraw graphics and refresh line path graph
 void WaveformComponent::resized()
 {
     const int w = getWidth();
@@ -65,6 +73,7 @@ void WaveformComponent::resized()
     refreshPath(0);
 }
 
+// Paint the line path graph
 void WaveformComponent::paint (Graphics& g)
 {
     g.drawImageAt (background, 0, 0);
@@ -73,8 +82,12 @@ void WaveformComponent::paint (Graphics& g)
     g.strokePath (path, PathStrokeType (3.0f));
 }
 
+// Whenever a point is moved in the GUI, we take those points and refill our buffer to:
+// 1. Redraw the graph
+// 2. Put new values in the waveformTable
 void WaveformComponent::componentMovedOrResized (Component& component, bool wasMoved, bool wasResized)
 {
+    // If point 1 and 3 are moved
     if (&component == curvePoints[0] || &component == curvePoints[2])
     {
         float x1 = (curvePoints[0]->getX() + (0.5f * curvePoints[0]->getWidth())) / (float) getWidth();
@@ -85,11 +98,13 @@ void WaveformComponent::componentMovedOrResized (Component& component, bool wasM
         
         float x3 = (curvePoints[2]->getX() + (0.5f * curvePoints[2]->getWidth())) / (float) getWidth();
         float y3 = ((getHeight() - curvePoints[2]->getY()) - (0.5f * curvePoints[2]->getHeight())) / (float) getHeight();
-                
+        
+        // Refill Buffer
         refillBuffer (x1, y1, x2, y2, x3, y3);
     }
 }
 
+// Draws our line path graph
 void WaveformComponent::refreshPath(int lfo_wave)
 {
     const int w = getWidth();
@@ -98,26 +113,34 @@ void WaveformComponent::refreshPath(int lfo_wave)
     const float xScale = (float) w / (float) 1024;
     const float yScale = (float) h/ (float) 2.05;
     
+    // Clear original path
     path.clear();
+    
+    // If sine, tri, or custom wave, start from 0 position
     if (lfo_wave == 0 || lfo_wave == 1 || lfo_wave == 4)
     {
         path.startNewSubPath (0.0f, (float) h/2);
     }
+    // If sawtooth, start from top position
     else if (lfo_wave == 2)
     {
         path.startNewSubPath (0.0f, 5.0f);
     }
+    // If square, start from bottom position
     else if (lfo_wave == 3)
     {
         path.startNewSubPath(0.0f, 205.0f);
     }
     
+    // Draw the line!
     for (int i = 0; i < 1024; ++i)
     {
+        // Sine wave
         if (lfo_wave == 0)
         {
             path.lineTo(i * xScale, (h/2) - (defaults[i-1] * yScale));
         }
+        // Triangle wave
         else if (lfo_wave == 1)
         {
             if (i < 256)
@@ -127,6 +150,7 @@ void WaveformComponent::refreshPath(int lfo_wave)
             else if (i < 1024)
                 path.lineTo(i * xScale, i * -yScale/255 + 515);
         }
+        // Sawtooth wave
         else if (lfo_wave == 2)
         {
             if (i < 15)
@@ -136,6 +160,7 @@ void WaveformComponent::refreshPath(int lfo_wave)
             else if (i < 1024)
                 path.lineTo(i * xScale, 205);
         }
+        // Square Wave
         else if (lfo_wave == 3)
         {
             if (i < 25)
@@ -147,15 +172,18 @@ void WaveformComponent::refreshPath(int lfo_wave)
             else if ( i < 1024)
                 path.lineTo(i * xScale, 5);
         }
+        // Custom wave
         else if (lfo_wave == 4)
         {
             path.lineTo(i * xScale, (h/2) - (waveformTable[i-1] * yScale));
         }
     }
     
+    // Repaint the line path graph once we have drawn out the path
     repaint();
 }
 
+// Enable/disable points/visibility depending on which lfo we are using
 void WaveformComponent::enablePoints(bool isEnabled)
 {
     curvePoints[0]->setEnabled(isEnabled);
@@ -165,16 +193,22 @@ void WaveformComponent::enablePoints(bool isEnabled)
     curvePoints[2]->setVisible(isEnabled);
 }
 
+// Refill buffer scales new points in the GUI and waveformTable
 void WaveformComponent::refillBuffer (float x1, float y1, float x2, float y2, float x3, float y3)
 {
+    // Determined by size of buffer (1024) and increment (i = 1)
     const float bufferScale = 1.0f / (float) 1024;
     
+    // If we are not initing the buffer, redraw
     if (!initBuffer && secondTime)
     {
         for (int i = 0; i < 1024; ++i)
         {
+            // Limit to how far we can go
             float x = jlimit (-1.0f, 1.0f, i * bufferScale);
             // waveformTable[i] = BezierCurve::cubicBezierNearlyThroughTwoPoints (x, x1, y1, x2, y2);
+            
+            // SCALING HERE
             if (i < 512)
             {
                 waveformTable[i] = BezierCurve::cubicBezierNearlyThroughTwoPoints(x, x1, y1, x2, y2);
@@ -192,6 +226,7 @@ void WaveformComponent::refillBuffer (float x1, float y1, float x2, float y2, fl
             secondTime = true;
         }
         
+        // Redraw
         refreshPath(4);
     }
     else
@@ -204,6 +239,7 @@ void WaveformComponent::refillBuffer (float x1, float y1, float x2, float y2, fl
     }
 }
 
+// Reset the buffer with default values
 void WaveformComponent::resetBuffer()
 {
     for (int i = 0; i < 1024; ++i)
@@ -218,6 +254,7 @@ void WaveformComponent::resetBuffer()
     refreshPath(4);
 }
 
+// Reset points to default positions
 void WaveformComponent::resetPoints()
 {
     const int w = getWidth();
