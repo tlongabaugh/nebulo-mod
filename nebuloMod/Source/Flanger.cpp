@@ -64,6 +64,7 @@ void Flanger::processMono(float* const samples, const int numSamples)
     jassert (samples != nullptr);
     
     float lfoSample;
+    static float dOut;
     
     for (int i = 0; i < numSamples; i++) {
         // Get LFO sample
@@ -74,8 +75,11 @@ void Flanger::processMono(float* const samples, const int numSamples)
         double delay = (lfoSample * _maxFlanging);
         delayLineL.setDelay(delay);
         
+        // calculate delayed sample while also putting feedback into the beginning of delay line
+        dOut = delayLineL.processSample((samples[i] + dOut*parameters.feedback));
+        
         // build output mix
-        samples[i] = samples[i]*(1.0-parameters.mix) + parameters.depth*(delayLineL.processSample(samples[i]))*parameters.mix;
+        samples[i] = samples[i]*(1.0-parameters.mix) + parameters.depth*dOut*parameters.mix;
         
     }
 }
