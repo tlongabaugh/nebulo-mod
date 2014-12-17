@@ -190,10 +190,12 @@ void WaveformComponent::refillBuffer (float x1, float y1, float x2, float y2, fl
         }
     }
     
-    if (initBuffer)
+    if (initBuffer) {
         initBuffer = false;
-    else if (!secondTime)
+    }
+    else if (!secondTime) {
         secondTime = true;
+    }
     
     lfo.fillLFOTable(waveformTable);
     refreshPath();

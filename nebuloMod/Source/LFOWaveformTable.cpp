@@ -24,7 +24,7 @@ LFOWaveformTable::LFOWaveformTable()
     _outPoint = 1;
     
     setSampleRate(INIT_SAMPLE_RATE);
-    fillLFOTable(waveformTable);
+    //fillLFOTable(waveformTable);
 }
 
 LFOWaveformTable::~LFOWaveformTable()
@@ -48,10 +48,10 @@ void LFOWaveformTable::setSampleRate(double sampleRate)
 void LFOWaveformTable::fillLFOTable(volatile float table[])
 {
     // Initialize sine waveform and put into tableBuf
-    for (int i = 0; i < TABLE_SIZE; i++)
-    {
-        tableBuf[i] = table[i];
-    }
+    //for (int i = 0; i < TABLE_SIZE; i++)
+    //{
+      //  tableBuf[i] = table[i];
+    //}
 }
 
 float LFOWaveformTable::tableLookup()
@@ -75,13 +75,13 @@ float LFOWaveformTable::nextOut()
     // if delay is greater than 0 (always will be for this class)
     if (_doNextOut) {
         // first part of interpolation
-        _nextOutput = tableBuf[_outPoint] * _omAlpha;
+        _nextOutput = waveformTable[_outPoint] * _omAlpha;
         // second part of interpolation (fractional)
         if (_outPoint + 1 < _maxDelay) {
-            _nextOutput += tableBuf[_outPoint+1] * _alpha;
+            _nextOutput += waveformTable[_outPoint+1] * _alpha;
         }
         else {
-            _nextOutput += tableBuf[0] * _alpha;
+            _nextOutput += waveformTable[0] * _alpha;
         }
         _doNextOut = false;
     }

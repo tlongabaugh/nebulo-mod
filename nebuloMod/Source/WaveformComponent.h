@@ -14,7 +14,7 @@
 #include "dRowAudio_MathsUtilities.h"
 #include "dRowAudio_BezierCurve.h"
 #include "LFOWaveformTable.h"
-#include "LookupTable.h"
+
 
 /* WARNING: IF YOU CHANGE THE SIZE OF THIS TABLE YOU MUST ALSO CHANGE THE SIZE OF
  THE tableBuffer IN LFOWaveformTable!!!!!!!! */
