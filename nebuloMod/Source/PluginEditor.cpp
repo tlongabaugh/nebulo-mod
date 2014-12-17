@@ -113,9 +113,6 @@ NebuloModAudioProcessorEditor::NebuloModAudioProcessorEditor (NebuloModAudioProc
     // Flags
     processor.flanger_active = true;
     processor.phaser_active = false;
-    initDrawing = true;
-    isMoving_marker_one = false;
-    isMoving_marker_two = false;
 }
 
 NebuloModAudioProcessorEditor::~NebuloModAudioProcessorEditor()
@@ -126,50 +123,19 @@ NebuloModAudioProcessorEditor::~NebuloModAudioProcessorEditor()
 void NebuloModAudioProcessorEditor::paint (Graphics& g)
 {
     // Background
-    g.fillAll (Colours::khaki);
+    g.fillAll (Colours::black);
     
     // Texts and Line Graph
-    g.setColour (Colours::black);
+    g.setColour (Colours::white);
     g.setFont (28.0f);
     g.drawFittedText ("Nebulo Mod", getLocalBounds(), Justification::bottomLeft, 1);
     g.setFont(16.0f);
     g.drawFittedText("by Ryan Foo and Tom Longabaugh", getLocalBounds(), Justification::bottomRight, 2);
     
     // Backgrounds son!!!
-    g.setColour(Colours::ivory);
+    g.setColour(Colours::grey);
     g.fillRoundedRectangle(320, 160, 370, 250, 25);
     g.fillRoundedRectangle(20, 160, 280, 250, 25);
-    
-    //float lineThickness = 2.0f;
-    
-    /*
-    // Wavetable graph init
-    if (initDrawing)
-    {
-        waveRef.startNewSubPath(40, 280);
-        for (int i = 0; i < 1024; i++)
-        {
-            // reaches to 270 by the end
-            float x_axis = (i+1) * 15 / 64;
-            static float init_y_axis;
-            init_y_axis = our_sineTable[i] * -100;
-            
-            waveRef.lineTo(40 + x_axis, 280 + init_y_axis);
-        }
-    
-        // The line graph!!
-        g.setColour(Colours::black);
-        g.strokePath(waveRef, PathStrokeType(lineThickness));
-        initDrawing = false;
-    }
-    else
-    {
-        // Update the path graph
-        updatePath();
-        g.setColour(Colours::black);
-        g.strokePath(waveRef, PathStrokeType(lineThickness));
-    }
-     */
 }
 
 void NebuloModAudioProcessorEditor::resized()
@@ -212,7 +178,6 @@ void NebuloModAudioProcessorEditor::sliderValueChanged(Slider* slider)
         }
         else if (slider->getComponentID().compare("Depth") == 0) {
             processor.flDepthVal = slider->getValue();
-            // debugText.setText("Changing the Depth dawg", dontSendNotification);
         }
         else if (slider->getComponentID().compare("Rate") == 0) {
             processor.flRateVal = slider->getValue();
@@ -265,7 +230,6 @@ void NebuloModAudioProcessorEditor::comboBoxChanged(ComboBox *comboBoxThatHasCha
         
         wavComponent.enablePoints(false);
         wavComponent.refreshPath(LFO.waveForm);
-        //repaint(20, 160, 280, 250);
     }
     else if (lfoMenu.getSelectedItemIndex() == 1)
     {
@@ -388,7 +352,6 @@ void NebuloModAudioProcessorEditor::comboBoxChanged(ComboBox *comboBoxThatHasCha
         processor.updatePhaser();
         
         // Repaint the GUI for new waveform drawing!
-        //repaint(20, 160, 280, 250);
         wavComponent.refreshPath(LFO.waveForm);
     }
     // Switch to flanger...
@@ -438,127 +401,10 @@ void NebuloModAudioProcessorEditor::comboBoxChanged(ComboBox *comboBoxThatHasCha
         processor.updateFlanger();
         
         // Repaint the GUI for new waveform drawing!
-        //repaint(20, 160, 280, 250);
         wavComponent.refreshPath(LFO.waveForm);
     }
     
     // Visualize our text!
     addAndMakeVisible(fxText);
     fxText.setVisible(true);
-}
-
-// Update GUI on mouse drag
-void NebuloModAudioProcessorEditor::mouseDrag(const MouseEvent& event)
-{
-    if (LFO.waveForm == 4)
-    {
-        // printf("Getting location...X:%d Y:%d\n", event.x, event.y);
-        if ((event.x >= 90) && (event.x <= 110) &&
-            (event.y >= 170) && (event.y <= 190))
-        {
-            printf("Marker one found!\n");
-            isMoving_marker_one = true;
-            //repaint();
-        }
-        
-        if ((event.x >= 210) && (event.x <= 230) &&
-            (event.y >= 370) && (event.y <= 390))
-        {
-            printf("Marker two found!\n");
-            isMoving_marker_two = true;
-            //repaint();
-        }
-    }
-}
-
-void NebuloModAudioProcessorEditor::mouseEnter (const MouseEvent& event)
-{
-    // printf("Getting location...%d %d\n", event.x, event.y);
-}
-
-void NebuloModAudioProcessorEditor::mouseUp (const MouseEvent& event)
-{
-    printf("Released\n");
-    
-    if (isMoving_marker_one)
-    {
-        isMoving_marker_one = false;
-        //our_customTable[255] = ;
-    }
-    
-    else if (isMoving_marker_two)
-    {
-        isMoving_marker_two = false;
-        //our_customTable[765] = ;
-    }
-    
-}
-
-void NebuloModAudioProcessorEditor::updatePath()
-{
-    // Clear the waveform
-    waveRef.clear();
-    
-    waveRef.startNewSubPath(40, 280);
-    // waveRef.lineTo(270, 280);
-    for (int i = 0; i < 1024; i++)
-    {
-        // X-axis and Y-axis points
-        float x_axis = (i+1) * 15 / 64;
-        static float y_axis = 0;
-
-        // Sine Wave Drawing
-        if (LFO.waveForm == 0)
-        {
-            y_axis = our_sineTable[i] * -100;
-        }
-        // Triangle Wave Drawing
-        else if (LFO.waveForm == 1)
-        {
-            if (i < 256)
-                y_axis = (i+1) * -25 / 64;              // get to 180
-            else if (i < 768)
-                y_axis = ((i+1) * 25 / 64) - 200;       // get to 390
-            else if (i < 1023)
-                y_axis = ((i+1) * -25 / 64) + 400;      // get to 280
-        }
-        // Sawtooth Wave Drawing
-        else if (LFO.waveForm == 2)
-        {
-            if (i == 0)
-                y_axis = 110;
-            else if (i < 1023)
-                y_axis = (i+1) * -105/512 + 110;
-            else
-                y_axis = 55;
-        }
-        // Square Wave Drawing
-        else if (LFO.waveForm == 3)
-        {
-            if (i < 512)
-                y_axis = -100;
-            else if (i < 1023)
-                y_axis = 110;
-            else
-                y_axis = 0;
-        }
-        // Customized Wave Drawing
-        else if (LFO.waveForm == 4)
-        {
-            y_axis = our_customTable[i] * -100;
-            if (i == 240)
-            {
-                waveRef.addEllipse(40 + x_axis, 280 + y_axis - 5, 10, 10);
-                marker_one.setXY(40 + x_axis, 280 + y_axis - 5);
-            }
-            else if (i == 750)
-            {
-                waveRef.addEllipse(40 + x_axis, 280 + y_axis - 5, 10, 10);
-                marker_two.setXY(40 + x_axis, 280 + y_axis - 5);
-            }
-        }
-        
-        // Draw the Waveform!
-        waveRef.lineTo(40 + x_axis, 280 + y_axis);
-    }
 }

@@ -199,14 +199,6 @@ public:
     void resized() override;
     void sliderValueChanged (Slider* slider) override;
     void comboBoxChanged (ComboBox *comboBoxThatHasChanged) override;
-    // Draw our path
-    void updatePath(void);
-    // Mouse Drag Override
-    void mouseDrag (const MouseEvent& event) override;
-    // Mouse Enter Override
-    void mouseEnter (const MouseEvent& event) override;
-    // Mouse Release Override
-    void mouseUp (const MouseEvent& event) override;
 
 private:
     // This reference is provided as a quick way for your editor to
@@ -241,15 +233,6 @@ private:
     // LFO Waveform Drawing
     Path waveRef;
     LFOWaveformTable LFO;
-    
-    // Flags
-    bool initDrawing;
-    bool isMoving_marker_one;
-    bool isMoving_marker_two;
-
-    // Movable Points
-    Point<float> marker_one;
-    Point<float> marker_two;
     
     // Waveform Component
     WaveformComponent wavComponent;

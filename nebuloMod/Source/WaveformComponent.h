@@ -111,7 +111,6 @@ public:
     
     void resized();
     void paint (Graphics& g);
-    void bufferChanged();
     void componentMovedOrResized(Component& component, bool wasMoved, bool wasResized);
     void resetBuffer();
     void refreshPath(int lfo_wave);

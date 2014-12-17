@@ -54,7 +54,7 @@ void WaveformComponent::resized()
         g.drawHorizontalLine((int) (i * yScale), 0.0f, (float) w);
         g.drawVerticalLine((int) (i * xScale), 0.0f, (float) h);
     }
-    g.drawLine (0.0f, (float) h, (float) w, 0.0f);
+    // g.drawLine (0.0f, (float) h, (float) w, 0.0f);
     
     refreshPath(0);
 }
@@ -65,11 +65,6 @@ void WaveformComponent::paint (Graphics& g)
     
     g.setColour (Colours::white);
     g.strokePath (path, PathStrokeType (3.0f));
-}
-
-void WaveformComponent::bufferChanged()
-{
-    // refreshPath();
 }
 
 void WaveformComponent::componentMovedOrResized (Component& component, bool wasMoved, bool wasResized)
@@ -101,7 +96,18 @@ void WaveformComponent::refreshPath(int lfo_wave)
     const float yScale = (float) h/ (float) 2.05;
     
     path.clear();
-    path.startNewSubPath (0.0f, (float) h);
+    if (lfo_wave == 0 || lfo_wave == 1 || lfo_wave == 4)
+    {
+        path.startNewSubPath (0.0f, (float) h/2);
+    }
+    else if (lfo_wave == 2)
+    {
+        path.startNewSubPath (0.0f, 5.0f);
+    }
+    else if (lfo_wave == 3)
+    {
+        path.startNewSubPath(0.0f, 205.0f);
+    }
     
     for (int i = 0; i < 1024; ++i)
     {
