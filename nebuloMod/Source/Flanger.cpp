@@ -10,12 +10,10 @@
 
 Flanger::Flanger(void) : currentSampleRate(INIT_SAMPLE_RATE)
 {
-    // Set Paramaters
+    // Set Paramaters and sample rate (44100 default, updated right before playback)
     setParameters(Parameters());
-    // Set Sample Rate (44100 default, updated right before playback)
     setSampleRate(INIT_SAMPLE_RATE);
 
-    
 }
 
 Flanger::~Flanger()
@@ -77,7 +75,7 @@ void Flanger::processMono(float* const samples, const int numSamples)
         delayLineL.setDelay(delay);
         
         // build output mix
-        samples[i] = samples[i]*(1.0-parameters.mix/2) + parameters.depth*(delayLineL.processSample(samples[i]))*parameters.mix/2;
+        samples[i] = samples[i]*(1.0-parameters.mix) + parameters.depth*(delayLineL.processSample(samples[i]))*parameters.mix;
         
     }
 }
@@ -88,6 +86,8 @@ void Flanger::processStereo(float* const left, float* const right, const int num
     jassert (left != nullptr && right != nullptr);
     
     float lfoSample;
+    static float dOutL = 0;
+    static float dOutR = 0;
     
     for (int i = 0; i < numSamples; i++) {
         // Get LFO sample
@@ -99,9 +99,13 @@ void Flanger::processStereo(float* const left, float* const right, const int num
         delayLineL.setDelay(delay);
         delayLineR.setDelay(delay);
 
+        // calculate delayed sample while also putting feedback into the beginning of delay line
+        dOutL = delayLineL.processSample((left[i] + dOutL*parameters.feedback));
+        dOutR = delayLineR.processSample((right[i] + dOutR*parameters.feedback));
+        
         // build output mix
-        left[i] = left[i]*(1.0-parameters.mix/2) + parameters.depth*(delayLineL.processSample(left[i]))*parameters.mix/2;
-        right[i] = right[i]*(1.0-parameters.mix/2) + parameters.depth*(delayLineR.processSample(right[i]))*parameters.mix/2;
+        left[i] = left[i]*(1.0-parameters.mix) + parameters.depth*dOutL*parameters.mix;
+        right[i] = right[i]*(1.0-parameters.mix) + parameters.depth*dOutR*parameters.mix;
         
     }
 }

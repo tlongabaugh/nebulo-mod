@@ -65,7 +65,7 @@ NebuloModAudioProcessorEditor::NebuloModAudioProcessorEditor (NebuloModAudioProc
     // Create dah sliders!!!
     createSlider(depthSlider, Slider::LinearHorizontal, processor.flDepthVal, 0.0, 1.0, 0.01, "Depth");
     createSlider(rateSlider, Slider::LinearHorizontal, processor.flRateVal, .1, 5.0, 0.01, "Rate");
-    createSlider(feedbackSlider, Slider::LinearHorizontal, processor.flFeedbackVal, 0.0, 100.0, 1.0, "Feedback");
+    createSlider(feedbackSlider, Slider::LinearHorizontal, processor.flFeedbackVal, 0.0, 1.0, 0.01, "Feedback");
     createSlider(mixSlider, Slider::LinearHorizontal, processor.flMixVal, 0.0, 0.5, 0.01, "Mix");
     
     // Create texts!

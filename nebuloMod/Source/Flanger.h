@@ -37,7 +37,7 @@ public:
         : depth(0.75f),
         rate(0.2f),
         lfoWaveform(0),
-        feedback(50.0f),
+        feedback(0.2f),
         mix(0.5f)
         {}
         
