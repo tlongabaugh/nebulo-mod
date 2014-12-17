@@ -263,6 +263,7 @@ void NebuloModAudioProcessorEditor::comboBoxChanged(ComboBox *comboBoxThatHasCha
             processor.updatePhaser();
         }
         
+        wavComponent.enablePoints(false);
         wavComponent.refreshPath(LFO.waveForm);
         //repaint(20, 160, 280, 250);
     }
@@ -281,8 +282,8 @@ void NebuloModAudioProcessorEditor::comboBoxChanged(ComboBox *comboBoxThatHasCha
             processor.updatePhaser();
         }
         
+        wavComponent.enablePoints(false);
         wavComponent.refreshPath(LFO.waveForm);
-        //repaint(20, 160, 280, 250);
     }
     else if (lfoMenu.getSelectedItemIndex() == 2)
     {
@@ -298,9 +299,9 @@ void NebuloModAudioProcessorEditor::comboBoxChanged(ComboBox *comboBoxThatHasCha
             processor.phsLfoWaveformVal = LFO.waveForm;
             processor.updatePhaser();
         }
-        
+
+        wavComponent.enablePoints(false);
         wavComponent.refreshPath(LFO.waveForm);
-        //repaint(20, 160, 280, 250);
     }
     else if (lfoMenu.getSelectedItemIndex() == 3)
     {
@@ -317,7 +318,7 @@ void NebuloModAudioProcessorEditor::comboBoxChanged(ComboBox *comboBoxThatHasCha
             processor.updatePhaser();
         }
         
-        //repaint(20, 160, 280, 250);
+        wavComponent.enablePoints(false);
         wavComponent.refreshPath(LFO.waveForm);
     }
     else if (lfoMenu.getSelectedItemIndex() == 4)
@@ -335,7 +336,7 @@ void NebuloModAudioProcessorEditor::comboBoxChanged(ComboBox *comboBoxThatHasCha
             processor.updatePhaser();
         }
         
-        //repaint(20, 160, 280, 250);
+        wavComponent.enablePoints(true);
         wavComponent.refreshPath(LFO.waveForm);
     }
     

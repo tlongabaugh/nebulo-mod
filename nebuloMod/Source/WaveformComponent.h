@@ -115,6 +115,7 @@ public:
     void componentMovedOrResized(Component& component, bool wasMoved, bool wasResized);
     void resetBuffer();
     void refreshPath(int lfo_wave);
+    void enablePoints(bool isEnabled);
     
 private:
     enum CurvePoints

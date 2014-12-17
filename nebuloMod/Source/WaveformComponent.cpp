@@ -64,7 +64,7 @@ void WaveformComponent::paint (Graphics& g)
     g.drawImageAt (background, 0, 0);
     
     g.setColour (Colours::white);
-    g.strokePath (path, PathStrokeType (2.0f));
+    g.strokePath (path, PathStrokeType (3.0f));
 }
 
 void WaveformComponent::bufferChanged()
@@ -111,94 +111,60 @@ void WaveformComponent::refreshPath(int lfo_wave)
         }
         else if (lfo_wave == 1)
         {
-            
+            if (i < 256)
+                path.lineTo(i * xScale, i * -yScale/255 + h/2);
+            else if (i < 768)
+                path.lineTo(i * xScale, i * yScale/256 - 100);
+            else if (i < 1024)
+                path.lineTo(i * xScale, i * -yScale/255 + 515);
         }
         else if (lfo_wave == 2)
         {
-            
+            if (i < 15)
+                path.lineTo(i * xScale, 5);
+            else if (i < 1010)
+                path.lineTo(i * xScale, i * -yScale/530 + 205);
+            else if (i < 1024)
+                path.lineTo(i * xScale, 205);
         }
         else if (lfo_wave == 3)
         {
-            if (i == 0)
-                path.lineTo(i * xScale, 0);
+            if (i < 25)
+                path.lineTo(i * xScale, 205);
             else if (i < 512)
                 path.lineTo(i * xScale, 5);
-            else if (i < 1024)
-                path.lineTo(i * xScale, 195);
+            else if (i < 999)
+                path.lineTo(i * xScale, 205);
             else if ( i < 1024)
-                path.lineTo(i * xScale, 0);
+                path.lineTo(i * xScale, 5);
         }
         else if (lfo_wave == 4)
         {
             path.lineTo(i * xScale, (h/2) - (waveformTable[i-1] * yScale));
         }
-        
-        /*
-         switch ((int)lfo.waveForm)
-         {
-         case 0:
-         path.lineTo(i * xScale, (h/2) - defaults[i-1] * yScale);
-         break;
-         
-         case 1:
-         if (i < 256)
-         path.lineTo(i * xScale, (h/2) - (i+1) * -25/64);
-         // y_axis = (i+1) * -25 / 64;              // get to 180
-         else if (i < 768)
-         path.lineTo(i * xScale, (h/2) - (i+1) * 25/64);
-         //y_axis = ((i+1) * 25 / 64) - 200;       // get to 390
-         else if (i < 1023)
-         path.lineTo(i * xScale, (h/2) - (i+1) * -25/64);
-         //y_axis = ((i+1) * -25 / 64) + 400;      // get to 280
-         break;
-         
-         case 2:
-         if (i == 0)
-         path.lineTo(i * xScale, 10);
-         //y_axis = 110;
-         else if (i < 1023)
-         path.lineTo(i * xScale, (h/2) - (i+1) * -105/512);
-         //y_axis = (i+1) * -105/512 + 110;
-         else
-         path.lineTo(i * xScale, h);
-         //y_axis = 55;
-         break;
-         
-         case 3:
-         if (i < 512)
-         path.lineTo(i * xScale, 10);
-         //y_axis = -100;
-         else if (i < 1023)
-         path.lineTo(i * xScale, 240);
-         //y_axis = 110;
-         
-         //y_axis = 0;
-         break;
-         
-         case 4:
-         // Draw the Waveform!
-         path.lineTo(i * xScale, (h/2) - (waveformTable[i-1] * yScale));
-         break;
-         
-         default:
-         
-         break;
-         }
-         */
     }
     
     repaint();
+}
+
+void WaveformComponent::enablePoints(bool isEnabled)
+{
+    curvePoints[0]->setEnabled(isEnabled);
+    curvePoints[2]->setEnabled(isEnabled);
+    
+    curvePoints[0]->setVisible(isEnabled);
+    curvePoints[2]->setVisible(isEnabled);
 }
 
 void WaveformComponent::refillBuffer (float x1, float y1, float x2, float y2, float x3, float y3)
 {
     const float bufferScale = 1.0f / (float) 1024;
     
-    for (int i = 0; i < 1024; ++i)
+    if (!initBuffer && secondTime)
     {
-        float x = jlimit (-1.0f, 1.0f, i * bufferScale);
-        if (!initBuffer && secondTime)
+        for (int i = 0; i < 1024; ++i)
         {
+            float x = jlimit (-1.0f, 1.0f, i * bufferScale);
             // waveformTable[i] = BezierCurve::cubicBezierNearlyThroughTwoPoints (x, x1, y1, x2, y2);
             if (i < 512)
             {
@@ -209,22 +175,25 @@ void WaveformComponent::refillBuffer (float x1, float y1, float x2, float y2, fl
                 waveformTable[i] = BezierCurve::cubicBezierNearlyThroughTwoPoints(x, x2, y2, x3, y3) - 1;
             }
         }
-        // Reset our buffer to default values
-        if (initBuffer || !secondTime)
-        {
-            waveformTable[i] = defaults[i];
+        
+        if (initBuffer) {
+            initBuffer = false;
         }
+        else if (!secondTime) {
+            secondTime = true;
+        }
+        
+        lfo.fillLFOTable(waveformTable);
+        refreshPath(4);
     }
-    
-    if (initBuffer) {
+    else
+    {
+        if (!initBuffer)
+            secondTime = true;
+        
         initBuffer = false;
+        refreshPath(0);
     }
-    else if (!secondTime) {
-        secondTime = true;
-    }
-    
-    lfo.fillLFOTable(waveformTable);
-    refreshPath(4);
 }
 
 void WaveformComponent::resetBuffer()
