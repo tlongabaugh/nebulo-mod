@@ -183,9 +183,10 @@ static float our_customTable[1024] = {0.006, 0.012, 0.018, 0.025, 0.031, 0.037, 
 //==============================================================================
 /**
 */
-class NebuloModAudioProcessorEditor  : public AudioProcessorEditor,
-                                       private Slider::Listener,
-                                       private ComboBox::Listener
+class NebuloModAudioProcessorEditor : public AudioProcessorEditor,
+                                      public MouseListener,
+                                      private Slider::Listener,
+                                      private ComboBox::Listener
 {
 public:
     NebuloModAudioProcessorEditor (NebuloModAudioProcessor&);
@@ -198,7 +199,13 @@ public:
     void sliderValueChanged (Slider* slider) override;
     void comboBoxChanged (ComboBox *comboBoxThatHasChanged) override;
     // Draw our path
-    void updatePath();
+    void updatePath(void);
+    // Mouse Drag Override
+    void mouseDrag (const MouseEvent& event) override;
+    // Mouse Enter Override
+    void mouseEnter (const MouseEvent& event) override;
+    // Mouse Release Override
+    void mouseUp (const MouseEvent& event) override;
 
 private:
     // This reference is provided as a quick way for your editor to
@@ -236,10 +243,14 @@ private:
     
     // Flags
     bool initDrawing;
+    bool isMoving_marker_one;
+    bool isMoving_marker_two;
 
     // Movable Points
     Point<float> marker_one;
     Point<float> marker_two;
+    
+    
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (NebuloModAudioProcessorEditor)
 };

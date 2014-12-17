@@ -107,6 +107,8 @@ NebuloModAudioProcessorEditor::NebuloModAudioProcessorEditor (NebuloModAudioProc
     processor.flanger_active = false;
     processor.phaser_active = true;
     initDrawing = true;
+    isMoving_marker_one = false;
+    isMoving_marker_two = false;
 }
 
 NebuloModAudioProcessorEditor::~NebuloModAudioProcessorEditor()
@@ -425,6 +427,53 @@ void NebuloModAudioProcessorEditor::comboBoxChanged(ComboBox *comboBoxThatHasCha
     // Visualize our text!
     addAndMakeVisible(fxText);
     fxText.setVisible(true);
+}
+
+// Update GUI on mouse drag
+void NebuloModAudioProcessorEditor::mouseDrag(const MouseEvent& event)
+{
+    if (LFO.waveForm == 4)
+    {
+        // printf("Getting location...X:%d Y:%d\n", event.x, event.y);
+        if ((event.x >= 90) && (event.x <= 110) &&
+            (event.y >= 170) && (event.y <= 190))
+        {
+            printf("Marker one found!\n");
+            isMoving_marker_one = true;
+            //repaint();
+        }
+        
+        if ((event.x >= 210) && (event.x <= 230) &&
+            (event.y >= 370) && (event.y <= 390))
+        {
+            printf("Marker two found!\n");
+            isMoving_marker_two = true;
+            //repaint();
+        }
+    }
+}
+
+void NebuloModAudioProcessorEditor::mouseEnter (const MouseEvent& event)
+{
+    // printf("Getting location...%d %d\n", event.x, event.y);
+}
+
+void NebuloModAudioProcessorEditor::mouseUp (const MouseEvent& event)
+{
+    printf("Released\n");
+    
+    if (isMoving_marker_one)
+    {
+        isMoving_marker_one = false;
+        //our_customTable[255] = ;
+    }
+    
+    else if (isMoving_marker_two)
+    {
+        isMoving_marker_two = false;
+        //our_customTable[765] = ;
+    }
+    
 }
 
 void NebuloModAudioProcessorEditor::updatePath()
