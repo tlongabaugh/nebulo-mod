@@ -56,7 +56,7 @@ void WaveformComponent::resized()
     }
     g.drawLine (0.0f, (float) h, (float) w, 0.0f);
     
-    refreshPath();
+    refreshPath(0);
 }
 
 void WaveformComponent::paint (Graphics& g)
@@ -70,7 +70,7 @@ void WaveformComponent::paint (Graphics& g)
 void WaveformComponent::bufferChanged()
 {
 
-    refreshPath();
+    // refreshPath();
 }
 
 void WaveformComponent::componentMovedOrResized (Component& component, bool wasMoved, bool wasResized)
@@ -92,7 +92,7 @@ void WaveformComponent::componentMovedOrResized (Component& component, bool wasM
     }
 }
 
-void WaveformComponent::refreshPath()
+void WaveformComponent::refreshPath(int lfo_wave)
 {
     //const int bufferSize = buffer.getSize();
     const int w = getWidth();
@@ -106,7 +106,34 @@ void WaveformComponent::refreshPath()
     
     for (int i = 0; i < 1024; ++i)
     {
-        path.lineTo(i * xScale, (h/2) - (waveformTable[i-1] * yScale));
+        if (lfo_wave == 0)
+        {
+            path.lineTo(i * xScale, (h/2) - (waveformTable[i-1] * yScale));
+        }
+        else if (lfo_wave == 1)
+        {
+            
+        }
+        else if (lfo_wave == 2)
+        {
+            
+        }
+        else if (lfo_wave == 3)
+        {
+            if (i == 0)
+                path.lineTo(i * xScale, 0);
+            else if (i < 512)
+                path.lineTo(i * xScale, 5);
+            else if (i < 1024)
+                path.lineTo(i * xScale, 195);
+            else if ( i < 1024)
+                path.lineTo(i * xScale, 0);
+        }
+        else if (lfo_wave == 4)
+        {
+            path.lineTo(i * xScale, (h/2) - (waveformTable[i-1] * yScale));
+        }
+        
         /*
         switch ((int)lfo.waveForm)
         {
@@ -180,7 +207,7 @@ void WaveformComponent::refillBuffer (float x1, float y1, float x2, float y2, fl
             }
             else if (i < 1024)
             {
-                waveformTable[i] = BezierCurve::cubicBezierNearlyThroughTwoPoints(x, x2, y2, x3, y3);
+                waveformTable[i] = BezierCurve::cubicBezierNearlyThroughTwoPoints(x, x2, y2, x3, y3) - 1;
             }
         }
         // Reset our buffer to default values
@@ -196,7 +223,7 @@ void WaveformComponent::refillBuffer (float x1, float y1, float x2, float y2, fl
         secondTime = true;
     
     lfo.fillLFOTable(waveformTable);
-    refreshPath();
+    refreshPath(4);
 }
 
 void WaveformComponent::resetBuffer()

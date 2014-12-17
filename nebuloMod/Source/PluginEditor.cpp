@@ -263,7 +263,7 @@ void NebuloModAudioProcessorEditor::comboBoxChanged(ComboBox *comboBoxThatHasCha
             processor.updatePhaser();
         }
         
-        wavComponent.refreshPath();    
+        wavComponent.refreshPath(LFO.waveForm);
         //repaint(20, 160, 280, 250);
     }
     else if (lfoMenu.getSelectedItemIndex() == 1)
@@ -281,7 +281,7 @@ void NebuloModAudioProcessorEditor::comboBoxChanged(ComboBox *comboBoxThatHasCha
             processor.updatePhaser();
         }
         
-        wavComponent.refreshPath();
+        wavComponent.refreshPath(LFO.waveForm);
         //repaint(20, 160, 280, 250);
     }
     else if (lfoMenu.getSelectedItemIndex() == 2)
@@ -299,7 +299,7 @@ void NebuloModAudioProcessorEditor::comboBoxChanged(ComboBox *comboBoxThatHasCha
             processor.updatePhaser();
         }
         
-        wavComponent.refreshPath();
+        wavComponent.refreshPath(LFO.waveForm);
         //repaint(20, 160, 280, 250);
     }
     else if (lfoMenu.getSelectedItemIndex() == 3)
@@ -318,7 +318,7 @@ void NebuloModAudioProcessorEditor::comboBoxChanged(ComboBox *comboBoxThatHasCha
         }
         
         //repaint(20, 160, 280, 250);
-        wavComponent.refreshPath();
+        wavComponent.refreshPath(LFO.waveForm);
     }
     else if (lfoMenu.getSelectedItemIndex() == 4)
     {
@@ -336,7 +336,7 @@ void NebuloModAudioProcessorEditor::comboBoxChanged(ComboBox *comboBoxThatHasCha
         }
         
         //repaint(20, 160, 280, 250);
-        wavComponent.refreshPath();
+        wavComponent.refreshPath(LFO.waveForm);
     }
     
     // Switch to phaser...
@@ -388,7 +388,7 @@ void NebuloModAudioProcessorEditor::comboBoxChanged(ComboBox *comboBoxThatHasCha
         
         // Repaint the GUI for new waveform drawing!
         //repaint(20, 160, 280, 250);
-        wavComponent.refreshPath();
+        wavComponent.refreshPath(LFO.waveForm);
     }
     // Switch to flanger...
     else if (processor.phaser_active && (modMenu.getSelectedItemIndex() == 0))
@@ -438,7 +438,7 @@ void NebuloModAudioProcessorEditor::comboBoxChanged(ComboBox *comboBoxThatHasCha
         
         // Repaint the GUI for new waveform drawing!
         //repaint(20, 160, 280, 250);
-        wavComponent.refreshPath();
+        wavComponent.refreshPath(LFO.waveForm);
     }
     
     // Visualize our text!
