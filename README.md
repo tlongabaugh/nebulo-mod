@@ -2,6 +2,7 @@ Nebulo Mod
 ==========
 
 A Flanger and Phaser plug-in with a customizable LFO.
+-----------------------------------------------------
 
 Authors: Ryan Foo and Tom Longabaugh
 
