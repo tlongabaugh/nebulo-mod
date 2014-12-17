@@ -34,9 +34,6 @@ public:
         tableWave
     } waveType;
     
-    // Fills the LFO table buffer from the global table
-    void fillLFOTable(volatile float table[]);
-    
     /* Calculate the next value to come out of the wavetable buffer */
     float nextOut();
     

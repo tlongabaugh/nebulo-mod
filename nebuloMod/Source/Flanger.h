@@ -28,7 +28,7 @@ public:
     {
         Parameters() noexcept
         : depth(0.75f),
-        rate(0.2f),
+        rate(0.5f),
         lfoWaveform(0),
         feedback(0.2f),
         mix(0.5f)

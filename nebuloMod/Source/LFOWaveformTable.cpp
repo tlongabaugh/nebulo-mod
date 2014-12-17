@@ -34,24 +34,14 @@ LFOWaveformTable::~LFOWaveformTable()
 void LFOWaveformTable::prepareToPlay()
 {
     // set frequency and wave form
-    frequency = 0.2;
+    frequency = 0.5;
     waveForm = sineWave;
 }
 
 void LFOWaveformTable::setSampleRate(double sampleRate)
 {
     currentSampleRate = sampleRate;
-    lowpass.setCoefficients(coeffs.makeLowPass(currentSampleRate, 450));
-}
-
-// Initialize our table buffer
-void LFOWaveformTable::fillLFOTable(volatile float table[])
-{
-    // Initialize sine waveform and put into tableBuf
-    //for (int i = 0; i < TABLE_SIZE; i++)
-    //{
-      //  tableBuf[i] = table[i];
-    //}
+    lowpass.setCoefficients(coeffs.makeLowPass(currentSampleRate, 900));
 }
 
 float LFOWaveformTable::tableLookup()
@@ -95,15 +85,11 @@ void LFOWaveformTable::setIncrement(double increment)
     jassert(increment >= 0.0);
     
     // read follows write
-    double outPointer = _inPoint - increment;
+    double outPointer = _inPoint + increment;
     _delay = increment;
     
-    // wrap pointer
-    while (outPointer < 0) {
-        outPointer += (double)_maxDelay;
-    }
     
-    // integer part of delay
+    // integer part of delay (rounds outPointer to int value)
     _outPoint = (long)outPointer;
     
     // fractional part of delay
@@ -111,7 +97,7 @@ void LFOWaveformTable::setIncrement(double increment)
     _omAlpha = (double)1.0 - _alpha;
     
     // wrap the buffer
-    if (_outPoint == _maxDelay) {
+    if (_outPoint >= _maxDelay) {
         _outPoint = 0;
     }
     
@@ -241,7 +227,8 @@ float LFOWaveformTable::generateLFOTableSample(float freq)
     
     tableSample = tableLookup();
     
-    return tableSample;
+    tableSample = lowpass.processSingleSampleRaw(tableSample);
+    return tableSample*.9; // make sure we don't out of bounds the delay time
 }
 
 
