@@ -12,7 +12,7 @@
 #include <stdio.h>
 #include <math.h>
 #include "DelayLine.h"
-#include "WaveformComponent.h"
+#include "LookupTable.h"
 
 #define BUFFER_SIZE         1024
 #define TABLE_SIZE          BUFFER_SIZE
