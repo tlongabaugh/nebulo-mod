@@ -106,6 +106,15 @@ NebuloModAudioProcessorEditor::NebuloModAudioProcessorEditor (NebuloModAudioProc
     // Waveform Component
     addAndMakeVisible(&wavComponent);
     
+    //&resetLFO = new TextButton("Reset LFO");
+    
+    resetLFO.setEnabled(false);
+    resetLFO.setSize(100, 25);
+    resetLFO.setButtonText("Reset LFO");
+    resetLFO.addListener(this);
+
+    addAndMakeVisible(resetLFO);
+    
     // Flags
     processor.flanger_active = true;
     processor.phaser_active = false;
@@ -155,6 +164,9 @@ void NebuloModAudioProcessorEditor::resized()
     feedbackText.setBounds(610, 270, 25, 75);
     mixText.setBounds(610, 320, 25, 75);
     fxText.setBounds(450, 360, 100, 50);
+    
+    resetLFO.setBounds(110, 430, 75, 25);
+    resetLFO.changeWidthToFitText();
     
     // Waveform Component
     wavComponent.setBounds(35, 180, 250, 210);          // 250 210
@@ -222,6 +234,7 @@ void NebuloModAudioProcessorEditor::comboBoxChanged(ComboBox *comboBoxThatHasCha
         }
         
         wavComponent.enablePoints(false);
+        resetLFO.setEnabled(false);
         wavComponent.refreshPath(LFO.waveForm);
     }
     else if (lfoMenu.getSelectedItemIndex() == 1)
@@ -239,6 +252,7 @@ void NebuloModAudioProcessorEditor::comboBoxChanged(ComboBox *comboBoxThatHasCha
         }
         
         wavComponent.enablePoints(false);
+        resetLFO.setEnabled(false);
         wavComponent.refreshPath(LFO.waveForm);
     }
     else if (lfoMenu.getSelectedItemIndex() == 2)
@@ -256,6 +270,7 @@ void NebuloModAudioProcessorEditor::comboBoxChanged(ComboBox *comboBoxThatHasCha
         }
 
         wavComponent.enablePoints(false);
+        resetLFO.setEnabled(false);
         wavComponent.refreshPath(LFO.waveForm);
     }
     else if (lfoMenu.getSelectedItemIndex() == 3)
@@ -273,6 +288,7 @@ void NebuloModAudioProcessorEditor::comboBoxChanged(ComboBox *comboBoxThatHasCha
         }
         
         wavComponent.enablePoints(false);
+        resetLFO.setEnabled(false);
         wavComponent.refreshPath(LFO.waveForm);
     }
     else if (lfoMenu.getSelectedItemIndex() == 4)
@@ -290,6 +306,7 @@ void NebuloModAudioProcessorEditor::comboBoxChanged(ComboBox *comboBoxThatHasCha
         }
         
         wavComponent.enablePoints(true);
+        resetLFO.setEnabled(true);
         wavComponent.refreshPath(LFO.waveForm);
     }
     
@@ -320,22 +337,27 @@ void NebuloModAudioProcessorEditor::comboBoxChanged(ComboBox *comboBoxThatHasCha
         if (lfoMenu.getSelectedItemIndex() == 0)
         {
             processor.phsLfoWaveformVal = 0;
+            resetLFO.setEnabled(false);
         }
         else if (lfoMenu.getSelectedItemIndex() == 1)
         {
             processor.phsLfoWaveformVal = 1;
+            resetLFO.setEnabled(false);
         }
         else if (lfoMenu.getSelectedItemIndex() == 2)
         {
             processor.phsLfoWaveformVal = 2;
+            resetLFO.setEnabled(false);
         }
         else if (lfoMenu.getSelectedItemIndex() == 3)
         {
             processor.phsLfoWaveformVal = 3;
+            resetLFO.setEnabled(false);
         }
         else if (lfoMenu.getSelectedItemIndex() == 4)
         {
             processor.phsLfoWaveformVal = 4;
+            resetLFO.setEnabled(true);
         }
         LFO.waveForm = processor.phsLfoWaveformVal;
         
@@ -371,22 +393,27 @@ void NebuloModAudioProcessorEditor::comboBoxChanged(ComboBox *comboBoxThatHasCha
         if (lfoMenu.getSelectedItemIndex() == 0)
         {
             processor.flLfoWaveformVal = 0;
+            resetLFO.setEnabled(false);
         }
         else if (lfoMenu.getSelectedItemIndex() == 1)
         {
             processor.flLfoWaveformVal = 1;
+            resetLFO.setEnabled(false);
         }
         else if (lfoMenu.getSelectedItemIndex() == 2)
         {
             processor.flLfoWaveformVal = 2;
+            resetLFO.setEnabled(false);
         }
         else if (lfoMenu.getSelectedItemIndex() == 3)
         {
             processor.flLfoWaveformVal = 3;
+            resetLFO.setEnabled(false);
         }
         else if (lfoMenu.getSelectedItemIndex() == 4)
         {
             processor.flLfoWaveformVal = 4;
+            resetLFO.setEnabled(true);
         }
         LFO.waveForm = processor.flLfoWaveformVal;
         
@@ -400,4 +427,18 @@ void NebuloModAudioProcessorEditor::comboBoxChanged(ComboBox *comboBoxThatHasCha
     // Visualize our text!
     addAndMakeVisible(fxText);
     fxText.setVisible(true);
+}
+
+void NebuloModAudioProcessorEditor::buttonClicked(Button* b)
+{
+    if (b)
+    {
+        wavComponent.resetBuffer();
+    }
+}
+
+
+void NebuloModAudioProcessorEditor::buttonStateChanged(Button* b)
+{
+
 }

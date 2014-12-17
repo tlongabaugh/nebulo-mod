@@ -192,7 +192,6 @@ void WaveformComponent::refillBuffer (float x1, float y1, float x2, float y2, fl
             secondTime = true;
         }
         
-        //lfo.fillLFOTable(waveformTable);
         refreshPath(4);
     }
     else
@@ -212,7 +211,11 @@ void WaveformComponent::resetBuffer()
         waveformTable[i] = defaults[i];
     }
     
+    secondTime = false;
+    initBuffer = true;
+    
     resetPoints();
+    refreshPath(4);
 }
 
 void WaveformComponent::resetPoints()
