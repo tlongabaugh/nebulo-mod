@@ -21,7 +21,7 @@ WaveformComponent::WaveformComponent():isInitialised(false)
         curvePoints[i]->addComponentListener(this);
         addAndMakeVisible(curvePoints[i]);
     }
-    
+        
     // Set flags
     secondTime = false;
     initBuffer = true;
@@ -91,14 +91,17 @@ void WaveformComponent::componentMovedOrResized (Component& component, bool wasM
     // If point 1 and 3 are moved
     if (&component == curvePoints[0] || &component == curvePoints[1])
     {
-        float x1 = (curvePoints[0]->getX() + (0.5f * curvePoints[0]->getWidth())) / (float) getWidth();
-        float y1 = ((getHeight() - curvePoints[0]->getY()) - (0.5f * curvePoints[0]->getHeight())) / (float) getHeight();
-        
-        float x2 = (curvePoints[1]->getX() + (0.5f * curvePoints[1]->getWidth())) / (float) getWidth();;
-        float y2 = ((getHeight() - curvePoints[1]->getY()) - (0.5f * curvePoints[1]->getHeight())) / (float) getHeight();
-        
-        // Refill Buffer
-        refillBuffer (x1, y1, x2, y2);
+        if (curvePoints[0]->getX() < 125 && curvePoints[1]->getX() > 125)
+        {
+            float x1 = (curvePoints[0]->getX() + (0.5f * curvePoints[0]->getWidth())) / (float) getWidth();
+            float y1 = ((getHeight() - curvePoints[0]->getY()) - (0.5f * curvePoints[0]->getHeight())) / (float) getHeight();
+            
+            float x2 = (curvePoints[1]->getX() + (0.5f * curvePoints[1]->getWidth())) / (float) getWidth();;
+            float y2 = ((getHeight() - curvePoints[1]->getY()) - (0.5f * curvePoints[1]->getHeight())) / (float) getHeight();
+            
+            // Refill Buffer
+            refillBuffer (x1, y1, x2, y2);
+        }
     }
 }
 
@@ -228,11 +231,6 @@ void WaveformComponent::refillBuffer (float x1, float y1, float x2, float y2)
             waveformTable[i] *= 2;
             // Bring everything down by -1
             waveformTable[i] -= 1;
-            
-            if (i < 150)
-                printf("%d: %f\n", i, waveformTable[i]);
-            
-
         }
         
         if (initBuffer) {
