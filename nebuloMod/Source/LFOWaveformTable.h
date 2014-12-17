@@ -18,6 +18,7 @@
 #define TABLE_SIZE          BUFFER_SIZE
 #define INIT_SAMPLE_RATE         44100
 
+// volatile float waveformTable[1024];
 
 class LFOWaveformTable : public DelayLine
 {

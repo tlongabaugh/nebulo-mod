@@ -8,6 +8,8 @@
 
 #include "WaveformComponent.h"
 
+volatile float waveformTable[1024];
+
 WaveformComponent::WaveformComponent():isInitialised(false)
 {
     for (int i = 0; i < 3; ++i)
@@ -19,6 +21,11 @@ WaveformComponent::WaveformComponent():isInitialised(false)
     
     secondTime = false;
     initBuffer = true;
+    
+    for (int i = 0; i < 1024; i++)
+    {
+        waveformTable[i] = defaults[i];
+    }
 }
 
 WaveformComponent::~WaveformComponent()
@@ -185,7 +192,7 @@ void WaveformComponent::refillBuffer (float x1, float y1, float x2, float y2, fl
             secondTime = true;
         }
         
-        lfo.fillLFOTable(waveformTable);
+        //lfo.fillLFOTable(waveformTable);
         refreshPath(4);
     }
     else
