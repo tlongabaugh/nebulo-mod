@@ -9,14 +9,14 @@
 #ifndef __NebuloMod__LFOWaveformTable__
 #define __NebuloMod__LFOWaveformTable__
 
-#include <stdio.h>
 #include <math.h>
+#include "../JuceLibraryCode/JuceHeader.h"
 #include "DelayLine.h"
 #include "LookupTable.h"
 
 #define BUFFER_SIZE         1024
 #define TABLE_SIZE          BUFFER_SIZE
-#define SAMPLE_RATE         44100
+#define INIT_SAMPLE_RATE         44100
 
 
 class LFOWaveformTable : public DelayLine
@@ -34,7 +34,7 @@ public:
     } waveType;
     
     // Fills the LFO table buffer from the global table
-    void fillLFOTable(float *table);
+    void fillLFOTable(volatile float table[]);
     
     /* Calculate the next value to come out of the wavetable buffer */
     float nextOut();
@@ -57,7 +57,7 @@ public:
     float tableLookup();
     
     /* Generates the lfotable waveform */
-    float generateLFOTable(float freq);
+    float generateLFOTableSample(float freq);
     
     float frequency;
     float waveForm;
@@ -66,7 +66,9 @@ public:
     
 private:
     double currentSampleRate;
-    float tableBuf[TABLE_SIZE];
+    volatile float tableBuf[TABLE_SIZE];
+    IIRFilter lowpass;
+    IIRCoefficients coeffs;
     
     
 };

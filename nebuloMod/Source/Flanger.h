@@ -13,14 +13,7 @@
 #include "LFOWaveformTable.h"
 #include "../JuceLibraryCode/JuceHeader.h"
 
-#define INIT_SAMPLE_RATE         44100
-#define INIT_LFO_FREQ       10
-// BSZ is 1/5 of a second at 44100 Hz sample rate/must be power of 2
-/*#define BSZ                 8192
-#define ROUND(n)            ((int)((double)(n) + 0.5))
-#define PIN(n, min, max)    ((n) > (max) ? max : ((n) < (min) ? (min) : (n)))
-#define MODF(n, i, f)       ((i) = (int)(n), (f) = (n) - (double)(i))
-*/
+#define INIT_SAMPLE_RATE    44100
 
 
 //---------------------------------------------------------------------------------------------

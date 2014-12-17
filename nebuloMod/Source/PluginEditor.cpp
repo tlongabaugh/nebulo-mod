@@ -140,7 +140,7 @@ void NebuloModAudioProcessorEditor::paint (Graphics& g)
     g.fillRoundedRectangle(320, 160, 370, 250, 25);
     g.fillRoundedRectangle(20, 160, 280, 250, 25);
     
-    float lineThickness = 2.0f;
+    //float lineThickness = 2.0f;
     
     /*
     // Wavetable graph init

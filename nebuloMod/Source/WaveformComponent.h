@@ -14,10 +14,11 @@
 #include "dRowAudio_MathsUtilities.h"
 #include "dRowAudio_BezierCurve.h"
 #include "LFOWaveformTable.h"
-#include "LookupTable.h"
+
 
 /* WARNING: IF YOU CHANGE THE SIZE OF THIS TABLE YOU MUST ALSO CHANGE THE SIZE OF
-   THE tableBuffer IN LFOWaveformTable!!!!!!!! */
+ THE tableBuffer IN LFOWaveformTable!!!!!!!! */
+
 
 static float defaults[1024] = {0.006, 0.012, 0.018, 0.025, 0.031, 0.037, 0.043, 0.049, 0.055, 0.061,
     0.067, 0.073, 0.080, 0.086, 0.092, 0.098, 0.104, 0.110, 0.116, 0.122, 0.128, 0.134, 0.140, 0.147,
@@ -101,8 +102,8 @@ static float defaults[1024] = {0.006, 0.012, 0.018, 0.025, 0.031, 0.037, 0.043, 
     -0.040, -0.034, -0.028, -0.022, -0.016, -0.010};
 
 class WaveformComponent : public Component,
-                          //public Buffer::Listener,
-                          public ComponentListener
+//public Buffer::Listener,
+public ComponentListener
 {
 public:
     WaveformComponent(/*Buffer& bufferToControl*/);

@@ -199,7 +199,7 @@ void NebuloModAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffe
     /* Get the samples from the input buffer */
     
     // Mono -> Mono
-    if (getNumInputChannels() == 1 && getNumOutputChannels() == 1) {
+    if (getNumInputChannels() == 1) {
         // Obtain data from channel 1
         float *monoData = buffer.getWritePointer(0);
         
@@ -217,7 +217,8 @@ void NebuloModAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffe
             // do nothing
         }
     }// Mono -> Stereo
-    if (getNumInputChannels() == 1 && getNumOutputChannels() == 2) {
+    /*
+    if (getNumInputChannels() == 1 ) {
         // Obtain data from channel 1
         float *monoDataL = buffer.getWritePointer(0);
         float *monoDataR = buffer.getWritePointer(1);
@@ -235,7 +236,7 @@ void NebuloModAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffe
         {
             // do nothing
         }
-    }
+    }*/
     else if (getNumInputChannels() == 2) {
         // Obtain data from channels 1 + 2
         float *leftChannel = buffer.getWritePointer(0);
