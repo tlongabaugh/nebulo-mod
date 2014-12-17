@@ -141,7 +141,7 @@ namespace BezierCurve
 			float currentx = xFromT (currentt, A,B,C,D); 
 			float currentslope = slopeFromT (currentt, A,B,C);
 			currentt -= (currentx - x) * (currentslope);
-			currentt = jlimit (0.0f, 1.0f, currentt);
+			currentt = jlimit (-1.0f, 1.0f, currentt);          // originally minimum was 0.0
 		} 
 		
 		float y = yFromT (currentt,  E,F,G,H);
@@ -166,8 +166,8 @@ namespace BezierCurve
 		a = jmax (min_param_a, jmin (max_param_a, a));
 		b = jmax (min_param_b, jmin (max_param_b, b));
 		
-		float x0 = 0;  
-		float y0 = 0;
+		float x0 = 0;       // 0
+		float y0 = 0;       // 0
 		float x4 = a;  
 		float y4 = b;
 		float x5 = c;  
@@ -205,7 +205,7 @@ namespace BezierCurve
 		
 		// Note that this function also requires cubicBezier()!
 		y = cubicBezier (x, x1, y1, x2,y2);
-		y = jmax (0.0f, jmin (1.0f, y));
+		y = jmax (-1.0f, jmin (1.0f, y));
 		return y;
 	}
 		
