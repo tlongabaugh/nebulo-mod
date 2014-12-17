@@ -35,9 +35,9 @@ public:
     {
         Parameters() noexcept
         : depth(0.75f),
-        rate(5.0f),
+        rate(0.2f),
         lfoWaveform(0),
-        feedback(50.0f),
+        feedback(0.2f),
         mix(0.5f)
         {}
         
@@ -76,8 +76,7 @@ private:
     DelayLine delayLineR;
     LFOWaveformTable LFO;       // LFO for the flanger
     double currentSampleRate;   // Current sample rate of Flanger
-    float avgDelay;             // Average delay time
-    double _maxFlanging;         // Max flanging time
+    double _maxFlanging;        // Max flanging time (init to 20ms)
     
 };
 

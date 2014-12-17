@@ -19,7 +19,8 @@ Phaser::~Phaser()
 {
 }
 
-void Phaser::range(float fMin, float fMax){ // Hz
+void Phaser::range(float fMin, float fMax)
+{
     depthMin = fMin / (currentSampleRate/2.f);
     depthMax = fMax / (currentSampleRate/2.f);
 }
@@ -112,7 +113,7 @@ inline float Phaser::processSampleL(float inSamp, float lfoSample)
     zm1 = y;
     
     // mix dry and phaser output
-    return inSamp*(1.0-parameters.mix/2) + y * parameters.depth * parameters.mix/2;
+    return inSamp*(1.0-parameters.mix) + y * parameters.depth * parameters.mix;
 }
 
 inline float Phaser::processSampleR(float inSamp, float lfoSample)
@@ -131,6 +132,6 @@ inline float Phaser::processSampleR(float inSamp, float lfoSample)
     zm1 = y;
     
     // mix dry and phaser output
-    return inSamp*(1.0-parameters.mix/2) + y * parameters.depth * parameters.mix/2;
+    return inSamp*(1.0-parameters.mix) + y * parameters.depth * parameters.mix;
 }
 
