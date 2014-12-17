@@ -3,7 +3,7 @@
 //  Phaser.h
 //  NebuloMod
 //
-//
+//  Written by Tom Longabaugh with help from www.musicdsp.org
 //
 
 #ifndef __NebuloMod__Phaser__
@@ -79,12 +79,12 @@ private:
         , _zm1( 0.f )
         {}
         
-        // sets the delay time
-        void delay(float delay){ //sample delay time
+        /* sets the delay time */
+        void delay(float delay){
             _a1 = (1.f - delay) / (1.f + delay);
         }
         
-        // processes a sample
+        /* processes a sample */
         float update(float inSamp){
             float y = inSamp * -_a1 + _zm1;
             _zm1 = y * _a1 + inSamp;
@@ -95,13 +95,14 @@ private:
         float _a1, _zm1;
     };
     
-    AllpassDelay allPassL[6]; // Six all pass filters to be cascaded for the phaser
-    AllpassDelay allPassR[6]; // Six all pass filters for right channel
-    Parameters parameters; // Holds phaser's parameters
-    LFOWaveformTable LFO; // The LFO for the phaser
-    double currentSampleRate; // The sample rate to run the phaser at
-    float depthMin, depthMax; // Range for the phaser
-    float zm1; // coeff
+    
+    AllpassDelay allPassL[6];   // Six all pass filters to be cascaded for the phaser
+    AllpassDelay allPassR[6];   // Six all pass filters for right channel
+    Parameters parameters;      // Holds phaser's parameters
+    LFOWaveformTable LFO;       // The LFO for the phaser
+    double currentSampleRate;   // The sample rate to run the phaser at
+    float depthMin, depthMax;   // Range for the phaser
+    float zm1;                  // coeff
 };
 
 #endif /* defined(__NebuloMod__Phaser__) */

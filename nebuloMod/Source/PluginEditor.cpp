@@ -132,7 +132,7 @@ void NebuloModAudioProcessorEditor::paint (Graphics& g)
     
     // Texts and Line Graph
     g.setColour (Colours::white);
-    g.setFont (28.0f);
+    g.setFont (60.0f);
     g.drawFittedText ("Nebulo Mod", getLocalBounds(), Justification::bottomLeft, 1);
     g.setFont(16.0f);
     g.drawFittedText("by Ryan Foo and Tom Longabaugh", getLocalBounds(), Justification::bottomRight, 2);

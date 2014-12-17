@@ -40,16 +40,18 @@ void Flanger::setSampleRate (const double sampleRate)
     // Make sure sample rate is valid
     jassert (sampleRate > 0);
     currentSampleRate = sampleRate;
+    
+    // set the max flanging to 20ms
     _maxFlanging = 0.02 * currentSampleRate;
 }
 
 void Flanger::prepareToPlay()
 {
-    // Init LFO
+    // Init Flanger LFO
     LFO.setSampleRate(currentSampleRate);
     LFO.prepareToPlay();
     
-    // reset delay line
+    // reset delay line to zero
     delayLineL.clear();
     delayLineR.clear();
 }
@@ -64,12 +66,13 @@ void Flanger::processMono(float* const samples, const int numSamples)
     jassert (samples != nullptr);
     
     float lfoSample;
-    static float dOut;
+    static float dOut  = 0; // delayed output
     
+    // Loop through sample buffer, rewriting as we go
     for (int i = 0; i < numSamples; i++) {
-        // Get LFO sample
+        // Get LFO sample (retrieves sample  and increments LFO position)
         LFO.waveForm = parameters.lfoWaveform;
-        lfoSample = (LFO.generateWaveSample() + 1.0)/2.0; // get into 0-1 range
+        lfoSample = (LFO.generateWaveSample() + 1.0)/2.0; // get into 0-1 range for proper flanging
         
         // change delay time
         double delay = (lfoSample * _maxFlanging);
@@ -78,7 +81,7 @@ void Flanger::processMono(float* const samples, const int numSamples)
         // calculate delayed sample while also putting feedback into the beginning of delay line
         dOut = delayLineL.processSample((samples[i] + dOut*parameters.feedback));
         
-        // build output mix
+        // build output mix (dry*(1-mix) + depth*processed*mix)
         samples[i] = samples[i]*(1.0-parameters.mix) + parameters.depth*dOut*parameters.mix;
         
     }
@@ -90,9 +93,10 @@ void Flanger::processStereo(float* const left, float* const right, const int num
     jassert (left != nullptr && right != nullptr);
     
     float lfoSample;
-    static float dOutL = 0;
-    static float dOutR = 0;
+    static float dOutL = 0; // delayed L output
+    static float dOutR = 0; // delayed R output
     
+    // loop through sample buffers, rewriting as we go
     for (int i = 0; i < numSamples; i++) {
         // Get LFO sample
         LFO.waveForm = parameters.lfoWaveform;
@@ -107,7 +111,7 @@ void Flanger::processStereo(float* const left, float* const right, const int num
         dOutL = delayLineL.processSample((left[i] + dOutL*parameters.feedback));
         dOutR = delayLineR.processSample((right[i] + dOutR*parameters.feedback));
         
-        // build output mix
+        // build output mix (dry*(1-mix) + depth*processed*mix)
         left[i] = left[i]*(1.0-parameters.mix) + parameters.depth*dOutL*parameters.mix;
         right[i] = right[i]*(1.0-parameters.mix) + parameters.depth*dOutR*parameters.mix;
     }

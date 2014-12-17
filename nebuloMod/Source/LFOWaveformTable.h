@@ -42,10 +42,10 @@ public:
     
     void prepareToPlay();
     
-    /* Generates a wave sample of the specified type */
-    
+    /* Generates a wave sample of a specified type */
     float generateWaveSample();
-    // Stock Waveform Generation
+    
+    /* Specific waveform generation funcitons, called by generateWaveSample() */
     float generateSine(float freq);
     float generateTriangle(float freq);
     float generateSawtooth(float freq);
@@ -54,20 +54,23 @@ public:
     /* Looks up the lfotable value */
     float tableLookup();
     
-    /* Generates the lfotable waveform */
+    /* Returns the lfotable waveform value
+     * This method increments over the buffer an equal amount of times related to 
+       lfoTable[] array length over period.
+     */
     float generateLFOTableSample(float freq);
     
+    /* Frequency and waveform params (frequently set by other classes) */
     float frequency;
     float waveForm;
     
+    /* Sets the sample rate that the lfo runs at (same as global sample rate */
     void setSampleRate(double sampleRate);
     
 private:
-    double currentSampleRate;
-    volatile float tableBuf[TABLE_SIZE];
-    IIRFilter lowpass;
-    IIRCoefficients coeffs;
-    
+    double currentSampleRate;   // The current sample rate
+    IIRFilter lowpass;          // filter for smoothing LFOs
+    IIRCoefficients coeffs;     // coefficients for setting lowpas filter
     
 };
 
