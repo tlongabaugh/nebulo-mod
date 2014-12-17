@@ -13,9 +13,12 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "dRowAudio_MathsUtilities.h"
 #include "dRowAudio_BezierCurve.h"
+#include "LFOWaveformTable.h"
+#include "LookupTable.h"
 
 /* WARNING: IF YOU CHANGE THE SIZE OF THIS TABLE YOU MUST ALSO CHANGE THE SIZE OF
    THE tableBuffer IN LFOWaveformTable!!!!!!!! */
+/*
 static float waveformTable[1024] = {0.006, 0.012, 0.018, 0.025, 0.031, 0.037, 0.043, 0.049, 0.055, 0.061,
     0.067, 0.073, 0.080, 0.086, 0.092, 0.098, 0.104, 0.110, 0.116, 0.122, 0.128, 0.134, 0.140, 0.147,
     0.153, 0.159, 0.165, 0.171, 0.177, 0.183, 0.189, 0.195, 0.201, 0.207, 0.213, 0.219, 0.225, 0.231,
@@ -95,7 +98,7 @@ static float waveformTable[1024] = {0.006, 0.012, 0.018, 0.025, 0.031, 0.037, 0.
     -0.258, -0.252, -0.246, -0.240, -0.234, -0.228, -0.222, -0.216, -0.210, -0.204, -0.198, -0.192,
     -0.186, -0.180, -0.174, -0.168, -0.162, -0.156, -0.150, -0.144, -0.138, -0.132, -0.126, -0.120,
     -0.114, -0.108, -0.101, -0.095, -0.089, -0.083, -0.077, -0.071, -0.065, -0.059, -0.053, -0.046,
-    -0.040, -0.034, -0.028, -0.022, -0.016, -0.010};
+    -0.040, -0.034, -0.028, -0.022, -0.016, -0.010};*/
 
 static float defaults[1024] = {0.006, 0.012, 0.018, 0.025, 0.031, 0.037, 0.043, 0.049, 0.055, 0.061,
     0.067, 0.073, 0.080, 0.086, 0.092, 0.098, 0.104, 0.110, 0.116, 0.122, 0.128, 0.134, 0.140, 0.147,
@@ -191,6 +194,7 @@ public:
     void bufferChanged();
     void componentMovedOrResized(Component& component, bool wasMoved, bool wasResized);
     void resetBuffer();
+    void refreshPath();
     
 private:
     enum CurvePoints
@@ -199,6 +203,8 @@ private:
         pointY1,
         pointX2,
         pointY2,
+        pointX3,
+        pointY3,
         numPoints,
     };
     
@@ -207,12 +213,15 @@ private:
     OwnedArray<CurvePoint> curvePoints;
     OwnedArray<Value> values;
     
-    void refreshPath();
-    void refillBuffer(float x1, float y1, float x2, float y2);
+    void refillBuffer(float x1, float y1, float x2, float y2, float x3, float y3);
     void resetPoints();
     
     Image background;
     bool isInitialised;
+    bool initBuffer;
+    bool secondTime;
+    
+    LFOWaveformTable lfo;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WaveformComponent);
 };
