@@ -66,7 +66,7 @@ NebuloModAudioProcessorEditor::NebuloModAudioProcessorEditor (NebuloModAudioProc
     createSlider(depthSlider, Slider::LinearHorizontal, processor.flDepthVal, 0.0, 1.0, 0.01, "Depth");
     createSlider(rateSlider, Slider::LinearHorizontal, processor.flRateVal, .1, 5.0, 0.01, "Rate");
     createSlider(feedbackSlider, Slider::LinearHorizontal, processor.flFeedbackVal, 0.0, 100.0, 1.0, "Feedback");
-    createSlider(mixSlider, Slider::LinearHorizontal, processor.flMixVal, 0.0, 1.0, 0.01, "Mix");
+    createSlider(mixSlider, Slider::LinearHorizontal, processor.flMixVal, 0.0, 0.5, 0.01, "Mix");
     
     // Create texts!
     createLabel(depthText, "Depth");
@@ -90,12 +90,14 @@ NebuloModAudioProcessorEditor::NebuloModAudioProcessorEditor (NebuloModAudioProc
     addAndMakeVisible(&lfoMenu);
     lfoMenu.addListener(this);
     
-    // Inits:
+    // Inits: (flanger enabled)
     modMenu.setSelectedItemIndex(0);
     lfoMenu.setSelectedItemIndex(0);
     LFO.waveForm = 0;
     feedbackSlider.setEnabled(true);
     fxText.setText("Flanger", dontSendNotification);
+    
+    // Update processor
     processor.flLfoWaveformVal = LFO.waveForm;
     processor.phsLfoWaveformVal = LFO.waveForm;
     

@@ -19,7 +19,8 @@ Phaser::~Phaser()
 {
 }
 
-void Phaser::range(float fMin, float fMax){ // Hz
+void Phaser::range(float fMin, float fMax)
+{
     depthMin = fMin / (currentSampleRate/2.f);
     depthMax = fMax / (currentSampleRate/2.f);
 }

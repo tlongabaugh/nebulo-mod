@@ -150,32 +150,30 @@ void NebuloModAudioProcessor::updatePhaser(void)
 //==============================================================================
 void NebuloModAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-    // Use this method as the place to do any pre-playback
-    // initialisation that you need..
+    Phaser::Parameters phaserParams = phaser.getParameters();
+    Flanger::Parameters flangerParams = flanger.getParameters();
     
-    // Initial Flanger/Phaser Values:
-    
-    // set Volume
-    flMixVal = 0.5;
-    flDepthVal= 0.5;
-    flRateVal = 8.0;
-    flFeedbackVal = 50.0;
-    flLfoWaveformVal = 1;
+    // Get Flanger/Phaser Values:
     
     // set Volume
-    phsMixVal = 0.5;
-    phsDepthVal= 0.5;
-    phsRateVal = 8.0;
-    phsFeedbackVal = 50.0;
-    phsLfoWaveformVal = 1;
+    flMixVal = flangerParams.mix;
+    flDepthVal= flangerParams.depth;
+    flRateVal = flangerParams.rate;
+    flFeedbackVal = flangerParams.feedback;
+    flLfoWaveformVal = flangerParams.lfoWaveform;
+    
+    // set Volume
+    phsMixVal = phaserParams.mix;
+    phsDepthVal= phaserParams.depth;
+    phsRateVal = phaserParams.rate;
+    phsFeedbackVal = 50.0;// never used
+    phsLfoWaveformVal = phaserParams.lfoWaveform;
     
     // Set Our Flanger and phaser Sample Rate
     flanger.setSampleRate(getSampleRate());
     phaser.setSampleRate(getSampleRate());
     phaser.prepareToPlay();
     flanger.prepareToPlay();
-    
-    //should call reset here
 }
 
 void NebuloModAudioProcessor::releaseResources()

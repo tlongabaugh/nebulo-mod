@@ -8,26 +8,20 @@
 
 #include "Flanger.h"
 
-Flanger::Flanger(void) : currentSampleRate(INIT_SAMPLE_RATE), avgDelay(100.0)
+Flanger::Flanger(void) : currentSampleRate(INIT_SAMPLE_RATE)
 {
     // Set Paramaters
     setParameters(Parameters());
     // Set Sample Rate (44100 default, updated right before playback)
     setSampleRate(INIT_SAMPLE_RATE);
-    
-    //delayLineL = new DelayLine(100, 4095);
-    //delayLineR = new DelayLine(100, 4095);
-    
-    delayLineL.setDelay(4090);
-    delayLineR.setDelay(4090);
+
     
 }
 
-Flanger::~Flanger(void)
+Flanger::~Flanger()
 {
-    ///delete [] delayLineL;
-    //delete [] delayLineR;
 }
+
 
 void Flanger::setParameters(const Parameters& newParam)
 {
@@ -76,11 +70,14 @@ void Flanger::processMono(float* const samples, const int numSamples)
     for (int i = 0; i < numSamples; i++) {
         // Get LFO sample
         LFO.waveForm = parameters.lfoWaveform;
-        lfoSample = LFO.generateWaveSample() + 1.0; // get into correct non-negative range
+        lfoSample = (LFO.generateWaveSample() + 1.0)/2.0; // get into 0-1 range
         
-        // process samples
-        delayLineL.setDelay(avgDelay*lfoSample*10);
-        //samples[i] = samples[i]*(1.0-parameters.mix/2) + parameters.depth*(delayLineL->processSample(samples[i]))*parameters.mix/2;
+        // change delay time
+        double delay = (lfoSample * _maxFlanging);
+        delayLineL.setDelay(delay);
+        
+        // build output mix
+        samples[i] = samples[i]*(1.0-parameters.mix/2) + parameters.depth*(delayLineL.processSample(samples[i]))*parameters.mix/2;
         
     }
 }
@@ -89,44 +86,22 @@ void Flanger::processStereo(float* const left, float* const right, const int num
 {
     // Make sure left and right channels are not NULL
     jassert (left != nullptr && right != nullptr);
-    float phase;
-    static float prev_phase;
-    static float triSample;
-    static float counter = 1;
     
     float lfoSample;
     
     for (int i = 0; i < numSamples; i++) {
-        /*phase = 2 * M_PI * (parameters.rate*100) / currentSampleRate + prev_phase;
-        lfoSample = (sin(phase) + 1.0) / 2.0;
-        if (phase > (2 * M_PI))
-        {
-            phase -= (2 * M_PI);
-        }
-        
-        prev_phase = phase;*/
-        
         // Get LFO sample
         LFO.waveForm = parameters.lfoWaveform;
-        //LFO.frequency = 40.0;
         lfoSample = (LFO.generateWaveSample() + 1.0)/2.0; // get into 0-1 range
-        
-        // process samples
-        //double delay = i/2000.0 * _maxFlanging;
-        
-        double delay = (lfoSample * _maxFlanging);//   avgDelay*lfoSample*10;
+
+        // change delay time
+        double delay = (lfoSample * _maxFlanging);
         delayLineL.setDelay(delay);
         delayLineR.setDelay(delay);
-        
-        
-        right[i] = parameters.depth*delayLineR.processSample(right[i]);
-        left[i] = left[i];
-        //left[i] = (left[i] + parameters.depth * delayLineL.processSample(left[i]))/2.0; // make this mix better
-        //right[i] = (right[i] + parameters.depth * delayLineR.processSample(right[i]))/2.0; // make this mix better
-        
-        
-        //left[i] = left[i]*(1.0-parameters.mix/2) + parameters.depth*(delayLineL->processSample(left[i]))*parameters.mix/2;
-        //right[i] = right[i]*(1.0-parameters.mix/2) + parameters.depth*(delayLineR->processSample(right[i]))*parameters.mix/2;
+
+        // build output mix
+        left[i] = left[i]*(1.0-parameters.mix/2) + parameters.depth*(delayLineL.processSample(left[i]))*parameters.mix/2;
+        right[i] = right[i]*(1.0-parameters.mix/2) + parameters.depth*(delayLineR.processSample(right[i]))*parameters.mix/2;
         
     }
 }
