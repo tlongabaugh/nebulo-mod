@@ -197,6 +197,7 @@ void WaveformComponent::refillBuffer (float x1, float y1, float x2, float y2, fl
 
     refreshPath();
     lfo.fillLFOTable(waveformTable);
+
 }
 
 void WaveformComponent::resetBuffer()
