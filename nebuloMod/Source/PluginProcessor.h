@@ -74,40 +74,27 @@ public:
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (NebuloModAudioProcessor)
-    
-    // Added by Ryan Foo
 
     /* Effect Control variables */
     
-    // Delay for flanger (?)
-    float flDelayVal;
-    // LFO ms increases the delay by at the maximum
-    float flDepthVal;
-    // LFO frequency
-    float flRateVal;
-    // LFO waveform
-    int flLfoWaveformVal;
-    // Feedback Level (?)
-    float flFeedbackVal;
-    // Dry/Wet mix
-    float flMixVal;
+    // Added by Ryan Foo
+    float flDelayVal;       // Delay for flanger (?)
+    float flDepthVal;       // LFO ms increases the delay by at the maximum
+    float flRateVal;        // LFO frequency
+    int flLfoWaveformVal;   // LFO waveform
+    float flFeedbackVal;    // Feedback Level (?)
+    float flMixVal;             // Dry/Wet mix
     
     // Added by Tom Longabaugh
-    // Delay for flanger (?)
-    float phsDelayVal;
-    // LFO ms increases the delay by at the maximum
-    float phsDepthVal;
-    // LFO frequency
-    float phsRateVal;
-    // LFO waveform
-    int phsLfoWaveformVal;
-    // Feedback Level (?)
-    float phsFeedbackVal;
-    // Dry/Wet mix (THIS SHOULD BE 50% MAX)
-    float phsMixVal;
+    float phsDelayVal;      // Delay for flanger (?)
+    float phsDepthVal;      // LFO ms increases the delay by at the maximum
+    float phsRateVal;       // LFO frequecy
+    int phsLfoWaveformVal;  // LFO waveform
+    float phsFeedbackVal;   // Feedback Level (always constant for phaser)
+    float phsMixVal;        // Dry/Wet mix (THIS SHOULD BE 50% MAX)
     
-    bool phaser_active;
-    bool flanger_active;
+    bool phaser_active;     // is phaser active
+    bool flanger_active;    // is flanger active
     
     // GUI update functions
     void updateFlanger(void);
@@ -116,7 +103,7 @@ public:
 private:
     Flanger flanger;
     Phaser phaser;
-    //LFOWaveformTable LFO;
+
 };
 
 

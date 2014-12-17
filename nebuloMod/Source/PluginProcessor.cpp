@@ -43,7 +43,7 @@ void NebuloModAudioProcessor::setParameter (int index, float newValue)
 
 const String NebuloModAudioProcessor::getParameterName (int index)
 {
-    return "PUT something HERE LATER";
+    return "";
 }
 
 const String NebuloModAudioProcessor::getParameterText (int index)
@@ -126,6 +126,7 @@ void NebuloModAudioProcessor::changeProgramName (int index, const String& newNam
 // GUI elements implemented by Ryan Foo
 void NebuloModAudioProcessor::updateFlanger(void)
 {
+    // set the params
     Flanger::Parameters flangerParams = flanger.getParameters();
     flangerParams.depth = flDepthVal;
     flangerParams.rate = flRateVal;
@@ -138,6 +139,7 @@ void NebuloModAudioProcessor::updateFlanger(void)
 
 void NebuloModAudioProcessor::updatePhaser(void)
 {
+    // set the params
     Phaser::Parameters phaserParams = phaser.getParameters();
     phaserParams.depth = phsDepthVal;
     phaserParams.rate = phsRateVal;
@@ -194,10 +196,11 @@ void NebuloModAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffe
         buffer.clear (i, 0, buffer.getNumSamples());
 
     //Written by tom longabaugh and ryan foo
+    
     /* Perform the necessary audio processing */
     
-    /* Get the samples from the input buffer */
     
+    /* Get the samples from the input buffer, then process them and send to output */
     // Mono -> Mono
     if (getNumInputChannels() == 1) {
         // Obtain data from channel 1

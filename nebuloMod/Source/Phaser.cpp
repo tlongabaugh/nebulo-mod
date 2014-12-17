@@ -9,9 +9,11 @@
 // Constructor
 Phaser::Phaser() : currentSampleRate(INIT_SAMPLE_RATE), zm1( 0.f )
 {
+    // set params and sample rate
     setParameters(Parameters());
     setSampleRate(INIT_SAMPLE_RATE);
 
+    // set depth range
     range(440.f, 1600.f);
 }
 
@@ -21,6 +23,7 @@ Phaser::~Phaser()
 
 void Phaser::range(float fMin, float fMax)
 {
+    // set depth min and max
     depthMin = fMin / (currentSampleRate/2.f);
     depthMax = fMax / (currentSampleRate/2.f);
 }
@@ -63,6 +66,7 @@ void Phaser::processMono(float* const samples, const int numSamples) noexcept
     
     float lfoSample;
     
+    // Loop through sample buffer, rewriting as we go
     for(int i = 0; i < numSamples; i++) {
         // get lfo sample, process mono channel
         LFO.waveForm = parameters.lfoWaveform;
@@ -86,6 +90,7 @@ void Phaser::processStereo(float* const left, float* const right, const int numS
     
     float lfoSample;
     
+    // Loop through sample buffers, rewriting as we go
     for(int i = 0; i < numSamples; i++) {
         // Get lfo sample
         LFO.waveForm = parameters.lfoWaveform;
@@ -99,7 +104,7 @@ void Phaser::processStereo(float* const left, float* const right, const int numS
 
 inline float Phaser::processSampleL(float inSamp, float lfoSample)
 {
-    // Calculate sweep based on lfoSample and depth controls
+    // new delay based on depth and lfo sample
     float d  = depthMin + (depthMax-depthMin) * (lfoSample + 1.f)/2.f;
     
     // Update the filter coefficients
@@ -108,7 +113,7 @@ inline float Phaser::processSampleL(float inSamp, float lfoSample)
         allPassL[i].delay(d);
     }
     
-    // Calculate the phased output
+    // Cascade the all pass filters, calculate the phased output with 0.2 feedback
     float y = allPassL[0].update(allPassL[1].update(allPassL[2].update(allPassL[3].update(allPassL[4].update(allPassL[5].update(inSamp + zm1 * 0.2))))));
     zm1 = y;
     
@@ -118,7 +123,7 @@ inline float Phaser::processSampleL(float inSamp, float lfoSample)
 
 inline float Phaser::processSampleR(float inSamp, float lfoSample)
 {
-    // Calculate sweep based on lfoSample and depth controls
+    // new delay based on depth and lfo sample
     float d  = depthMin + (depthMax-depthMin) * (lfoSample + 1.f)/2.f;
     
     // Update the filter coefficients
@@ -127,11 +132,13 @@ inline float Phaser::processSampleR(float inSamp, float lfoSample)
         allPassR[i].delay(d);
     }
     
-    // Calculate the phased output
+    // Cascade the allpass filters, calculate the phased output with 0.1 feedback
     float y = allPassR[0].update(allPassR[1].update(allPassR[2].update(allPassR[3].update(allPassR[4].update(allPassR[5].update(inSamp + zm1 * 0.1))))));
     zm1 = y;
     
     // mix dry and phaser output
     return inSamp*(1.0-parameters.mix) + y * parameters.depth * parameters.mix;
 }
+
+
 

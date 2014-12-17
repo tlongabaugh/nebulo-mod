@@ -19,12 +19,12 @@
 
 LFOWaveformTable::LFOWaveformTable()
 {
+    // Set the max delay of the buffer, and the inpoint to 0 (inPoint never changes)
     _maxDelay = TABLE_SIZE;
     _inPoint = 0;
     _outPoint = 1;
     
     setSampleRate(INIT_SAMPLE_RATE);
-    //fillLFOTable(waveformTable);
 }
 
 LFOWaveformTable::~LFOWaveformTable()
@@ -33,13 +33,14 @@ LFOWaveformTable::~LFOWaveformTable()
 
 void LFOWaveformTable::prepareToPlay()
 {
-    // set frequency and wave form
+    // set frequency and wave form initially
     frequency = 0.5;
     waveForm = sineWave;
 }
 
 void LFOWaveformTable::setSampleRate(double sampleRate)
 {
+    // Set sample rate and coefficients for lowpass
     currentSampleRate = sampleRate;
     lowpass.setCoefficients(coeffs.makeLowPass(currentSampleRate, 900));
 }
@@ -66,6 +67,7 @@ float LFOWaveformTable::nextOut()
     if (_doNextOut) {
         // first part of interpolation
         _nextOutput = waveformTable[_outPoint] * _omAlpha;
+        
         // second part of interpolation (fractional)
         if (_outPoint + 1 < _maxDelay) {
             _nextOutput += waveformTable[_outPoint+1] * _alpha;
@@ -73,8 +75,10 @@ float LFOWaveformTable::nextOut()
         else {
             _nextOutput += waveformTable[0] * _alpha;
         }
+        
         _doNextOut = false;
     }
+    
     return _nextOutput;
 }
 
@@ -84,10 +88,9 @@ void LFOWaveformTable::setIncrement(double increment)
     jassert(increment <= (float)_maxDelay);
     jassert(increment >= 0.0);
     
-    // read follows write
+    // read pointer will move through buffer
     double outPointer = _inPoint + increment;
     _delay = increment;
-    
     
     // integer part of delay (rounds outPointer to int value)
     _outPoint = (long)outPointer;
@@ -96,7 +99,7 @@ void LFOWaveformTable::setIncrement(double increment)
     _alpha = outPointer - _outPoint;
     _omAlpha = (double)1.0 - _alpha;
     
-    // wrap the buffer
+    // wrap the pointer when it gets to end of buffer
     if (_outPoint >= _maxDelay) {
         _outPoint = 0;
     }
@@ -108,6 +111,8 @@ void LFOWaveformTable::setIncrement(double increment)
 float LFOWaveformTable::generateWaveSample()
 {
     float waveSample;
+    
+    // Generate the next wave sample based on GUI input
     if (waveForm == sineWave) {
         waveSample = generateSine(frequency);
     }
@@ -120,22 +125,23 @@ float LFOWaveformTable::generateWaveSample()
     else if (waveForm == squareWave) {
         waveSample = generateSquare(frequency);
     }
-    else {
-        waveSample = generateLFOTableSample(frequency); // implement wavetable later
+    else { // lfoTable
+        waveSample = generateLFOTableSample(frequency);
     }
     
     return waveSample;
 }
 
-// Stock Waveform Generation
 float LFOWaveformTable::generateSine(float freq)
 {
     float phase, sinSample = 0;
     static float prev_phase;
     
+    // Get phase, then get sample
     phase = 2 * M_PI * freq / currentSampleRate + prev_phase;
     sinSample = sin(phase);
     
+    // wrap phase
     if (phase > (2 * M_PI))
     {
         phase -= (2 * M_PI);
@@ -154,14 +160,15 @@ float LFOWaveformTable::generateTriangle(float freq)
     
     float T = currentSampleRate / freq;
     
+    // increment, calculate tri sample
     sawSample2 += 2./T;
     triSample = fabsf(sawSample2) * 2. - 1.;
     
+    //wrap sample
     if (sawSample2 >= 1)
     {
         sawSample2 -= 2;
     }
-    
     
     return triSample;
 }
@@ -171,34 +178,44 @@ float LFOWaveformTable::generateSawtooth(float freq)
     static float sawSample;
     float T = currentSampleRate / freq;
 
+    // generate saw sample
     sawSample += 2./T;
     
+    // decrement to begin period again
     if (sawSample >= 1)
     {
         sawSample -= 2;
     }
     
+    // Low pass the saw sample for smoothing
     sawSample = lowpass.processSingleSampleRaw(sawSample);
+    
     return sawSample;
     
 }
 
 float LFOWaveformTable::generateSquare(float freq)
 {
-    float phase, sawSample = 0;
+    // Generates a smoothed square by rounding the 1 to -1 to 1 jumps
+    float phase, squareSample = 0;
     static float prev_phase;
     
+    // Generate a sine sample
     phase = 2 * M_PI * freq / currentSampleRate + prev_phase;
-    sawSample = sin(phase);
-    if(sawSample >= 0.2){
-        sawSample = 0.2;
+    squareSample = sin(phase);
+    
+    // Cut the top of it off
+    if(squareSample >= 0.2){
+        squareSample = 0.2;
     }
-    else if (sawSample <= -0.2){
-        sawSample = -0.2;
+    else if (squareSample <= -0.2){
+        squareSample = -0.2;
     }
     
-    sawSample *= 5;
+    // Get back into correct amplitude
+    squareSample *= 5;
     
+    // wrap phase
     if (phase > (2 * M_PI))
     {
         phase -= (2 * M_PI);
@@ -206,28 +223,34 @@ float LFOWaveformTable::generateSquare(float freq)
     
     prev_phase = phase;
     
-    return sawSample;
+    return squareSample;
 }
+
 
 float LFOWaveformTable::generateLFOTableSample(float freq)
 {
     float tableSample;
+        static float tableIncr = 0.0;
+    
     // Number of samples per period
     float T = currentSampleRate / freq;
-    static float tableIncr = 0.0;
     
-    // Fractionally increment the table value
+    // increment the table value
     tableIncr += (double)(_maxDelay / T);
     
     // wrap the table increment
     if (tableIncr >= 1024.0) {
         tableIncr = 0.0;
     }
+    
+    // set the read pointer back the correct amount
     setIncrement(tableIncr);
     
+    // get the table sample, lowpass it for smoothing
     tableSample = tableLookup();
     
     tableSample = lowpass.processSingleSampleRaw(tableSample);
+    
     return tableSample*.9; // make sure we don't out of bounds the delay time
 }
 

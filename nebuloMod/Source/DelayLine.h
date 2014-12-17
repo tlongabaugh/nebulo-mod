@@ -25,32 +25,32 @@ public:
     void setMaxDelay(unsigned long delay);
     
     /* sets the delay line delay */
-    virtual void setDelay(double delay);
+    void setDelay(double delay);
     
     /* returns the delay amount */
     double getDelay();
     
     /* returns next value to be outputted by delay line */
-    virtual float nextOut();
+    float nextOut();
     
     /* processes a sample in the delay line */
-    virtual float processSample(float inputSample);
+    float processSample(float inputSample);
     
     // clears the delay buffer
     void clear();
     
 protected:
-    unsigned long _inPoint; //write point
-    unsigned long _outPoint; // read point
-    double _delay; // delay amount
-    double _alpha;
-    double _omAlpha;
-    double _nextOutput;
-    bool _doNextOut; 
-    float *_sampBuffer;
-    unsigned long _maxDelay;
+    unsigned long _inPoint;     //write point
+    unsigned long _outPoint;    // read point
+    double _delay;              // delay amount
+    double _alpha;              // fractional value
+    double _omAlpha;            // fractional value
+    double _nextOutput;         // next output from table
+    bool _doNextOut;            // checks to see if we need to calc next out
+    float *_sampBuffer;         // the delay line buffer
+    unsigned long _maxDelay;    // The max amount of delay (in samples)
 };
 
-
-
 #endif /* defined(__NebuloMod__DelayLine__) */
+
+
