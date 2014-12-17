@@ -91,21 +91,22 @@ NebuloModAudioProcessorEditor::NebuloModAudioProcessorEditor (NebuloModAudioProc
     lfoMenu.addListener(this);
     
     // Inits:
-    modMenu.setSelectedItemIndex(1);
-    lfoMenu.setSelectedItemIndex(1);
-    LFO.waveForm = 1;
-    feedbackSlider.setEnabled(false);
-    fxText.setText("Phaser", dontSendNotification);
-    LFO.waveForm = processor.phsLfoWaveformVal;
+    modMenu.setSelectedItemIndex(0);
+    lfoMenu.setSelectedItemIndex(0);
+    LFO.waveForm = 0;
+    feedbackSlider.setEnabled(true);
+    fxText.setText("Flanger", dontSendNotification);
+    LFO.waveForm = processor.flLfoWaveformVal;
+    
     // Update Phaser
-    processor.updatePhaser();
+    processor.updateFlanger();
     
     // Debugging Text
     addAndMakeVisible(debugText);
     
     // Flags
-    processor.flanger_active = false;
-    processor.phaser_active = true;
+    processor.flanger_active = true;
+    processor.phaser_active = false;
     initDrawing = true;
 }
 

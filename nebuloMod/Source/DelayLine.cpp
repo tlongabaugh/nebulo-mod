@@ -83,33 +83,6 @@ double DelayLine::getDelay()
     return _delay;
 }
 
-/*
-float DelayLine::tapOut(unsigned long tapDelay)
-{
-    // set the tap point
-    long tap = _inPoint - tapDelay - 1;
-    
-    // check for wrap around
-    while (tap < 0) {
-        tap+= _maxDelay;
-    }
-    
-    return _sampBuffer[tap];
-}
-
-void DelayLine::tapIn(float value, unsigned long tapDelay)
-{
-    // set the tap point
-    long tap = _inPoint - tapDelay - 1;
-    
-    // check for wrap around
-    while (tap < 0) {
-        tap+= _maxDelay;
-    }
-    
-    _sampBuffer[tap] = value;
-}*/
-
 float DelayLine::nextOut()
 {
     // if delay is greater than 0
