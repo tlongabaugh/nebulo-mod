@@ -64,9 +64,9 @@ NebuloModAudioProcessorEditor::NebuloModAudioProcessorEditor (NebuloModAudioProc
     
     // Create dah sliders!!!
     createSlider(depthSlider, Slider::LinearHorizontal, processor.flDepthVal, 0.0, 1.0, 0.01, "Depth");
-    createSlider(rateSlider, Slider::LinearHorizontal, processor.flRateVal, 1.0, 15.0, 0.5, "Rate");
+    createSlider(rateSlider, Slider::LinearHorizontal, processor.flRateVal, .1, 5.0, 0.01, "Rate");
     createSlider(feedbackSlider, Slider::LinearHorizontal, processor.flFeedbackVal, 0.0, 100.0, 1.0, "Feedback");
-    createSlider(mixSlider, Slider::LinearHorizontal, processor.flMixVal, 0.0, 1.0, 0.05, "Mix");
+    createSlider(mixSlider, Slider::LinearHorizontal, processor.flMixVal, 0.0, 1.0, 0.01, "Mix");
     
     // Create texts!
     createLabel(depthText, "Depth");
@@ -96,7 +96,9 @@ NebuloModAudioProcessorEditor::NebuloModAudioProcessorEditor (NebuloModAudioProc
     LFO.waveForm = 0;
     feedbackSlider.setEnabled(true);
     fxText.setText("Flanger", dontSendNotification);
-    LFO.waveForm = processor.flLfoWaveformVal;
+    processor.flLfoWaveformVal = LFO.waveForm;
+    processor.phsLfoWaveformVal = LFO.waveForm;
+    
     
     // Update Phaser
     processor.updateFlanger();
@@ -143,14 +145,7 @@ void NebuloModAudioProcessorEditor::paint (Graphics& g)
             // reaches to 270 by the end
             float x_axis = (i+1) * 15 / 64;
             static float init_y_axis;
-            
-            if (i < 256)
-                init_y_axis = (i+1) * -25 / 64;              // get to 180
-            else if (i < 768)
-                init_y_axis = ((i+1) * 25 / 64) - 200;       // get to 390
-            else if (i < 1023)
-                init_y_axis = ((i+1) * -25 / 64) + 400;      // get to 280
-            
+            init_y_axis = our_sineTable[i] * -100;
             
             waveRef.lineTo(40 + x_axis, 280 + init_y_axis);
         }
@@ -340,6 +335,9 @@ void NebuloModAudioProcessorEditor::comboBoxChanged(ComboBox *comboBoxThatHasCha
         // Disable our feedback slider since we are using a phaser
         feedbackSlider.setEnabled(false);
         
+        // Change the necessary ranges
+        rateSlider.setRange(1.0, 15.0, .01);
+        
         // Text
         fxText.setText("Phaser", dontSendNotification);
         
@@ -386,6 +384,8 @@ void NebuloModAudioProcessorEditor::comboBoxChanged(ComboBox *comboBoxThatHasCha
         
         // Enable the feedback slider
         feedbackSlider.setEnabled(true);
+        
+        rateSlider.setRange(0.1, 5.0, .01);
         
         // Text
         fxText.setText("Flanger", dontSendNotification);
