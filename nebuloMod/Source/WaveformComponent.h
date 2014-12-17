@@ -128,8 +128,6 @@ private:
         pointY1,
         pointX2,
         pointY2,
-        pointX3,
-        pointY3,
         numPoints,
     };
     
@@ -141,7 +139,7 @@ private:
     OwnedArray<Value> values;
     
     // Refill the buffer when we want to draw a new waveform
-    void refillBuffer(float x1, float y1, float x2, float y2, float x3, float y3);
+    void refillBuffer(float x1, float y1, float x2, float y2);
     // Reset the points
     void resetPoints();
 
@@ -150,6 +148,7 @@ private:
     bool isInitialised;
     bool initBuffer;
     bool secondTime;
+    bool isRedrawing;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WaveformComponent);
 };

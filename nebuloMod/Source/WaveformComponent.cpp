@@ -15,7 +15,7 @@ volatile float waveformTable[1024];
 WaveformComponent::WaveformComponent():isInitialised(false)
 {
     // Initialize our waveform points
-    for (int i = 0; i < 3; ++i)
+    for (int i = 0; i < 2; ++i)
     {
         curvePoints.add(new CurvePoint());
         curvePoints[i]->addComponentListener(this);
@@ -25,6 +25,7 @@ WaveformComponent::WaveformComponent():isInitialised(false)
     // Set flags
     secondTime = false;
     initBuffer = true;
+    isRedrawing = false;
     
     // Initialize our table values to default sine wave lookup table values
     for (int i = 0; i < 1024; i++)
@@ -88,19 +89,16 @@ void WaveformComponent::paint (Graphics& g)
 void WaveformComponent::componentMovedOrResized (Component& component, bool wasMoved, bool wasResized)
 {
     // If point 1 and 3 are moved
-    if (&component == curvePoints[0] || &component == curvePoints[2])
+    if (&component == curvePoints[0] || &component == curvePoints[1])
     {
         float x1 = (curvePoints[0]->getX() + (0.5f * curvePoints[0]->getWidth())) / (float) getWidth();
         float y1 = ((getHeight() - curvePoints[0]->getY()) - (0.5f * curvePoints[0]->getHeight())) / (float) getHeight();
         
         float x2 = (curvePoints[1]->getX() + (0.5f * curvePoints[1]->getWidth())) / (float) getWidth();;
-        float y2 = ((getHeight() - curvePoints[1]->getY()) - (0.5f * curvePoints[1]->getHeight())) / (float) getHeight();;
-        
-        float x3 = (curvePoints[2]->getX() + (0.5f * curvePoints[2]->getWidth())) / (float) getWidth();
-        float y3 = ((getHeight() - curvePoints[2]->getY()) - (0.5f * curvePoints[2]->getHeight())) / (float) getHeight();
+        float y2 = ((getHeight() - curvePoints[1]->getY()) - (0.5f * curvePoints[1]->getHeight())) / (float) getHeight();
         
         // Refill Buffer
-        refillBuffer (x1, y1, x2, y2, x3, y3);
+        refillBuffer (x1, y1, x2, y2);
     }
 }
 
@@ -117,7 +115,7 @@ void WaveformComponent::refreshPath(int lfo_wave)
     path.clear();
     
     // If sine, tri, or custom wave, start from 0 position
-    if (lfo_wave == 0 || lfo_wave == 1 || lfo_wave == 4)
+    if (lfo_wave == 0 || lfo_wave == 1)
     {
         path.startNewSubPath (0.0f, (float) h/2);
     }
@@ -131,6 +129,19 @@ void WaveformComponent::refreshPath(int lfo_wave)
     {
         path.startNewSubPath(0.0f, 205.0f);
     }
+    else if (lfo_wave == 4)
+    {
+        
+        if (isRedrawing)
+        {
+            path.startNewSubPath(0.0f, 205.0f);
+            isRedrawing = false;
+        }
+        else
+        {
+            path.startNewSubPath (0.0f, (float) h/2);            
+        }
+    }
     
     // Draw the line!
     for (int i = 0; i < 1024; ++i)
@@ -138,7 +149,7 @@ void WaveformComponent::refreshPath(int lfo_wave)
         // Sine wave
         if (lfo_wave == 0)
         {
-            path.lineTo(i * xScale, (h/2) - (defaults[i-1] * yScale));
+            path.lineTo(i * xScale, (h/2) - (defaults[i] * yScale));
         }
         // Triangle wave
         else if (lfo_wave == 1)
@@ -175,7 +186,7 @@ void WaveformComponent::refreshPath(int lfo_wave)
         // Custom wave
         else if (lfo_wave == 4)
         {
-            path.lineTo(i * xScale, (h/2) - (waveformTable[i-1] * yScale));
+            path.lineTo(i * xScale, (h/2) - (waveformTable[i] * yScale));
         }
     }
     
@@ -187,17 +198,17 @@ void WaveformComponent::refreshPath(int lfo_wave)
 void WaveformComponent::enablePoints(bool isEnabled)
 {
     curvePoints[0]->setEnabled(isEnabled);
-    curvePoints[2]->setEnabled(isEnabled);
+    curvePoints[1]->setEnabled(isEnabled);
     
     curvePoints[0]->setVisible(isEnabled);
-    curvePoints[2]->setVisible(isEnabled);
+    curvePoints[1]->setVisible(isEnabled);
 }
 
 // Refill buffer scales new points in the GUI and waveformTable
 // We have three points here: (x1,y1) [first marker], (x2,y2) [midpoint], and (x3,y3) [second marker].
 // These points are used to redraw the graph.
 // The bezier curve is applied to the first marker and midpoint and another curve is applied to the midpoint and second marker.
-void WaveformComponent::refillBuffer (float x1, float y1, float x2, float y2, float x3, float y3)
+void WaveformComponent::refillBuffer (float x1, float y1, float x2, float y2)
 {
     // Determined by size of buffer (1024) and increment (i = 1)
     const float bufferScale = 1.0f / (float) 1024;
@@ -208,18 +219,20 @@ void WaveformComponent::refillBuffer (float x1, float y1, float x2, float y2, fl
         for (int i = 0; i < 1024; ++i)
         {
             // Limit to how far we can go
-            float x = jlimit (-1.0f, 1.0f, i * bufferScale);
-            // waveformTable[i] = BezierCurve::cubicBezierNearlyThroughTwoPoints (x, x1, y1, x2, y2);
+            float x = jlimit (0.0f, 1.0f, i * bufferScale);
+            // Run Bezier Curve
+            waveformTable[i] = BezierCurve::cubicBezierNearlyThroughTwoPoints (x, x1, y1, x2, y2);
             
-            // SCALING HERE
-            if (i < 512)
-            {
-                waveformTable[i] = BezierCurve::cubicBezierNearlyThroughTwoPoints(x, x1, y1, x2, y2);
-            }
-            else if (i < 1024)
-            {
-                waveformTable[i] = BezierCurve::cubicBezierNearlyThroughTwoPoints(x, x2, y2, x3, y3) - 1;
-            }
+            // SCALE IT
+            // Increase the size by two
+            waveformTable[i] *= 2;
+            // Bring everything down by -1
+            waveformTable[i] -= 1;
+            
+            if (i < 150)
+                printf("%d: %f\n", i, waveformTable[i]);
+            
+
         }
         
         if (initBuffer) {
@@ -228,6 +241,8 @@ void WaveformComponent::refillBuffer (float x1, float y1, float x2, float y2, fl
         else if (!secondTime) {
             secondTime = true;
         }
+        
+        isRedrawing = true;
         
         // Redraw
         refreshPath(4);
@@ -269,20 +284,13 @@ void WaveformComponent::resetPoints()
     const int h = getHeight();
     
     // Default Point Values
-    float x1 = w * 0.25f - 4.5;
-    float y1 = (h/2) - waveformTable[240] * h/2.02;
+    float x1 = w * 0.25f;
+    float y1 = (h/2) - waveformTable[255] * h/2.02;
     
-    float x2 = w * 0.5f - 5;
-    float y2 = h/2;
-    
-    float x3 = w * 0.75f - 5;
-    float y3 = (h/2) - waveformTable[767] * h/2.21;
+    float x2 = w * 0.75f;
+    float y2 = (h/2) - waveformTable[767] * h/2.21;
     
     // Set the curve points
     curvePoints[0]->setBounds ((int) (x1), (int) (y1), 10, 10);
     curvePoints[1]->setBounds ((int) (x2), (int) (y2), 10, 10);
-    curvePoints[2]->setBounds ((int) (x3), (int) (y3), 10, 10);
-    
-    // Don't let curve point 1 be visible
-    curvePoints[1]->setVisible(false);
 }
