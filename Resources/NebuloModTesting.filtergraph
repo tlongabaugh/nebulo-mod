@@ -22,7 +22,7 @@
   <FILTER uid="4" x="0.45125" y="0.496296" uiLastX="358" uiLastY="177">
     <PLUGIN name="NebuloMod" format="VST" category="Effect" manufacturer="FUboyz"
             version="V1.0.0" file="/Users/tom/Library/Audio/Plug-Ins/VST/NebuloMod.vst"
-            uid="4e4d6f64" isInstrument="0" fileTime="14a5026f4d0" numInputs="2"
+            uid="4e4d6f64" isInstrument="0" fileTime="14a5b860730" numInputs="2"
             numOutputs="2" isShell="0"/>
     <STATE>160.K41XCA.....ZCIjQ....A3TSuQF....Y....A.................................................................................................................................................................................</STATE>
   </FILTER>

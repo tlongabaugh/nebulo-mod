@@ -168,7 +168,7 @@ void NebuloModAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBl
     phsMixVal = phaserParams.mix;
     phsDepthVal= phaserParams.depth;
     phsRateVal = phaserParams.rate;
-    phsFeedbackVal = 50.0;// never used
+    phsFeedbackVal = 0.5;// never used
     phsLfoWaveformVal = phaserParams.lfoWaveform;
     
     // Set Our Flanger and phaser Sample Rate
@@ -201,7 +201,7 @@ void NebuloModAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffe
     
     
     /* Get the samples from the input buffer, then process them and send to output */
-    // Mono -> Mono
+    // Mono
     if (getNumInputChannels() == 1) {
         // Obtain data from channel 1
         float *monoData = buffer.getWritePointer(0);
@@ -219,27 +219,7 @@ void NebuloModAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffe
         {
             // do nothing
         }
-    }// Mono -> Stereo
-    /*
-    if (getNumInputChannels() == 1 ) {
-        // Obtain data from channel 1
-        float *monoDataL = buffer.getWritePointer(0);
-        float *monoDataR = buffer.getWritePointer(1);
-        
-        // Check Flag status to determine which effect to process
-        if (phaser_active)
-        {
-            phaser.processMono(monoDataL, buffer.getNumSamples());
-        }
-        else if (flanger_active)
-        {
-            flanger.processMono(monoDataR, buffer.getNumSamples());
-        }
-        else
-        {
-            // do nothing
-        }
-    }*/
+    }
     else if (getNumInputChannels() == 2) {
         // Obtain data from channels 1 + 2
         float *leftChannel = buffer.getWritePointer(0);
@@ -256,7 +236,7 @@ void NebuloModAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffe
         }
         else
         {
-            // do nothing son!
+            // do nothing
         }
     }
     else {

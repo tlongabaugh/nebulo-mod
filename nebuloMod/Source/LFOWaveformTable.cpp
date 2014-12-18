@@ -187,9 +187,6 @@ float LFOWaveformTable::generateSawtooth(float freq)
         sawSample -= 2;
     }
     
-    // Low pass the saw sample for smoothing
-    sawSample = lowpass.processSingleSampleRaw(sawSample);
-    
     return sawSample;
     
 }
