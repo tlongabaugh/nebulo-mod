@@ -15,7 +15,6 @@
 		12582DBE3E9EF8D9B80A9665 /* CAStreamBasicDescription.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 122B372B2A8C761C57371BAD /* CAStreamBasicDescription.cpp */; settings = {COMPILER_FLAGS = "-w"; }; };
 		18F19A530C151F55B414EE08 /* DiscRecording.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 81F69432A0F10C7D37D64E2F /* DiscRecording.framework */; };
 		19EEBB96DAE0829C5AD46DD2 /* CarbonEventHandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 52E8B77BE0EA32C91B1F80C7 /* CarbonEventHandler.cpp */; settings = {COMPILER_FLAGS = "-w"; }; };
-		1A8B12EE77B0F05DB7DD968A /* PluginEditor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3E3CCFB593943C869FBAEBAC /* PluginEditor.cpp */; };
 		1B2EA11ABC04F2A75621E54B /* juce_RTAS_DigiCode2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 758BB884B71CEFC3148BA05D /* juce_RTAS_DigiCode2.cpp */; settings = {COMPILER_FLAGS = "-w"; }; };
 		22AA4C64AA12B70665B995DB /* AUScopeElement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 48DD13FB11D0042538887E93 /* AUScopeElement.cpp */; settings = {COMPILER_FLAGS = "-w"; }; };
 		22FE70C8D262F289E80C5DFE /* juce_PluginUtilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 75F9BCD07BD2D6E338239565 /* juce_PluginUtilities.cpp */; };
@@ -31,7 +30,6 @@
 		4C2D7961BA5F97732E249D1E /* juce_opengl.mm in Sources */ = {isa = PBXBuildFile; fileRef = C4F7DEAC0530C815A340145F /* juce_opengl.mm */; };
 		4FED890A3B791B8027A3F422 /* CoreMIDI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 140EABF2214E80B81CEB862F /* CoreMIDI.framework */; };
 		52D65D3657105DE6733A87A1 /* AUOutputBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 02843331E6D9B13F4F8976BD /* AUOutputBase.cpp */; settings = {COMPILER_FLAGS = "-w"; }; };
-		545AC9EF567A4C862066436F /* PluginProcessor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1095105B66313EC47FA089B1 /* PluginProcessor.cpp */; };
 		5AA70F4F1C1B0FE64761F521 /* CAAUParameter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C1BE0C3CFC78763B00EBB8BB /* CAAUParameter.cpp */; settings = {COMPILER_FLAGS = "-w"; }; };
 		690CC6CCC580A9369C898931 /* juce_AU_Resources.r in Rez */ = {isa = PBXBuildFile; fileRef = C025ADF2489B61C6E75AA8C2 /* juce_AU_Resources.r */; };
 		6DE0B34481A38800552A9C5C /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C18E51194E5D0D66D938DB61 /* Carbon.framework */; };
@@ -61,12 +59,13 @@
 		D9E71BD28298249D19CA364F /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4AE688C41DC1F1BE4CC3ABFD /* Cocoa.framework */; };
 		DFFE86323349BBCB52EE3E7B /* juce_events.mm in Sources */ = {isa = PBXBuildFile; fileRef = F906B7A0D941F20671D92F66 /* juce_events.mm */; };
 		E0DB6B1F02FAA5BBF064A980 /* juce_VST3_Wrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8A501D54913B3E8F2B5433F1 /* juce_VST3_Wrapper.mm */; };
-		E231A7611A3C054F001ED317 /* LFOtest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E231A75F1A3C054F001ED317 /* LFOtest.cpp */; };
-		E265DE271A24429A00A0345D /* Flanger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E265DE1F1A24429A00A0345D /* Flanger.cpp */; };
-		E265DE281A24429A00A0345D /* LFOWaveformGenerator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E265DE211A24429A00A0345D /* LFOWaveformGenerator.cpp */; };
-		E265DE291A24429A00A0345D /* LFOWaveformTable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E265DE231A24429A00A0345D /* LFOWaveformTable.cpp */; };
-		E265DE2A1A24429A00A0345D /* Phaser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E265DE251A24429A00A0345D /* Phaser.cpp */; };
-		E266AB991A3B9C7B00063E64 /* BiQuad.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E266AB971A3B9C7B00063E64 /* BiQuad.cpp */; };
+		E2FC34201A41578A00A414D9 /* DelayLine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E2FC34111A41578900A414D9 /* DelayLine.cpp */; };
+		E2FC34211A41578A00A414D9 /* Flanger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E2FC34151A41578900A414D9 /* Flanger.cpp */; };
+		E2FC34221A41578A00A414D9 /* LFOWaveformTable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E2FC34171A41578900A414D9 /* LFOWaveformTable.cpp */; };
+		E2FC34231A41578A00A414D9 /* Phaser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E2FC341A1A41578900A414D9 /* Phaser.cpp */; };
+		E2FC34241A41578A00A414D9 /* PluginEditor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E2FC341C1A41578900A414D9 /* PluginEditor.cpp */; };
+		E2FC34251A41578A00A414D9 /* PluginProcessor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E2FC341E1A41578A00A414D9 /* PluginProcessor.cpp */; };
+		E2FC34281A4157CD00A414D9 /* WaveformComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E2FC34261A4157CD00A414D9 /* WaveformComponent.cpp */; };
 		E6DB291FC4C3136F9D03D90E /* juce_VST_Wrapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0082E47F4B378C4414019886 /* juce_VST_Wrapper.cpp */; };
 		EAA31E95FE362F00C867CD77 /* AUCarbonViewControl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A22DF0C31667AF9BCCA854D /* AUCarbonViewControl.cpp */; settings = {COMPILER_FLAGS = "-w"; }; };
 		EC0247E1CB32E555CA239A24 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F18E962B92FB0AFBCEAA9A01 /* CoreAudio.framework */; };
@@ -163,7 +162,6 @@
 		103A6D911524AFCF8E5A96CF /* juce_OpenGLShaderProgram.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_OpenGLShaderProgram.h; path = ../../JuceLibraryCode/modules/juce_opengl/opengl/juce_OpenGLShaderProgram.h; sourceTree = SOURCE_ROOT; };
 		1063118A57311F465F0B29E9 /* CAVectorUnit.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = CAVectorUnit.cpp; path = Extras/CoreAudio/PublicUtility/CAVectorUnit.cpp; sourceTree = DEVELOPER_DIR; };
 		10797D3882060914A32DBC63 /* MusicDeviceBase.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = MusicDeviceBase.cpp; path = Extras/CoreAudio/AudioUnits/AUPublic/OtherBases/MusicDeviceBase.cpp; sourceTree = DEVELOPER_DIR; };
-		1095105B66313EC47FA089B1 /* PluginProcessor.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = PluginProcessor.cpp; path = ../../Source/PluginProcessor.cpp; sourceTree = SOURCE_ROOT; };
 		114E9A5437F5A6A5657C816E /* juce_data_structures.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = juce_data_structures.mm; path = ../../JuceLibraryCode/modules/juce_data_structures/juce_data_structures.mm; sourceTree = SOURCE_ROOT; };
 		116C9FEB3E85CAA5A0E83F22 /* juce_win32_HiddenMessageWindow.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_win32_HiddenMessageWindow.h; path = ../../JuceLibraryCode/modules/juce_events/native/juce_win32_HiddenMessageWindow.h; sourceTree = SOURCE_ROOT; };
 		1180C1F8C0165DF35E30403B /* juce_SpinLock.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_SpinLock.h; path = ../../JuceLibraryCode/modules/juce_core/threads/juce_SpinLock.h; sourceTree = SOURCE_ROOT; };
@@ -321,7 +319,6 @@
 		3DB978B6E16D8416C991688C /* juce_FileInputStream.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = juce_FileInputStream.cpp; path = ../../JuceLibraryCode/modules/juce_core/files/juce_FileInputStream.cpp; sourceTree = SOURCE_ROOT; };
 		3DBDDD9DDAB05D16F618AED0 /* juce_Drawable.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = juce_Drawable.cpp; path = ../../JuceLibraryCode/modules/juce_gui_basics/drawables/juce_Drawable.cpp; sourceTree = SOURCE_ROOT; };
 		3DDDD9F6EA5C807A3F7E5447 /* juce_String.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = juce_String.cpp; path = ../../JuceLibraryCode/modules/juce_core/text/juce_String.cpp; sourceTree = SOURCE_ROOT; };
-		3E3CCFB593943C869FBAEBAC /* PluginEditor.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = PluginEditor.cpp; path = ../../Source/PluginEditor.cpp; sourceTree = SOURCE_ROOT; };
 		3F17A586280CF92C488911D7 /* juce_GroupComponent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_GroupComponent.h; path = ../../JuceLibraryCode/modules/juce_gui_basics/layout/juce_GroupComponent.h; sourceTree = SOURCE_ROOT; };
 		3F233D66D03F90A55E3C251F /* AUEffectBase.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = AUEffectBase.cpp; path = Extras/CoreAudio/AudioUnits/AUPublic/OtherBases/AUEffectBase.cpp; sourceTree = DEVELOPER_DIR; };
 		3FDA5ECD78B9F8E2AEDA6CD2 /* AUResources.r */ = {isa = PBXFileReference; lastKnownFileType = file.r; name = AUResources.r; path = Extras/CoreAudio/AudioUnits/AUPublic/AUBase/AUResources.r; sourceTree = DEVELOPER_DIR; };
@@ -481,7 +478,6 @@
 		6B58AE319AC1D2B06D3FC567 /* juce_TextDiff.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = juce_TextDiff.cpp; path = ../../JuceLibraryCode/modules/juce_core/text/juce_TextDiff.cpp; sourceTree = SOURCE_ROOT; };
 		6B6AD1E41F329DC3D6BAC6B5 /* juce_module_info */ = {isa = PBXFileReference; lastKnownFileType = text; name = juce_module_info; path = ../../JuceLibraryCode/modules/juce_audio_devices/juce_module_info; sourceTree = SOURCE_ROOT; };
 		6B705A1851674F8EF8F21A9D /* juce_IIRFilterAudioSource.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = juce_IIRFilterAudioSource.cpp; path = ../../JuceLibraryCode/modules/juce_audio_basics/sources/juce_IIRFilterAudioSource.cpp; sourceTree = SOURCE_ROOT; };
-		6C03805AEC811C3BEF1FAAE1 /* PluginEditor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = PluginEditor.h; path = ../../Source/PluginEditor.h; sourceTree = SOURCE_ROOT; };
 		6C2757CA93E5C08B919C1346 /* CAAudioChannelLayout.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CAAudioChannelLayout.h; path = Extras/CoreAudio/PublicUtility/CAAudioChannelLayout.h; sourceTree = DEVELOPER_DIR; };
 		6C38D1827CB028CE732C4DF5 /* juce_AudioTransportSource.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_AudioTransportSource.h; path = ../../JuceLibraryCode/modules/juce_audio_devices/sources/juce_AudioTransportSource.h; sourceTree = SOURCE_ROOT; };
 		6CAB0BA360C16E7D6F84FE2B /* juce_Path.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = juce_Path.cpp; path = ../../JuceLibraryCode/modules/juce_graphics/geometry/juce_Path.cpp; sourceTree = SOURCE_ROOT; };
@@ -866,7 +862,6 @@
 		D76A8491CED441C54010A68B /* juce_FileChooser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_FileChooser.h; path = ../../JuceLibraryCode/modules/juce_gui_basics/filebrowser/juce_FileChooser.h; sourceTree = SOURCE_ROOT; };
 		D78264ACC32534D24113C3AC /* juce_win32_Network.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = juce_win32_Network.cpp; path = ../../JuceLibraryCode/modules/juce_core/native/juce_win32_Network.cpp; sourceTree = SOURCE_ROOT; };
 		D7D350E56339EA113588BA2D /* juce_IIRFilterAudioSource.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_IIRFilterAudioSource.h; path = ../../JuceLibraryCode/modules/juce_audio_basics/sources/juce_IIRFilterAudioSource.h; sourceTree = SOURCE_ROOT; };
-		D7D7C3F8B9622E6DF3536816 /* PluginProcessor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = PluginProcessor.h; path = ../../Source/PluginProcessor.h; sourceTree = SOURCE_ROOT; };
 		D7FEA23B6B21CCD848A90A41 /* juce_ComponentListener.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = juce_ComponentListener.cpp; path = ../../JuceLibraryCode/modules/juce_gui_basics/components/juce_ComponentListener.cpp; sourceTree = SOURCE_ROOT; };
 		D80C718EEFAFA1645E3A3909 /* juce_SliderPropertyComponent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_SliderPropertyComponent.h; path = ../../JuceLibraryCode/modules/juce_gui_basics/properties/juce_SliderPropertyComponent.h; sourceTree = SOURCE_ROOT; };
 		D89D707F9E724201B36F7B6B /* juce_TopLevelWindow.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = juce_TopLevelWindow.cpp; path = ../../JuceLibraryCode/modules/juce_gui_basics/windows/juce_TopLevelWindow.cpp; sourceTree = SOURCE_ROOT; };
@@ -908,21 +903,27 @@
 		E1C662228D5F2F1EAF27497B /* juce_FileLogger.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_FileLogger.h; path = ../../JuceLibraryCode/modules/juce_core/logging/juce_FileLogger.h; sourceTree = SOURCE_ROOT; };
 		E1C66E1092559C78B11A8944 /* juce_PluginDescription.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = juce_PluginDescription.cpp; path = ../../JuceLibraryCode/modules/juce_audio_processors/processors/juce_PluginDescription.cpp; sourceTree = SOURCE_ROOT; };
 		E2316EF245981000BFD7854D /* juce_ChangeListener.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_ChangeListener.h; path = ../../JuceLibraryCode/modules/juce_events/broadcasters/juce_ChangeListener.h; sourceTree = SOURCE_ROOT; };
-		E231A75F1A3C054F001ED317 /* LFOtest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LFOtest.cpp; path = ../../Source/LFOtest.cpp; sourceTree = "<group>"; };
-		E231A7601A3C054F001ED317 /* LFOtest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LFOtest.h; path = ../../Source/LFOtest.h; sourceTree = "<group>"; };
 		E2453C0ABC1FD6DC6E27442C /* juce_KeyPressMappingSet.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_KeyPressMappingSet.h; path = ../../JuceLibraryCode/modules/juce_gui_basics/commands/juce_KeyPressMappingSet.h; sourceTree = SOURCE_ROOT; };
 		E256B60061C1FDAAAE6A54C6 /* juce_DrawableImage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_DrawableImage.h; path = ../../JuceLibraryCode/modules/juce_gui_basics/drawables/juce_DrawableImage.h; sourceTree = SOURCE_ROOT; };
-		E265DE1F1A24429A00A0345D /* Flanger.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Flanger.cpp; path = ../../Source/Flanger.cpp; sourceTree = "<group>"; };
-		E265DE201A24429A00A0345D /* Flanger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Flanger.h; path = ../../Source/Flanger.h; sourceTree = "<group>"; };
-		E265DE211A24429A00A0345D /* LFOWaveformGenerator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LFOWaveformGenerator.cpp; path = ../../Source/LFOWaveformGenerator.cpp; sourceTree = "<group>"; };
-		E265DE221A24429A00A0345D /* LFOWaveformGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LFOWaveformGenerator.h; path = ../../Source/LFOWaveformGenerator.h; sourceTree = "<group>"; };
-		E265DE231A24429A00A0345D /* LFOWaveformTable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LFOWaveformTable.cpp; path = ../../Source/LFOWaveformTable.cpp; sourceTree = "<group>"; };
-		E265DE241A24429A00A0345D /* LFOWaveformTable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LFOWaveformTable.h; path = ../../Source/LFOWaveformTable.h; sourceTree = "<group>"; };
-		E265DE251A24429A00A0345D /* Phaser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Phaser.cpp; path = ../../Source/Phaser.cpp; sourceTree = "<group>"; };
-		E265DE261A24429A00A0345D /* Phaser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Phaser.h; path = ../../Source/Phaser.h; sourceTree = "<group>"; };
-		E266AB971A3B9C7B00063E64 /* BiQuad.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BiQuad.cpp; path = ../../Source/BiQuad.cpp; sourceTree = "<group>"; };
-		E266AB981A3B9C7B00063E64 /* BiQuad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BiQuad.h; path = ../../Source/BiQuad.h; sourceTree = "<group>"; };
 		E27FCE17FF7A0F7F6174679F /* juce_DrawableButton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_DrawableButton.h; path = ../../JuceLibraryCode/modules/juce_gui_basics/buttons/juce_DrawableButton.h; sourceTree = SOURCE_ROOT; };
+		E2FC34101A41576800A414D9 /* CurvePoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CurvePoint.h; path = ../../Source/CurvePoint.h; sourceTree = "<group>"; };
+		E2FC34111A41578900A414D9 /* DelayLine.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DelayLine.cpp; path = ../../Source/DelayLine.cpp; sourceTree = "<group>"; };
+		E2FC34121A41578900A414D9 /* DelayLine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DelayLine.h; path = ../../Source/DelayLine.h; sourceTree = "<group>"; };
+		E2FC34131A41578900A414D9 /* dRowAudio_BezierCurve.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dRowAudio_BezierCurve.h; path = ../../Source/dRowAudio_BezierCurve.h; sourceTree = "<group>"; };
+		E2FC34141A41578900A414D9 /* dRowAudio_MathsUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dRowAudio_MathsUtilities.h; path = ../../Source/dRowAudio_MathsUtilities.h; sourceTree = "<group>"; };
+		E2FC34151A41578900A414D9 /* Flanger.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Flanger.cpp; path = ../../Source/Flanger.cpp; sourceTree = "<group>"; };
+		E2FC34161A41578900A414D9 /* Flanger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Flanger.h; path = ../../Source/Flanger.h; sourceTree = "<group>"; };
+		E2FC34171A41578900A414D9 /* LFOWaveformTable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LFOWaveformTable.cpp; path = ../../Source/LFOWaveformTable.cpp; sourceTree = "<group>"; };
+		E2FC34181A41578900A414D9 /* LFOWaveformTable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LFOWaveformTable.h; path = ../../Source/LFOWaveformTable.h; sourceTree = "<group>"; };
+		E2FC34191A41578900A414D9 /* LookupTable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LookupTable.h; path = ../../Source/LookupTable.h; sourceTree = "<group>"; };
+		E2FC341A1A41578900A414D9 /* Phaser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Phaser.cpp; path = ../../Source/Phaser.cpp; sourceTree = "<group>"; };
+		E2FC341B1A41578900A414D9 /* Phaser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Phaser.h; path = ../../Source/Phaser.h; sourceTree = "<group>"; };
+		E2FC341C1A41578900A414D9 /* PluginEditor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PluginEditor.cpp; path = ../../Source/PluginEditor.cpp; sourceTree = "<group>"; };
+		E2FC341D1A41578A00A414D9 /* PluginEditor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PluginEditor.h; path = ../../Source/PluginEditor.h; sourceTree = "<group>"; };
+		E2FC341E1A41578A00A414D9 /* PluginProcessor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PluginProcessor.cpp; path = ../../Source/PluginProcessor.cpp; sourceTree = "<group>"; };
+		E2FC341F1A41578A00A414D9 /* PluginProcessor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PluginProcessor.h; path = ../../Source/PluginProcessor.h; sourceTree = "<group>"; };
+		E2FC34261A4157CD00A414D9 /* WaveformComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WaveformComponent.cpp; path = ../../Source/WaveformComponent.cpp; sourceTree = "<group>"; };
+		E2FC34271A4157CD00A414D9 /* WaveformComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WaveformComponent.h; path = ../../Source/WaveformComponent.h; sourceTree = "<group>"; };
 		E3005094EB8DA1939E1332FF /* juce_CaretComponent.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = juce_CaretComponent.cpp; path = ../../JuceLibraryCode/modules/juce_gui_basics/keyboard/juce_CaretComponent.cpp; sourceTree = SOURCE_ROOT; };
 		E3031DFE96F9598A63CD5FA0 /* juce_DynamicObject.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_DynamicObject.h; path = ../../JuceLibraryCode/modules/juce_core/containers/juce_DynamicObject.h; sourceTree = SOURCE_ROOT; };
 		E30536104752896243FF89C0 /* juce_PropertiesFile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = juce_PropertiesFile.h; path = ../../JuceLibraryCode/modules/juce_data_structures/app_properties/juce_PropertiesFile.h; sourceTree = SOURCE_ROOT; };
@@ -1291,22 +1292,24 @@
 		2ED705B13B8185521C0AC999 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				E266AB981A3B9C7B00063E64 /* BiQuad.h */,
-				E266AB971A3B9C7B00063E64 /* BiQuad.cpp */,
-				E265DE201A24429A00A0345D /* Flanger.h */,
-				E265DE1F1A24429A00A0345D /* Flanger.cpp */,
-				E265DE221A24429A00A0345D /* LFOWaveformGenerator.h */,
-				E265DE211A24429A00A0345D /* LFOWaveformGenerator.cpp */,
-				E265DE241A24429A00A0345D /* LFOWaveformTable.h */,
-				E265DE231A24429A00A0345D /* LFOWaveformTable.cpp */,
-				E265DE261A24429A00A0345D /* Phaser.h */,
-				E265DE251A24429A00A0345D /* Phaser.cpp */,
-				D7D7C3F8B9622E6DF3536816 /* PluginProcessor.h */,
-				1095105B66313EC47FA089B1 /* PluginProcessor.cpp */,
-				6C03805AEC811C3BEF1FAAE1 /* PluginEditor.h */,
-				3E3CCFB593943C869FBAEBAC /* PluginEditor.cpp */,
-				E231A7601A3C054F001ED317 /* LFOtest.h */,
-				E231A75F1A3C054F001ED317 /* LFOtest.cpp */,
+				E2FC34191A41578900A414D9 /* LookupTable.h */,
+				E2FC34121A41578900A414D9 /* DelayLine.h */,
+				E2FC34111A41578900A414D9 /* DelayLine.cpp */,
+				E2FC34161A41578900A414D9 /* Flanger.h */,
+				E2FC34151A41578900A414D9 /* Flanger.cpp */,
+				E2FC34181A41578900A414D9 /* LFOWaveformTable.h */,
+				E2FC34171A41578900A414D9 /* LFOWaveformTable.cpp */,
+				E2FC341B1A41578900A414D9 /* Phaser.h */,
+				E2FC341A1A41578900A414D9 /* Phaser.cpp */,
+				E2FC341D1A41578A00A414D9 /* PluginEditor.h */,
+				E2FC341C1A41578900A414D9 /* PluginEditor.cpp */,
+				E2FC341F1A41578A00A414D9 /* PluginProcessor.h */,
+				E2FC341E1A41578A00A414D9 /* PluginProcessor.cpp */,
+				E2FC34271A4157CD00A414D9 /* WaveformComponent.h */,
+				E2FC34261A4157CD00A414D9 /* WaveformComponent.cpp */,
+				E2FC34101A41576800A414D9 /* CurvePoint.h */,
+				E2FC34131A41578900A414D9 /* dRowAudio_BezierCurve.h */,
+				E2FC34141A41578900A414D9 /* dRowAudio_MathsUtilities.h */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -2982,34 +2985,32 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				545AC9EF567A4C862066436F /* PluginProcessor.cpp in Sources */,
-				1A8B12EE77B0F05DB7DD968A /* PluginEditor.cpp in Sources */,
 				B83899B8A82B8B6298116E58 /* AUBase.cpp in Sources */,
 				C1E4FDC7BFA2060DB2CC4EAB /* AUBuffer.cpp in Sources */,
 				48B9ECD8B36ACD3E45B7FE16 /* AUCarbonViewBase.cpp in Sources */,
 				EAA31E95FE362F00C867CD77 /* AUCarbonViewControl.cpp in Sources */,
 				7B0C2AD122816128050F7056 /* AUCarbonViewDispatch.cpp in Sources */,
-				E265DE271A24429A00A0345D /* Flanger.cpp in Sources */,
-				E231A7611A3C054F001ED317 /* LFOtest.cpp in Sources */,
 				0B8860730F38EFD8FFBF6184 /* AUDispatch.cpp in Sources */,
 				379A8977262DAFCA9E6A4805 /* AUEffectBase.cpp in Sources */,
 				7E70892C9BC1CD4F28434A41 /* AUInputElement.cpp in Sources */,
 				9EACB64462F00D0529121BBE /* AUMIDIBase.cpp in Sources */,
-				E265DE2A1A24429A00A0345D /* Phaser.cpp in Sources */,
 				C4E152D5766D3115B2EEB84D /* AUMIDIEffectBase.cpp in Sources */,
 				52D65D3657105DE6733A87A1 /* AUOutputBase.cpp in Sources */,
 				F1FADCCFC5E272EC2C6438A3 /* AUOutputElement.cpp in Sources */,
 				22AA4C64AA12B70665B995DB /* AUScopeElement.cpp in Sources */,
 				3FBE2C5A08F0B9D134A89A4F /* CAAudioChannelLayout.cpp in Sources */,
+				E2FC34231A41578A00A414D9 /* Phaser.cpp in Sources */,
 				5AA70F4F1C1B0FE64761F521 /* CAAUParameter.cpp in Sources */,
 				808C8589295ED123A551FA89 /* CAMutex.cpp in Sources */,
+				E2FC34211A41578A00A414D9 /* Flanger.cpp in Sources */,
 				19EEBB96DAE0829C5AD46DD2 /* CarbonEventHandler.cpp in Sources */,
 				12582DBE3E9EF8D9B80A9665 /* CAStreamBasicDescription.cpp in Sources */,
 				428209B9205964F87CED42A1 /* CAVectorUnit.cpp in Sources */,
 				8813DF19B799C38CBB830A0D /* ComponentBase.cpp in Sources */,
+				E2FC34281A4157CD00A414D9 /* WaveformComponent.cpp in Sources */,
 				04D8FE3CCD8EEA2521CFCAD5 /* MusicDeviceBase.cpp in Sources */,
+				E2FC34241A41578A00A414D9 /* PluginEditor.cpp in Sources */,
 				F977DA49C319EE828CEA16B5 /* juce_AAX_Wrapper.cpp in Sources */,
-				E265DE281A24429A00A0345D /* LFOWaveformGenerator.cpp in Sources */,
 				D6676D27066A6A1EF0B701C7 /* juce_AAX_Wrapper.mm in Sources */,
 				C540A1BEC4648C19EE3B8CD8 /* juce_AU_Wrapper.mm in Sources */,
 				F427B353E4C4AAEA969848CF /* juce_audio_basics.mm in Sources */,
@@ -3017,16 +3018,17 @@
 				F9411099C4256D867B190E63 /* juce_audio_formats.mm in Sources */,
 				7FE3B545EAC2B3D39634E2A8 /* juce_audio_processors.mm in Sources */,
 				F136E701B7E7FED0D908FD74 /* juce_core.mm in Sources */,
-				E265DE291A24429A00A0345D /* LFOWaveformTable.cpp in Sources */,
+				E2FC34251A41578A00A414D9 /* PluginProcessor.cpp in Sources */,
 				041DCFDC371C1515B2D05320 /* juce_cryptography.mm in Sources */,
 				09806D6CC80FAF3763C73281 /* juce_data_structures.mm in Sources */,
-				E266AB991A3B9C7B00063E64 /* BiQuad.cpp in Sources */,
 				DFFE86323349BBCB52EE3E7B /* juce_events.mm in Sources */,
 				830BAF5C1CCBF2DE9322E85C /* juce_graphics.mm in Sources */,
 				ED4D82E8F6881B26E4572B54 /* juce_gui_basics.mm in Sources */,
 				F2C65B309AB03987D1DF0CBE /* juce_gui_extra.mm in Sources */,
 				4C2D7961BA5F97732E249D1E /* juce_opengl.mm in Sources */,
 				22FE70C8D262F289E80C5DFE /* juce_PluginUtilities.cpp in Sources */,
+				E2FC34201A41578A00A414D9 /* DelayLine.cpp in Sources */,
+				E2FC34221A41578A00A414D9 /* LFOWaveformTable.cpp in Sources */,
 				F85831D645EB2494749E7E97 /* juce_RTAS_DigiCode1.cpp in Sources */,
 				1B2EA11ABC04F2A75621E54B /* juce_RTAS_DigiCode2.cpp in Sources */,
 				2F3D867A15B03181BAEF33C1 /* juce_RTAS_DigiCode3.cpp in Sources */,
