@@ -37,8 +37,11 @@
       useCustomWorkingDirectory = "NO"
       buildConfiguration = "Debug"
       ignoresPersistentStateOnLaunch = "NO"
-      debugDocumentVersioning = "YES"
+      debugDocumentVersioning = "NO"
       allowLocationSimulation = "YES">
+      <PathRunnable
+         FilePath = "/Users/tom/nebulo-mod/JUCE/extras/audio plugin host/Builds/MacOSX/build/Debug/Plugin Host.app">
+      </PathRunnable>
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
@@ -48,6 +51,12 @@
             ReferencedContainer = "container:NebuloMod.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
+      <CommandLineArguments>
+         <CommandLineArgument
+            argument = "~/nebulo-mod/Resources/NebuloModTesting.filtergraph"
+            isEnabled = "YES">
+         </CommandLineArgument>
+      </CommandLineArguments>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>
